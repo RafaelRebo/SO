@@ -10,6 +10,8 @@
 #include <unistd.h>
 #include <time.h>
 #include <sys/utsname.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <fcntl.h>
 #include "lista.h"
 #include "listaficheros.h"
@@ -29,6 +31,8 @@ void Cmd_open(char * trozos[],tListF* F);
 void Cmd_close (char* trozos[],tListF* F);
 void Cmd_dup (char* trozos[],tListF* F);
 void infosys(char* trozos[]);
+char LetraTF (mode_t m);
+void stats(char* trozos[]);
 void Help(char* trozos[]);
 
 int main() {
@@ -374,6 +378,54 @@ void infosys(char* trozos[]){
         printf("infosys: opcion incorrecta < %s >. Ver 'help infosys' para ayuda",trozos[1]);
     }
 }
+
+char LetraTF (mode_t m){
+    switch (m&S_IFMT) { /*and bit a bit con los bits de formato,0170000 */
+        case S_IFSOCK: return 's'; /*socket */
+        case S_IFLNK: return 'l'; /*symbolic link*/
+        case S_IFREG: return '-'; /* fichero normal*/
+        case S_IFBLK: return 'b'; /*block device*/
+        case S_IFDIR: return 'd'; /*directorio */
+        case S_IFCHR: return 'c'; /*char device*/
+        case S_IFIFO: return 'p'; /*pipe*/
+        default: return '?'; /*desconocido, no deberia aparecer*/
+    }
+}
+
+void stats(char* trozos[]){
+    struct stat *buf = NULL;
+
+    int size=400, dirIndex;
+    char directorio[size];
+    if(trozos[1]==NULL){
+        getcwd(directorio,size); //Devuelve el directorio de trabajo actual
+        printf("%s",directorio);
+    }
+    else{
+        for(dirIndex=1; (strcmp(trozos[dirIndex],"-long")==0)||(strcmp(trozos[dirIndex],"-link")==0)||(strcmp(trozos[dirIndex],"-acc")==0);dirIndex++);
+
+        for(int j=dirIndex;trozos[j]!=NULL;j++) {
+            lstat(trozos[j],buf);
+            //STAT sin args: Tamaño y nombre
+            //STAT long: Fecha, 1, inodo, propietario, grupo, permisos, tamaño, nombre
+            //STAT
+
+
+            for (int i = 1; i < dirIndex; i++) {
+                if (strcmp(trozos[i], "-long")) {
+
+                } else if (strcmp(trozos[i], "-link")) {
+
+                } else {
+
+                }
+            }
+        }
+
+    }
+
+}
+
 
 void Help(char* trozos[]) {
     if (trozos[1] != NULL) {
