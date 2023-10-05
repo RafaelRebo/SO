@@ -10,9 +10,14 @@
 #include <unistd.h>
 #include <time.h>
 #include <sys/utsname.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <fcntl.h>
 #include "lista.h"
 #include "listaficheros.h"
+#include "aux.c"
+
+
 
 void imprimirPrompt();
 void leerEntrada(char* comando);
@@ -29,6 +34,8 @@ void Cmd_open(char * trozos[],tListF* F);
 void Cmd_close (char* trozos[],tListF* F);
 void Cmd_dup (char* trozos[],tListF* F);
 void infosys(char* trozos[]);
+char LetraTF (mode_t m);
+void stats(char* trozos[]);
 void Help(char* trozos[]);
 
 int main() {
@@ -107,6 +114,9 @@ void procesarComando(char* trozos[],tList* L,tListF* F){
     }
     else if(strcmp(trozos[0],"infosys")==0){
         infosys(trozos);
+    }
+    else if(strcmp(trozos[0],"stat")==0){
+        stats(trozos);
     }
     else if(strcmp(trozos[0],"help")==0){
         Help(trozos);
@@ -375,6 +385,94 @@ void infosys(char* trozos[]){
     }
 }
 
+char LetraTF (mode_t m){
+    switch (m&S_IFMT) { /*and bit a bit con los bits de formato,0170000 */
+        case S_IFSOCK: return 's'; /*socket */
+        case S_IFLNK: return 'l'; /*symbolic link*/
+        case S_IFREG: return '-'; /* fichero normal*/
+        case S_IFBLK: return 'b'; /*block device*/
+        case S_IFDIR: return 'd'; /*directorio */
+        case S_IFCHR: return 'c'; /*char device*/
+        case S_IFIFO: return 'p'; /*pipe*/
+        default: return '?'; /*desconocido, no deberia aparecer*/
+    }
+}
+char * ConvierteModo (mode_t m, char *permisos)
+{
+    strcpy (permisos,"---------- ");
+
+    permisos[0]=LetraTF(m);
+    if (m&S_IRUSR) permisos[1]='r';    /*propietario*/
+    if (m&S_IWUSR) permisos[2]='w';
+    if (m&S_IXUSR) permisos[3]='x';
+    if (m&S_IRGRP) permisos[4]='r';    /*grupo*/
+    if (m&S_IWGRP) permisos[5]='w';
+    if (m&S_IXGRP) permisos[6]='x';
+    if (m&S_IROTH) permisos[7]='r';    /*resto*/
+    if (m&S_IWOTH) permisos[8]='w';
+    if (m&S_IXOTH) permisos[9]='x';
+    if (m&S_ISUID) permisos[3]='s';    /*setuid, setgid y stickybit*/
+    if (m&S_ISGID) permisos[6]='s';
+    if (m&S_ISVTX) permisos[9]='t';
+
+    return permisos;
+}
+
+void stats(char* trozos[]){
+    struct stat buf;
+    time_t returnedTime;
+    bool longComand = false, linkComand = false, accComand = false;//variables que indican si se escribieron
+    int size=400, dirIndex=0;
+    char directorio[size], permisos[10], directorioLink[size];
+    if(trozos[1]==NULL){
+        getcwd(directorio,size); //Devuelve el directorio de trabajo actual
+        printf("%s",directorio);
+    }
+    else{
+//-----------verificar subcomandos--------------
+        bool continuar=true;
+        do{
+
+            dirIndex+=1;
+            if (strcmp(trozos[dirIndex], "-long")==0) longComand=true;
+            else if (strcmp(trozos[dirIndex], "-link")==0) linkComand=true;
+            else if (strcmp(trozos[dirIndex], "-acc")==0) accComand=true;
+            else continuar = false;
+        }while(continuar);
+        //--------------
+
+        for(int j=dirIndex;trozos[j]!=NULL;j++) {
+            if(lstat(trozos[j],&buf)==-1){
+                perror("Error lstat");
+                return;
+            }
+
+
+            //STAT sin args: Tamaño y nombre
+            //STAT long: Fecha, 1, inodo, propietario, grupo, permisos, tamaño, nombre
+            //STAT
+
+            if(longComand){
+                if(accComand) returnedTime = buf.st_atime;
+                else returnedTime = buf.st_mtime;
+                printf("%ld\t%d (%ld)\t%u\t%u %s\t%jd\t%s", buf.st_atime, 1, buf.st_ino, buf.st_uid, buf.st_gid, permisos, buf.st_size, trozos[dirIndex]);
+                if(readlink(trozos[dirIndex], directorioLink, buf.st_size+1)==-1) return;
+                if(linkComand){
+                    directorioLink[buf.st_size] = '\0';
+                    printf(" -> %s", directorioLink);
+                }
+            }
+            else
+                printf("%jd\t%s", buf.st_size, trozos[dirIndex]);
+
+
+        }
+
+    }
+
+}
+
+
 void Help(char* trozos[]) {
     if (trozos[1] != NULL) {
         printf("%s", trozos[1]);
@@ -421,3 +519,4 @@ void Help(char* trozos[]) {
                " open [filepath flags] close [df] dup [df] listopen infosys help [cmd] quit exit bye\n");
     }
 }
+
