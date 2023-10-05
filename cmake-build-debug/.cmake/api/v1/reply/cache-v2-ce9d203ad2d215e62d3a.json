@@ -55,7 +55,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/rafael/Documentos/SO/C/P0/cmake-build-debug"
+			"value" : "/home/rafael/CLionProjects/SO/cmake-build-debug"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -415,7 +415,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/rafael/Documentos/SO/C/P0/cmake-build-debug/CMakeFiles/pkgRedirects"
+			"value" : "/home/rafael/CLionProjects/SO/cmake-build-debug/CMakeFiles/pkgRedirects"
 		},
 		{
 			"name" : "CMAKE_GENERATOR",
@@ -475,7 +475,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/rafael/Documentos/SO/C/P0"
+			"value" : "/home/rafael/CLionProjects/SO"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
@@ -1007,7 +1007,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/rafael/Documentos/SO/C/P0/cmake-build-debug"
+			"value" : "/home/rafael/CLionProjects/SO/cmake-build-debug"
 		},
 		{
 			"name" : "P0_IS_TOP_LEVEL",
@@ -1031,7 +1031,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/rafael/Documentos/SO/C/P0"
+			"value" : "/home/rafael/CLionProjects/SO"
 		},
 		{
 			"name" : "_CMAKE_LINKER_PUSHPOP_STATE_SUPPORTED",
@@ -1044,42 +1044,6 @@
 			],
 			"type" : "INTERNAL",
 			"value" : "TRUE"
-		},
-		{
-			"name" : "p1_BINARY_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "/home/rafael/Documentos/SO/C/P0/cmake-build-debug"
-		},
-		{
-			"name" : "p1_IS_TOP_LEVEL",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "ON"
-		},
-		{
-			"name" : "p1_SOURCE_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "/home/rafael/Documentos/SO/C/P0"
 		}
 	],
 	"kind" : "cache",
