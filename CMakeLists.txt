@@ -8,4 +8,5 @@ add_executable(P0 p0.c
         types.h
         lista.h
         listaficheros.c
-        listaficheros.h)
+        listaficheros.h
+        aux.c)
