@@ -13,6 +13,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <pwd.h>
 #include "lista.h"
 #include "listaficheros.h"
 
@@ -111,6 +112,9 @@ void procesarComando(char* trozos[],tList* L,tListF* F){
     }
     else if(strcmp(trozos[0],"infosys")==0){
         infosys(trozos);
+    }
+    else if(strcmp(trozos[0],"stat")==0){
+        stats(trozos);
     }
     else if(strcmp(trozos[0],"help")==0){
         Help(trozos);
@@ -393,37 +397,55 @@ char LetraTF (mode_t m){
 }
 
 void stats(char* trozos[]){
+    bool isLong=false, isLink=false, isAcc=false;
     struct stat *buf = NULL;
-
+    struct passwd pwent;
+    struct passwd *pwentp;
+    buf=malloc(sizeof(struct stat));
     int size=400, dirIndex;
     char directorio[size];
+    char date[20];
+    char namebuffer[100];
     if(trozos[1]==NULL){
         getcwd(directorio,size); //Devuelve el directorio de trabajo actual
         printf("%s",directorio);
     }
+        //STAT sin args: Tamaño y nombre
+        //STAT long: Fecha, 1, inodo, propietario, grupo, permisos, tamaño, nombre
+        //STAT
     else{
-        for(dirIndex=1; (strcmp(trozos[dirIndex],"-long")==0)||(strcmp(trozos[dirIndex],"-link")==0)||(strcmp(trozos[dirIndex],"-acc")==0);dirIndex++);
-
+        for(dirIndex=1;(strcmp(trozos[dirIndex],"-long")==0)||(strcmp(trozos[dirIndex],"-link")==0)||(strcmp(trozos[dirIndex],"-acc")==0);dirIndex++){
+            if(strcmp(trozos[dirIndex],"-long")==0) isLong=true;
+            else if(strcmp(trozos[dirIndex],"-link")==0) isLink=true;
+            else if(strcmp(trozos[dirIndex],"-acc")==0) isAcc=true;
+        }
         for(int j=dirIndex;trozos[j]!=NULL;j++) {
             lstat(trozos[j],buf);
-            //STAT sin args: Tamaño y nombre
-            //STAT long: Fecha, 1, inodo, propietario, grupo, permisos, tamaño, nombre
-            //STAT
-
-
-            for (int i = 1; i < dirIndex; i++) {
-                if (strcmp(trozos[i], "-long")) {
-
-                } else if (strcmp(trozos[i], "-link")) {
-
-                } else {
-
+            if(isLong){
+                strftime(date, sizeof(date), "%d/%m/%y - %H:%M", localtime(&(buf->st_ctime)));
+                getpwuid_r(buf->st_uid, &pwent, namebuffer, sizeof(namebuffer), &pwentp);
+                if(isLink){
+                    if(isAcc){ //SI LONG SI LINK SI ACC
+                        printf("\t%s (%ld) %s %u %ld bytes %s",date,buf->st_ino,pwent.pw_name,buf->st_gid,buf->st_size,trozos[j]);
+                    }
+                    else{ //SI LONG SI LINK NO ACC
+                        printf("\t%ld bytes %s",buf->st_size,trozos[j]);
+                    }
+                }
+                else{
+                    if(isAcc){ //SI LONG NO LINK SI ACC
+                        printf("\t%ld bytes %s",buf->st_size,trozos[j]);
+                    }
+                    else{ //SI LONG NO LINK NO ACC
+                        printf("\t%ld bytes %s",buf->st_size,trozos[j]);
+                    }
                 }
             }
+            else{
+                printf("\t%ld bytes %s",buf->st_size,trozos[j]);
+            }
         }
-
     }
-
 }
 
 
