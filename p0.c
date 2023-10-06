@@ -15,6 +15,8 @@
 #include <fcntl.h>
 #include "lista.h"
 #include "listaficheros.h"
+#include <pwd.h>
+#include <grp.h>
 #include "aux.c"
 
 
@@ -421,6 +423,8 @@ char * ConvierteModo (mode_t m, char *permisos)
 void stats(char* trozos[]){
     struct stat buf;
     time_t returnedTime;
+    struct passwd *user;
+    struct group *group;
     bool longComand = false, linkComand = false, accComand = false;//variables que indican si se escribieron
     int size=400, dirIndex=0;
     char directorio[size], permisos[10], directorioLink[size];
@@ -455,7 +459,15 @@ void stats(char* trozos[]){
             if(longComand){
                 if(accComand) returnedTime = buf.st_atime;
                 else returnedTime = buf.st_mtime;
-                printf("%ld\t%d (%ld)\t%u\t%u %s\t%jd\t%s", buf.st_atime, 1, buf.st_ino, buf.st_uid, buf.st_gid, permisos, buf.st_size, trozos[dirIndex]);
+                if ((user = getpwuid(buf.st_uid)) == NULL){
+                    perror("Error obtener nombre de usuario");
+                    return;
+                }
+                if ((group = getgrgid(buf.st_gid)) == NULL) {
+                    perror("Error obtener nombre del grupo");
+                    return;
+                }
+                printf("%ld\t%d (%ld)\t%s\t%s %s\t%jd\t%s", buf.st_atime, 1, buf.st_ino, user->pw_name, group->gr_name, permisos, buf.st_size, trozos[dirIndex]);
                 if(readlink(trozos[dirIndex], directorioLink, buf.st_size+1)==-1) return;
                 if(linkComand){
                     directorioLink[buf.st_size] = '\0';

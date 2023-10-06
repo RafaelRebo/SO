@@ -85,6 +85,7 @@ CMakeFiles/P0.dir/p0.c.o: /home/yago/CLionProjects/SO/p0.c \
   /home/yago/CLionProjects/SO/lista.h \
   /home/yago/CLionProjects/SO/types.h \
   /home/yago/CLionProjects/SO/listaficheros.h \
+  /usr/include/pwd.h \
   /home/yago/CLionProjects/SO/aux.c
 
 
@@ -167,6 +168,8 @@ CMakeFiles/P0.dir/p0.c.o: /home/yago/CLionProjects/SO/p0.c \
 /usr/include/x86_64-linux-gnu/bits/long-double.h:
 
 /usr/include/x86_64-linux-gnu/bits/uintn-identity.h:
+
+/usr/include/pwd.h:
 
 /usr/include/x86_64-linux-gnu/bits/getopt_posix.h:
 

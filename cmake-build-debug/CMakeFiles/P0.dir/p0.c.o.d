@@ -68,5 +68,5 @@ CMakeFiles/P0.dir/p0.c.o: /home/yago/CLionProjects/SO/p0.c \
  /usr/include/x86_64-linux-gnu/bits/fcntl.h \
  /usr/include/x86_64-linux-gnu/bits/fcntl-linux.h \
  /home/yago/CLionProjects/SO/lista.h /home/yago/CLionProjects/SO/types.h \
- /home/yago/CLionProjects/SO/listaficheros.h \
- /home/yago/CLionProjects/SO/aux.c
+ /home/yago/CLionProjects/SO/listaficheros.h /usr/include/pwd.h \
+ /usr/include/grp.h /home/yago/CLionProjects/SO/aux.c
