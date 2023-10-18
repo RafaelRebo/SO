@@ -428,7 +428,7 @@ void stats(char* trozos[]){
     char date[20];
     bool longComand = false, linkComand = false, accComand = false;//variables que indican si se escribieron
     int size=400, dirIndex=0;
-    char directorio[size], permisos[10], directorioLink[size];
+    char directorio[size], permisos[20], directorioLink[size];
     if(trozos[1]==NULL){
         getcwd(directorio,size); //Devuelve el directorio de trabajo actual
         printf("%s",directorio);
@@ -451,9 +451,10 @@ void stats(char* trozos[]){
                 return;
             }
             if(longComand){
-                strftime(date, sizeof(date), "%d/%m/%y - %H:%M", localtime(&(buf.st_ctime)));
+                ConvierteModo(buf.st_mode,permisos);
                 if(accComand) returnedTime = buf.st_atime;
                 else returnedTime = buf.st_mtime;
+                strftime(date, sizeof(date), "%d/%m/%y - %H:%M", localtime(&(returnedTime)));
                 if ((user = getpwuid(buf.st_uid)) == NULL){
                     perror("Error obtener nombre de usuario");
                     return;
