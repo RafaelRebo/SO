@@ -13,9 +13,13 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <pwd.h>
 #include "lista.h"
 #include "listaficheros.h"
+#include <pwd.h>
+#include <grp.h>
+#include "aux.c"
+
+
 
 void imprimirPrompt();
 void leerEntrada(char* comando);
@@ -395,55 +399,89 @@ char LetraTF (mode_t m){
         default: return '?'; /*desconocido, no deberia aparecer*/
     }
 }
+char * ConvierteModo (mode_t m, char *permisos)
+{
+    strcpy (permisos,"---------- ");
+
+    permisos[0]=LetraTF(m);
+    if (m&S_IRUSR) permisos[1]='r';    /*propietario*/
+    if (m&S_IWUSR) permisos[2]='w';
+    if (m&S_IXUSR) permisos[3]='x';
+    if (m&S_IRGRP) permisos[4]='r';    /*grupo*/
+    if (m&S_IWGRP) permisos[5]='w';
+    if (m&S_IXGRP) permisos[6]='x';
+    if (m&S_IROTH) permisos[7]='r';    /*resto*/
+    if (m&S_IWOTH) permisos[8]='w';
+    if (m&S_IXOTH) permisos[9]='x';
+    if (m&S_ISUID) permisos[3]='s';    /*setuid, setgid y stickybit*/
+    if (m&S_ISGID) permisos[6]='s';
+    if (m&S_ISVTX) permisos[9]='t';
+
+    return permisos;
+}
 
 void stats(char* trozos[]){
-    bool isLong=false, isLink=false, isAcc=false;
-    struct stat *buf=NULL;
-    //struct passwd *pwd;
-    buf=malloc(sizeof(struct stat));
-    int size=400, dirIndex;
-    char directorio[size];
-    char date[20];
+    struct stat buf;
+    time_t returnedTime;
+    struct passwd *user;
+    struct group *group;
+    bool longComand = false, linkComand = false, accComand = false;//variables que indican si se escribieron
+    int size=400, dirIndex=0;
+    char directorio[size], permisos[10], directorioLink[size];
     if(trozos[1]==NULL){
         getcwd(directorio,size); //Devuelve el directorio de trabajo actual
         printf("%s",directorio);
     }
-        //STAT sin args: Tamaño y nombre
-        //STAT long: Fecha, 1, inodo, propietario, grupo, permisos, tamaño, nombre
-        //STAT
     else{
-        for(dirIndex=1;(strcmp(trozos[dirIndex],"-long")==0)||(strcmp(trozos[dirIndex],"-link")==0)||(strcmp(trozos[dirIndex],"-acc")==0);dirIndex++){
-            if(strcmp(trozos[dirIndex],"-long")==0) isLong=true;
-            else if(strcmp(trozos[dirIndex],"-link")==0) isLink=true;
-            else if(strcmp(trozos[dirIndex],"-acc")==0) isAcc=true;
-        }
+//-----------verificar subcomandos--------------
+        bool continuar=true;
+        do{
+
+            dirIndex+=1;
+            if (strcmp(trozos[dirIndex], "-long")==0) longComand=true;
+            else if (strcmp(trozos[dirIndex], "-link")==0) linkComand=true;
+            else if (strcmp(trozos[dirIndex], "-acc")==0) accComand=true;
+            else continuar = false;
+        }while(continuar);
+        //--------------
+
         for(int j=dirIndex;trozos[j]!=NULL;j++) {
-            lstat(trozos[j],buf);
-            //pwd=getpwuid(buf->st_uid);
-            if(isLong){
-                strftime(date, sizeof(date), "%d/%m/%y - %H:%M", localtime(&(buf->st_ctime)));
-                if(isLink){
-                    if(isAcc){ //SI LONG SI LINK SI ACC
-                        printf("\t%s (%ld) %s %u %ld bytes %s",date,buf->st_ino,"asd",buf->st_gid,buf->st_size,trozos[j]);
-                    }
-                    else{ //SI LONG SI LINK NO ACC
-                        printf("\t%ld bytes %s",buf->st_size,trozos[j]);
-                    }
+            if(lstat(trozos[j],&buf)==-1){
+                perror("Error lstat");
+                return;
+            }
+
+
+            //STAT sin args: Tamaño y nombre
+            //STAT long: Fecha, 1, inodo, propietario, grupo, permisos, tamaño, nombre
+            //STAT
+
+            if(longComand){
+                if(accComand) returnedTime = buf.st_atime;
+                else returnedTime = buf.st_mtime;
+                if ((user = getpwuid(buf.st_uid)) == NULL){
+                    perror("Error obtener nombre de usuario");
+                    return;
                 }
-                else{
-                    if(isAcc){ //SI LONG NO LINK SI ACC
-                        printf("\t%ld bytes %s",buf->st_size,trozos[j]);
-                    }
-                    else{ //SI LONG NO LINK NO ACC
-                        printf("\t%ld bytes %s",buf->st_size,trozos[j]);
-                    }
+                if ((group = getgrgid(buf.st_gid)) == NULL) {
+                    perror("Error obtener nombre del grupo");
+                    return;
+                }
+                printf("%ld\t%d (%ld)\t%s\t%s %s\t%jd\t%s", buf.st_atime, 1, buf.st_ino, user->pw_name, group->gr_name, permisos, buf.st_size, trozos[dirIndex]);
+                if(readlink(trozos[dirIndex], directorioLink, buf.st_size+1)==-1) return;
+                if(linkComand){
+                    directorioLink[buf.st_size] = '\0';
+                    printf(" -> %s", directorioLink);
                 }
             }
-            else{
-                printf("\t%ld bytes %s",buf->st_size,trozos[j]);
-            }
+            else
+                printf("%jd\t%s", buf.st_size, trozos[dirIndex]);
+
+
         }
+
     }
+
 }
 
 
@@ -493,3 +531,4 @@ void Help(char* trozos[]) {
                " open [filepath flags] close [df] dup [df] listopen infosys help [cmd] quit exit bye\n");
     }
 }
+
