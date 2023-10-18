@@ -129,30 +129,6 @@ P0/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/P0.dir/build.make CMakeFiles/P0.dir/build
 .PHONY : P0/fast
 
-aux.o: aux.c.o
-.PHONY : aux.o
-
-# target to build an object file
-aux.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/P0.dir/build.make CMakeFiles/P0.dir/aux.c.o
-.PHONY : aux.c.o
-
-aux.i: aux.c.i
-.PHONY : aux.i
-
-# target to preprocess a source file
-aux.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/P0.dir/build.make CMakeFiles/P0.dir/aux.c.i
-.PHONY : aux.c.i
-
-aux.s: aux.c.s
-.PHONY : aux.s
-
-# target to generate assembly for a file
-aux.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/P0.dir/build.make CMakeFiles/P0.dir/aux.c.s
-.PHONY : aux.c.s
-
 lista.o: lista.c.o
 .PHONY : lista.o
 
@@ -234,9 +210,6 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... P0"
-	@echo "... aux.o"
-	@echo "... aux.i"
-	@echo "... aux.s"
 	@echo "... lista.o"
 	@echo "... lista.i"
 	@echo "... lista.s"

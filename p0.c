@@ -17,7 +17,7 @@
 #include "listaficheros.h"
 #include <pwd.h>
 #include <grp.h>
-#include "aux.c"
+#include <dirent.h>
 
 
 
@@ -39,6 +39,7 @@ void infosys(char* trozos[]);
 char LetraTF (mode_t m);
 void stats(char* trozos[]);
 void Help(char* trozos[]);
+void list (char* trozos[]);
 
 int main() {
     bool terminado=false;
@@ -119,6 +120,9 @@ void procesarComando(char* trozos[],tList* L,tListF* F){
     }
     else if(strcmp(trozos[0],"stat")==0){
         stats(trozos);
+    }
+    else if(strcmp(trozos[0],"list")==0){
+        list(trozos);
     }
     else if(strcmp(trozos[0],"help")==0){
         Help(trozos);
@@ -463,11 +467,13 @@ void stats(char* trozos[]){
                     perror("Error obtener nombre del grupo");
                     return;
                 }
-                printf("\t%s\t%d (%ld)\t%s\t%s %s\t%jd\t%s", date, 1, buf.st_ino, user->pw_name, group->gr_name, permisos, buf.st_size, trozos[dirIndex]);
-                if(readlink(trozos[j], directorioLink, buf.st_size+1)==-1) return;
+                printf("\t%s\t%ld (%ld)\t%s\t%s %s\t%jd\t%s", date, buf.st_nlink, buf.st_ino, user->pw_name, group->gr_name, permisos, buf.st_size, trozos[j]);
                 if(linkComand){
-                    directorioLink[buf.st_size] = '\0';
-                    printf(" -> %s\n", directorioLink);
+                    if(readlink(trozos[j], directorioLink, buf.st_size+1)!=-1) {
+                        directorioLink[buf.st_size] = '\0';
+                        printf(" -> %s\n", directorioLink);
+                    }
+                    else puts("");
                 }
                 else puts("");
             }
@@ -476,6 +482,48 @@ void stats(char* trozos[]){
             }
         }
     }
+}
+
+
+void list (char* trozos[]){
+
+    struct stat buf;
+    DIR *dir = NULL;
+    struct dirent *files = NULL;
+
+
+    if(trozos[1] != NULL){
+
+        if(lstat(trozos[1],&buf)==-1){
+            perror("****error al acceder");
+            return;
+        }
+        if((buf.st_mode & S_IFMT) == S_IFDIR){  //si es un directorio
+            printf("************%s\n", trozos[1]);
+            dir = opendir(trozos[1]);
+            if(dir==NULL){
+
+                perror("Error al acceder al directorio");
+                return;
+            }
+            else{
+
+                while ((files=readdir(dir)) != NULL) {
+                    if(-strcmp(files->d_name, ".") && -strcmp(files->d_name, "..")){ //si no son ni . ni ..
+
+                        printf("\t");
+                        //stats(instruccionStats);
+                    }
+                }
+                closedir(dir);
+            }
+
+
+        }
+        else printf("no es dir");
+    }
+    else
+        stats(trozos); //tmpc
 }
 
 
