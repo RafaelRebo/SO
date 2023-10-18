@@ -425,6 +425,7 @@ void stats(char* trozos[]){
     time_t returnedTime;
     struct passwd *user;
     struct group *group;
+    char date[20];
     bool longComand = false, linkComand = false, accComand = false;//variables que indican si se escribieron
     int size=400, dirIndex=0;
     char directorio[size], permisos[10], directorioLink[size];
@@ -436,7 +437,6 @@ void stats(char* trozos[]){
 //-----------verificar subcomandos--------------
         bool continuar=true;
         do{
-
             dirIndex+=1;
             if (strcmp(trozos[dirIndex], "-long")==0) longComand=true;
             else if (strcmp(trozos[dirIndex], "-link")==0) linkComand=true;
@@ -450,13 +450,8 @@ void stats(char* trozos[]){
                 perror("Error lstat");
                 return;
             }
-
-
-            //STAT sin args: Tamaño y nombre
-            //STAT long: Fecha, 1, inodo, propietario, grupo, permisos, tamaño, nombre
-            //STAT
-
             if(longComand){
+                strftime(date, sizeof(date), "%d/%m/%y - %H:%M", localtime(&(buf.st_ctime)));
                 if(accComand) returnedTime = buf.st_atime;
                 else returnedTime = buf.st_mtime;
                 if ((user = getpwuid(buf.st_uid)) == NULL){
@@ -467,21 +462,19 @@ void stats(char* trozos[]){
                     perror("Error obtener nombre del grupo");
                     return;
                 }
-                printf("%ld\t%d (%ld)\t%s\t%s %s\t%jd\t%s", buf.st_atime, 1, buf.st_ino, user->pw_name, group->gr_name, permisos, buf.st_size, trozos[dirIndex]);
-                if(readlink(trozos[dirIndex], directorioLink, buf.st_size+1)==-1) return;
+                printf("\t%s\t%d (%ld)\t%s\t%s %s\t%jd\t%s", date, 1, buf.st_ino, user->pw_name, group->gr_name, permisos, buf.st_size, trozos[dirIndex]);
+                if(readlink(trozos[j], directorioLink, buf.st_size+1)==-1) return;
                 if(linkComand){
                     directorioLink[buf.st_size] = '\0';
-                    printf(" -> %s", directorioLink);
+                    printf(" -> %s\n", directorioLink);
                 }
+                else puts("");
             }
-            else
-                printf("%jd\t%s", buf.st_size, trozos[dirIndex]);
-
-
+            else {
+                printf("%jd\t%s\n", buf.st_size, trozos[j]);
+            }
         }
-
     }
-
 }
 
 
