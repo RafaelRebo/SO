@@ -398,13 +398,12 @@ char LetraTF (mode_t m){
 
 void stats(char* trozos[]){
     bool isLong=false, isLink=false, isAcc=false;
-    struct stat *buf = NULL;
-    struct passwd *pwd;
+    struct stat *buf=NULL;
+    //struct passwd *pwd;
     buf=malloc(sizeof(struct stat));
     int size=400, dirIndex;
     char directorio[size];
     char date[20];
-    char namebuffer[100];
     if(trozos[1]==NULL){
         getcwd(directorio,size); //Devuelve el directorio de trabajo actual
         printf("%s",directorio);
@@ -420,12 +419,12 @@ void stats(char* trozos[]){
         }
         for(int j=dirIndex;trozos[j]!=NULL;j++) {
             lstat(trozos[j],buf);
-            pwd= getpwuid(buf->st_uid);
+            //pwd=getpwuid(buf->st_uid);
             if(isLong){
                 strftime(date, sizeof(date), "%d/%m/%y - %H:%M", localtime(&(buf->st_ctime)));
                 if(isLink){
                     if(isAcc){ //SI LONG SI LINK SI ACC
-                        printf("\t%s (%ld) %s %u %ld bytes %s",date,buf->st_ino,pwd->pw_name,buf->st_gid,buf->st_size,trozos[j]);
+                        printf("\t%s (%ld) %s %u %ld bytes %s",date,buf->st_ino,"asd",buf->st_gid,buf->st_size,trozos[j]);
                     }
                     else{ //SI LONG SI LINK NO ACC
                         printf("\t%ld bytes %s",buf->st_size,trozos[j]);
