@@ -463,11 +463,13 @@ void stats(char* trozos[]){
                     perror("Error obtener nombre del grupo");
                     return;
                 }
-                printf("\t%s\t%d (%ld)\t%s\t%s %s\t%jd\t%s", date, 1, buf.st_ino, user->pw_name, group->gr_name, permisos, buf.st_size, trozos[dirIndex]);
-                if(readlink(trozos[j], directorioLink, buf.st_size+1)==-1) return;
+                printf("\t%s\t%ld (%ld)\t%s\t%s %s\t%jd\t%s", date, buf.st_nlink, buf.st_ino, user->pw_name, group->gr_name, permisos, buf.st_size, trozos[j]);
                 if(linkComand){
-                    directorioLink[buf.st_size] = '\0';
-                    printf(" -> %s\n", directorioLink);
+                    if(readlink(trozos[j], directorioLink, buf.st_size+1)!=-1) {
+                        directorioLink[buf.st_size] = '\0';
+                        printf(" -> %s\n", directorioLink);
+                    }
+                    else puts("");
                 }
                 else puts("");
             }
