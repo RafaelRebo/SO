@@ -423,107 +423,132 @@ char * ConvierteModo (mode_t m, char *permisos)
 
     return permisos;
 }
+int leerParametros(char* trozos[], bool* longComand, bool* linkComand, bool* accComand){
+    int dirIndex = 0;
+    bool continuar=true;
+    do{
+        dirIndex+=1;
+        if (strcmp(trozos[dirIndex], "-long")==0) *longComand=true;
+        else if (strcmp(trozos[dirIndex], "-link")==0) *linkComand=true;
+        else if (strcmp(trozos[dirIndex], "-acc")==0) *accComand=true;
+        else continuar = false;
+    }while(continuar);
+    return dirIndex;
+}
 
-void stats(char* trozos[]){
-    struct stat buf;
+void statOneFile(char* file, bool longComand, bool linkComand, bool accComand){
+
     time_t returnedTime;
+    int size=400;
+    char date[20], permisos[20], directorioLink[size];
+    struct stat buf;
     struct passwd *user;
     struct group *group;
-    char date[20];
+
+    if(lstat(file,&buf)==-1){
+        perror("Error lstat");
+        return;
+    }
+    if(longComand){
+        ConvierteModo(buf.st_mode,permisos);
+        if(accComand) returnedTime = buf.st_atime;
+        else returnedTime = buf.st_mtime;
+        strftime(date, sizeof(date), "%d/%m/%y - %H:%M", localtime(&(returnedTime)));
+        if ((user = getpwuid(buf.st_uid)) == NULL){
+            perror("Error obtener nombre de usuario");
+            return;
+        }
+        if ((group = getgrgid(buf.st_gid)) == NULL) {
+            perror("Error obtener nombre del grupo");
+            return;
+        }
+        printf("\t%s\t%ld (%ld)\t%s\t%s %s\t%jd\t%s", date, buf.st_nlink, buf.st_ino, user->pw_name, group->gr_name, permisos, buf.st_size, file);
+        if(linkComand){
+            if(readlink(file, directorioLink, buf.st_size+1)!=-1) {
+                directorioLink[buf.st_size] = '\0';
+                printf(" -> %s\n", directorioLink);
+            }
+            else puts("");
+        }
+        else puts("");
+    }
+    else {
+        printf("%jd\t%s\n", buf.st_size, file);
+    }
+}
+
+void stats(char* trozos[]){
+
     bool longComand = false, linkComand = false, accComand = false;//variables que indican si se escribieron
-    int size=400, dirIndex=0;
-    char directorio[size], permisos[20], directorioLink[size];
+    int size=400, dirIndex;
+    char directorio[size];
+
     if(trozos[1]==NULL){
         getcwd(directorio,size); //Devuelve el directorio de trabajo actual
         printf("%s",directorio);
     }
     else{
-//-----------verificar subcomandos--------------
-        bool continuar=true;
-        do{
-            dirIndex+=1;
-            if (strcmp(trozos[dirIndex], "-long")==0) longComand=true;
-            else if (strcmp(trozos[dirIndex], "-link")==0) linkComand=true;
-            else if (strcmp(trozos[dirIndex], "-acc")==0) accComand=true;
-            else continuar = false;
-        }while(continuar);
-        //--------------
+
+        dirIndex = leerParametros(trozos, &longComand, &linkComand, &accComand); //guarda direccion del indice del primer archivo
 
         for(int j=dirIndex;trozos[j]!=NULL;j++) {
-            if(lstat(trozos[j],&buf)==-1){
-                perror("Error lstat");
-                return;
-            }
-            if(longComand){
-                ConvierteModo(buf.st_mode,permisos);
-                if(accComand) returnedTime = buf.st_atime;
-                else returnedTime = buf.st_mtime;
-                strftime(date, sizeof(date), "%d/%m/%y - %H:%M", localtime(&(returnedTime)));
-                if ((user = getpwuid(buf.st_uid)) == NULL){
-                    perror("Error obtener nombre de usuario");
-                    return;
-                }
-                if ((group = getgrgid(buf.st_gid)) == NULL) {
-                    perror("Error obtener nombre del grupo");
-                    return;
-                }
-                printf("\t%s\t%ld (%ld)\t%s\t%s %s\t%jd\t%s", date, buf.st_nlink, buf.st_ino, user->pw_name, group->gr_name, permisos, buf.st_size, trozos[j]);
-                if(linkComand){
-                    if(readlink(trozos[j], directorioLink, buf.st_size+1)!=-1) {
-                        directorioLink[buf.st_size] = '\0';
-                        printf(" -> %s\n", directorioLink);
-                    }
-                    else puts("");
-                }
-                else puts("");
-            }
-            else {
-                printf("%jd\t%s\n", buf.st_size, trozos[j]);
-            }
+            statOneFile(trozos[j], longComand, linkComand, accComand);
         }
     }
 }
 
 
 void list (char* trozos[]){
-
+    bool longComand = false, linkComand = false, accComand = false;
+    int dirIndex;
     struct stat buf;
     DIR *dir = NULL;
     struct dirent *files = NULL;
 
 
+
+
     if(trozos[1] != NULL){
-
-        if(lstat(trozos[1],&buf)==-1){
-            perror("****error al acceder");
-            return;
-        }
-        if((buf.st_mode & S_IFMT) == S_IFDIR){  //si es un directorio
-            printf("************%s\n", trozos[1]);
-            dir = opendir(trozos[1]);
-            if(dir==NULL){
-
-                perror("Error al acceder al directorio");
+        dirIndex = leerParametros(trozos, &longComand, &linkComand, &accComand);
+        for(int j=dirIndex;trozos[j]!=NULL;j++) {
+            if(lstat(trozos[j],&buf)==-1){
+                perror("****error al acceder");
                 return;
             }
-            else{
+            if((buf.st_mode & S_IFMT) == S_IFDIR){  //si es un directorio
+                printf("************%s\n", trozos[j]);
+                dir = opendir(trozos[j]);
+                if(dir==NULL){
 
-                while ((files=readdir(dir)) != NULL) {
-                    if(-strcmp(files->d_name, ".") && -strcmp(files->d_name, "..")){ //si no son ni . ni ..
-
-                        printf("\t");
-                        //stats(instruccionStats);
-                    }
+                    perror("Error al acceder al directorio");
+                    return;
                 }
-                closedir(dir);
-            }
+                if(chdir(trozos[j])==-1){
+                    perror("No se pudo cambiar el directorio");
+                }
 
+                else{
+
+
+                    //hacer bucle como en el stats!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    while ((files=readdir(dir)) != NULL) {
+                        if(-strcmp(files->d_name, ".") && -strcmp(files->d_name, "..")){ //si no son ni . ni ..
+                            printf("\t");
+                            statOneFile(files->d_name, longComand, linkComand, accComand);
+                        }
+                    }
+                    chdir("..");
+                    closedir(dir);
+                }
+
+
+            }else stats(trozos);  //pq imprime tmbn el test como si no fuera directorio? (falla la condicion ns pq [empezo a suceder despues de añadir el bucle])
 
         }
-        else printf("no es dir");
+
     }
     else
-        stats(trozos); //tmpc
+        stats(trozos);
 }
 
 
