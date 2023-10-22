@@ -76,9 +76,6 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/yago/CLionProjects/SO/aux.c">
-			<Option target="P0"/>
-		</Unit>
 		<Unit filename="/home/yago/CLionProjects/SO/lista.c">
 			<Option target="P0"/>
 		</Unit>

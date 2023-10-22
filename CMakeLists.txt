@@ -9,4 +9,4 @@ add_executable(P0 p0.c
         lista.h
         listaficheros.c
         listaficheros.h
-        aux.c)
+)
