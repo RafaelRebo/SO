@@ -517,7 +517,6 @@ void stats(char *trozos[]) {
 
         dirIndex = leerParametros(trozos, &longComand, &linkComand, &accComand, &recaComand, &recbComand, &hidComand);
         //guarda direccion del indice del primer archivo
-        dirIndex--;
         for (int j = dirIndex; trozos[j] != NULL; j++) {
             statOneFile(trozos[j], longComand, linkComand, accComand);
         }
