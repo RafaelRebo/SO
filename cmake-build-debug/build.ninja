@@ -73,14 +73,6 @@ build CMakeFiles/P0.dir/listaficheros.c.o: C_COMPILER__P0_unscanned_Debug /home/
   TARGET_COMPILE_PDB = CMakeFiles/P0.dir/
   TARGET_PDB = P0.pdb
 
-build CMakeFiles/P0.dir/aux.c.o: C_COMPILER__P0_unscanned_Debug /home/rafael/CLionProjects/SO/aux.c || cmake_object_order_depends_target_P0
-  DEP_FILE = CMakeFiles/P0.dir/aux.c.o.d
-  FLAGS = -g -std=gnu99 -fdiagnostics-color=always
-  OBJECT_DIR = CMakeFiles/P0.dir
-  OBJECT_FILE_DIR = CMakeFiles/P0.dir
-  TARGET_COMPILE_PDB = CMakeFiles/P0.dir/
-  TARGET_PDB = P0.pdb
-
 
 # =============================================================================
 # Link build statements for EXECUTABLE target P0
@@ -89,7 +81,7 @@ build CMakeFiles/P0.dir/aux.c.o: C_COMPILER__P0_unscanned_Debug /home/rafael/CLi
 #############################################
 # Link the executable P0
 
-build P0: C_EXECUTABLE_LINKER__P0_Debug CMakeFiles/P0.dir/p0.c.o CMakeFiles/P0.dir/lista.c.o CMakeFiles/P0.dir/listaficheros.c.o CMakeFiles/P0.dir/aux.c.o
+build P0: C_EXECUTABLE_LINKER__P0_Debug CMakeFiles/P0.dir/p0.c.o CMakeFiles/P0.dir/lista.c.o CMakeFiles/P0.dir/listaficheros.c.o
   FLAGS = -g
   OBJECT_DIR = CMakeFiles/P0.dir
   POST_BUILD = :
