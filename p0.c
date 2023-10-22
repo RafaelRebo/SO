@@ -428,11 +428,12 @@ char * ConvierteModo (mode_t m, char *permisos)
 }
 
 int leerParametros(char* trozos[], bool* longComand, bool* linkComand, bool* accComand, bool *recaComand,bool *recbComand,bool *hidComand){
-    int dirIndex = 0;
+    int dirIndex = 1;
     bool continuar=true;
     do{
         dirIndex+=1;
-        if (strcmp(trozos[dirIndex], "-long")==0) *longComand=true;
+        if(trozos[dirIndex]==NULL) continuar=false;
+        else if (strcmp(trozos[dirIndex], "-long")==0) *longComand=true;
         else if (strcmp(trozos[dirIndex], "-link")==0) *linkComand=true;
         else if (strcmp(trozos[dirIndex], "-acc")==0) *accComand=true;
         else if (strcmp(trozos[dirIndex], "-reca")==0){
@@ -488,7 +489,7 @@ void statOneFile(char* file, bool longComand, bool linkComand, bool accComand){
     struct group *group;
 
     if(lstat(file,&buf)==-1){
-        perror("Error lstat");
+        perror("No ejecutado");
         return;
     }
     if(longComand){
@@ -534,7 +535,7 @@ void stats(char* trozos[]){
 
         dirIndex = leerParametros(trozos, &longComand, &linkComand, &accComand, &recaComand, &recbComand, &hidComand);
         //guarda direccion del indice del primer archivo
-
+        dirIndex--;
         for(int j=dirIndex;trozos[j]!=NULL;j++) {
             statOneFile(trozos[j], longComand, linkComand, accComand);
         }
@@ -719,11 +720,14 @@ void list (char* trozos[]){
     getcwd(iniDir,1000);
     if(trozos[1] != NULL){
         dirIndex = leerParametros(trozos, &longComand, &linkComand, &accComand, &recaComand, &recbComand, &hidComand);
-        for(int j=dirIndex;trozos[j]!=NULL;j++) {
-            if(recaComand) listContentReca(trozos[j], longComand, linkComand, accComand, hidComand,iniDir);
-            else if(recbComand) listContentRecb(trozos[j], longComand, linkComand, accComand, hidComand,iniDir);
-            else listContentRegular(trozos[j], longComand, linkComand, accComand, hidComand);
-            printf("\n");
+        if(trozos[dirIndex]==NULL) printf("%s",iniDir);
+        else {
+            for (int j = dirIndex; trozos[j] != NULL; j++) {
+                if (recaComand) listContentReca(trozos[j], longComand, linkComand, accComand, hidComand, iniDir);
+                else if (recbComand) listContentRecb(trozos[j], longComand, linkComand, accComand, hidComand, iniDir);
+                else listContentRegular(trozos[j], longComand, linkComand, accComand, hidComand);
+                printf("\n");
+            }
         }
     }
     else stats(trozos);
