@@ -418,11 +418,11 @@ char *ConvierteModo(mode_t m, char *permisos) {
 }
 
 int leerParametros(char *trozos[], bool *longComand, bool *linkComand, bool *accComand, bool *recaComand, bool *recbComand, bool *hidComand) {
-    int dirIndex = 1;
+    int dirIndex = 0;
     bool continuar = true;
     do {
         dirIndex += 1;
-        if (trozos[dirIndex] == NULL) continuar = false;
+        if(trozos[dirIndex]==NULL) continuar=false;
         else if (strcmp(trozos[dirIndex], "-long") == 0) *longComand = true;
         else if (strcmp(trozos[dirIndex], "-link") == 0) *linkComand = true;
         else if (strcmp(trozos[dirIndex], "-acc") == 0) *accComand = true;
