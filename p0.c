@@ -557,6 +557,10 @@ void listContentReca(char* filename, bool longComand, bool linkComand, bool accC
             chdir(ogDir);
             closedir(dir);
             dir = opendir(filename);
+            if(dir==NULL){
+                perror("Error al acceder al directorio");
+                return;
+            }
             if(chdir(filename)==-1){
                 perror("No se pudo cambiar el directorio");
             }
@@ -571,7 +575,6 @@ void listContentReca(char* filename, bool longComand, bool linkComand, bool accC
             }
             chdir(ogDir);
             closedir(dir);
-
         }
     }else statOneFile(filename,longComand,linkComand,accComand);
 
