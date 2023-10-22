@@ -36,6 +36,7 @@ void Cmd_close (char* trozos[],tListF* F);
 void Cmd_dup (char* trozos[],tListF* F);
 void infosys(char* trozos[]);
 char LetraTF (mode_t m);
+void create(char* trozos[]);
 void stats(char* trozos[]);
 void Help(char* trozos[]);
 void list (char* trozos[]);
@@ -116,6 +117,9 @@ void procesarComando(char* trozos[],tList* L,tListF* F){
     }
     else if(strcmp(trozos[0],"infosys")==0){
         infosys(trozos);
+    }
+    else if(strcmp(trozos[0],"create")==0){
+        create(trozos);
     }
     else if(strcmp(trozos[0],"stat")==0){
         stats(trozos);
@@ -445,6 +449,35 @@ int leerParametros(char* trozos[], bool* longComand, bool* linkComand, bool* acc
     return dirIndex;
 }
 
+void create(char* trozos[]){
+    char dir[1000];
+    getcwd(dir,1000);
+    if(trozos[1]==NULL){
+        printf("%s",dir);
+    }
+    else if(trozos[1][0]=='-'){
+        if(strcmp(trozos[1],"-f")==0){
+            if(mkdir(trozos[2],0777)==-1) perror("Imposible crear directorio");
+            else{
+                strcat(dir,"/");
+                strcat(dir,trozos[2]);
+                printf("Directorio creado en < %s >",dir);
+            }
+        }
+        else{
+            printf("create: opcion incorrecta < %s >. Ver 'help create' para ayuda",trozos[1]);
+        }
+    }
+    else{
+        if(open(trozos[1],O_CREAT,0777)==-1) perror("Imposible crear fichero");
+        else {
+            strcat(dir,"/");
+            strcat(dir,trozos[1]);
+            printf("Fichero %s creado satisfactoriamente en < %s >",trozos[1],dir);
+        }
+    }
+}
+
 void statOneFile(char* file, bool longComand, bool linkComand, bool accComand){
 
     time_t returnedTime;
@@ -690,6 +723,7 @@ void list (char* trozos[]){
             if(recaComand) listContentReca(trozos[j], longComand, linkComand, accComand, hidComand,iniDir);
             else if(recbComand) listContentRecb(trozos[j], longComand, linkComand, accComand, hidComand,iniDir);
             else listContentRegular(trozos[j], longComand, linkComand, accComand, hidComand);
+            printf("\n");
         }
     }
     else stats(trozos);
