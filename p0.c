@@ -59,6 +59,10 @@ void Help(char *trozos[]);
 
 void list(char *trozos[]);
 
+typedef struct parametros{
+    bool longComand, linkComand, accComand, recaComand, recbComand, hidComand;
+}tParametros;
+
 int main() {
     bool terminado = false;
     tComando comando;
@@ -417,22 +421,25 @@ char *ConvierteModo(mode_t m, char *permisos) {
     return permisos;
 }
 
-int leerParametros(char *trozos[], bool *longComand, bool *linkComand, bool *accComand, bool *recaComand, bool *recbComand, bool *hidComand) {
+int leerParametros(char *trozos[], tParametros *parametros) {
     int dirIndex = 0;
+    parametros->longComand=false;
+    parametros->linkComand=false;
+    parametros->accComand = false;
+    parametros->recaComand = false;
+    parametros->recbComand = false;
+    parametros->hidComand = false;
     bool continuar = true;
+
     do {
         dirIndex += 1;
         if(trozos[dirIndex]==NULL) continuar=false;
-        else if (strcmp(trozos[dirIndex], "-long") == 0) *longComand = true;
-        else if (strcmp(trozos[dirIndex], "-link") == 0) *linkComand = true;
-        else if (strcmp(trozos[dirIndex], "-acc") == 0) *accComand = true;
-        else if (strcmp(trozos[dirIndex], "-reca") == 0) {
-            *recaComand = true;
-            *recbComand = false;
-        } else if (strcmp(trozos[dirIndex], "-recb") == 0) {
-            *recbComand = true;
-            *recaComand = false;
-        } else if (strcmp(trozos[dirIndex], "-hid") == 0) *hidComand = true;
+        else if (strcmp(trozos[dirIndex], "-long") == 0) parametros->longComand = true;
+        else if (strcmp(trozos[dirIndex], "-link") == 0) parametros->linkComand = true;
+        else if (strcmp(trozos[dirIndex], "-acc") == 0) parametros->accComand = true;
+        else if (strcmp(trozos[dirIndex], "-reca") == 0) parametros->recaComand = true;
+        else if (strcmp(trozos[dirIndex], "-recb") == 0) parametros->recbComand = true;
+        else if (strcmp(trozos[dirIndex], "-hid") == 0) parametros->hidComand = true;
         else continuar = false;
     } while (continuar);
     return dirIndex;
@@ -467,7 +474,7 @@ void create(char *trozos[]) {
 }
 
 }
-void statOneFile(char *file, bool longComand, bool linkComand, bool accComand) {
+void statOneFile(char *file, tParametros parametros) {
 
     time_t returnedTime;
     int size = 400;
@@ -480,9 +487,9 @@ void statOneFile(char *file, bool longComand, bool linkComand, bool accComand) {
         perror("No ejecutado");
         return;
     }
-    if (longComand) {
+    if (parametros.longComand) {
         ConvierteModo(buf.st_mode, permisos);
-        if (accComand) returnedTime = buf.st_atime;
+        if (parametros.accComand) returnedTime = buf.st_atime;
         else returnedTime = buf.st_mtime;
         strftime(date, sizeof(date), "%d/%m/%y - %H:%M", localtime(&(returnedTime)));
         if ((user = getpwuid(buf.st_uid)) == NULL) {
@@ -495,7 +502,7 @@ void statOneFile(char *file, bool longComand, bool linkComand, bool accComand) {
         }
         printf("\t%s\t%ld (%ld)\t%s\t%s %s\t%jd\t%s", date, buf.st_nlink, buf.st_ino, user->pw_name, group->gr_name,
                permisos, buf.st_size, file);
-        if (linkComand) {
+        if (parametros.linkComand) {
             if (readlink(file, directorioLink, buf.st_size + 1) != -1) {
                 directorioLink[buf.st_size] = '\0';
                 printf(" -> %s\n", directorioLink);
@@ -507,8 +514,8 @@ void statOneFile(char *file, bool longComand, bool linkComand, bool accComand) {
 }
 
 void stats(char *trozos[]) {
+    tParametros parametros;
 
-    bool longComand = false, linkComand = false, accComand = false, recaComand = false, recbComand = false, hidComand = false;
     //variables que indican si se escribieron
     int size = 400, dirIndex;
     char directorio[size];
@@ -518,10 +525,10 @@ void stats(char *trozos[]) {
         printf("%s", directorio);
     } else {
 
-        dirIndex = leerParametros(trozos, &longComand, &linkComand, &accComand, &recaComand, &recbComand, &hidComand);
+        dirIndex = leerParametros(trozos, &parametros);
         //guarda direccion del indice del primer archivo
         for (int j = dirIndex; trozos[j] != NULL; j++) {
-            statOneFile(trozos[j], longComand, linkComand, accComand);
+            statOneFile(trozos[j], parametros);
         }
     }
 }
@@ -535,7 +542,7 @@ void removeSubstring(char *string, char *substring) {
     }
 }
 
-void listContentReca(char *filename, bool longComand, bool linkComand, bool accComand, bool hidComand, char iniDir[]) {
+void listContentReca(char *filename, tParametros parametros, char iniDir[]) {
     struct stat buf, bufrec;
     DIR *dir = NULL;
     struct dirent *files = NULL;
@@ -563,10 +570,10 @@ void listContentReca(char *filename, bool longComand, bool linkComand, bool accC
                 if (lstat(files->d_name, &bufrec) == -1) {
                     perror("****error al acceder");
                     return;
-                } else if (-strcmp(files->d_name, ".") && -strcmp(files->d_name, "..")) {
-                    if (hidComand || files->d_name[0] != '.') {
+                } else if (-strcmp(files->d_name, ".") && -strcmp(files->d_name, "..") || parametros.hidComand) {
+                    if (parametros.hidComand || files->d_name[0] != '.') {
                         printf("\t");
-                        statOneFile(files->d_name, longComand, linkComand, accComand);
+                        statOneFile(files->d_name, parametros);
                     }
                 }
             }
@@ -587,19 +594,19 @@ void listContentReca(char *filename, bool longComand, bool linkComand, bool accC
                 }
                 if ((bufrec.st_mode & S_IFMT) == S_IFDIR && -strcmp(files->d_name, ".") &&
                     -strcmp(files->d_name, "..")) {
-                    if (hidComand || files->d_name[0] != '.') {
-                        listContentReca(files->d_name, longComand, linkComand, accComand, hidComand, iniDir);
+                    if (parametros.hidComand || files->d_name[0] != '.') {
+                        listContentReca(files->d_name, parametros, iniDir);
                     }
                 }
             }
             chdir(ogDir);
             closedir(dir);
         }
-    } else statOneFile(filename, longComand, linkComand, accComand);
+    } else statOneFile(filename, parametros);
 
 }
 
-void listContentRecb(char *filename, bool longComand, bool linkComand, bool accComand, bool hidComand, char iniDir[]) {
+void listContentRecb(char *filename, tParametros parametros, char iniDir[]) {
     struct stat buf, bufrec;
     DIR *dir = NULL;
     struct dirent *files = NULL;
@@ -627,8 +634,8 @@ void listContentRecb(char *filename, bool longComand, bool linkComand, bool accC
                 }
                 if ((bufrec.st_mode & S_IFMT) == S_IFDIR && -strcmp(files->d_name, ".") &&
                     -strcmp(files->d_name, "..")) {
-                    if (hidComand || files->d_name[0] != '.') {
-                        listContentRecb(files->d_name, longComand, linkComand, accComand, hidComand, iniDir);
+                    if (parametros.hidComand || files->d_name[0] != '.') {
+                        listContentRecb(files->d_name, parametros, iniDir);
                     }
                 }
             }
@@ -646,20 +653,20 @@ void listContentRecb(char *filename, bool longComand, bool linkComand, bool accC
                 perror("No se pudo cambiar el directorio");
             }
             while ((files = readdir(dir)) != NULL) {
-                if (-strcmp(files->d_name, ".") && -strcmp(files->d_name, "..")) {
-                    if (hidComand || files->d_name[0] != '.') {
+                if (-strcmp(files->d_name, ".") && -strcmp(files->d_name, "..") || parametros.hidComand) {
+                    if (parametros.hidComand || files->d_name[0] != '.') {
                         printf("\t");
-                        statOneFile(files->d_name, longComand, linkComand, accComand);
+                        statOneFile(files->d_name, parametros);
                     }
                 }
             }
             chdir(ogDir);
             closedir(dir);
         }
-    } else statOneFile(filename, longComand, linkComand, accComand);
+    } else statOneFile(filename, parametros);
 }
 
-void listContentRegular(char *filename, bool longComand, bool linkComand, bool accComand, bool hidComand) {
+void listContentRegular(char *filename, tParametros parametros) {
     struct stat buf, bufrec;
     DIR *dir = NULL;
     struct dirent *files = NULL;
@@ -684,33 +691,33 @@ void listContentRegular(char *filename, bool longComand, bool linkComand, bool a
                 if (lstat(files->d_name, &bufrec) == -1) {
                     perror("****error al acceder");
                     return;
-                } else if (-strcmp(files->d_name, ".") && -strcmp(files->d_name, "..")) {
-                    if (hidComand || files->d_name[0] != '.') {
+                } else if (-strcmp(files->d_name, ".") && -strcmp(files->d_name, "..") || parametros.hidComand) {
+                    if (parametros.hidComand || files->d_name[0] != '.') {
                         printf("\t");
-                        statOneFile(files->d_name, longComand, linkComand, accComand);
+                        statOneFile(files->d_name, parametros);
                     }
                 }
             }
             chdir(ogDir);
             closedir(dir);
         }
-    } else statOneFile(filename, longComand, linkComand, accComand);
+    } else statOneFile(filename, parametros);
 }
 
 
 void list(char *trozos[]) {
-    bool longComand = false, linkComand = false, accComand = false, recaComand = false, recbComand = false, hidComand = false;
+    tParametros parametros;
     int dirIndex;
     char iniDir[1000];
     getcwd(iniDir, 1000);
     if (trozos[1] != NULL) {
-        dirIndex = leerParametros(trozos, &longComand, &linkComand, &accComand, &recaComand, &recbComand, &hidComand);
+        dirIndex = leerParametros(trozos, &parametros);
         if (trozos[dirIndex] == NULL) printf("%s", iniDir);
         else {
             for (int j = dirIndex; trozos[j] != NULL; j++) {
-                if (recaComand) listContentReca(trozos[j], longComand, linkComand, accComand, hidComand, iniDir);
-                else if (recbComand) listContentRecb(trozos[j], longComand, linkComand, accComand, hidComand, iniDir);
-                else listContentRegular(trozos[j], longComand, linkComand, accComand, hidComand);
+                if (parametros.recaComand) listContentReca(trozos[j], parametros, iniDir);
+                else if (parametros.recbComand) listContentRecb(trozos[j], parametros, iniDir);
+                else listContentRegular(trozos[j], parametros);
                 printf("\n");
             }
         }
