@@ -445,25 +445,28 @@ void create(char *trozos[]) {
         printf("%s", dir);
     } else if (trozos[1][0] == '-') {
         if (strcmp(trozos[1], "-f") == 0) {
-            if (mkdir(trozos[2], 0777) == -1) perror("Imposible crear directorio");
+            if(trozos[2]==NULL){
+                printf("%s", dir);
+            }
+            else if (open(trozos[2], O_CREAT, 0777) == -1) perror("Imposible crear fichero");
             else {
                 strcat(dir, "/");
                 strcat(dir, trozos[2]);
-                printf("Directorio creado en < %s >", dir);
+                printf("Fichero %s creado satisfactoriamente en < %s >", trozos[2], dir);
             }
         } else {
             printf("create: opcion incorrecta < %s >. Ver 'help create' para ayuda", trozos[1]);
         }
     } else {
-        if (open(trozos[1], O_CREAT, 0777) == -1) perror("Imposible crear fichero");
+        if (mkdir(trozos[1], 0777) == -1) perror("Imposible crear directorio");
         else {
             strcat(dir, "/");
             strcat(dir, trozos[1]);
-            printf("Fichero %s creado satisfactoriamente en < %s >", trozos[1], dir);
-        }
+            printf("Directorio creado en < %s >", dir);
     }
 }
 
+}
 void statOneFile(char *file, bool longComand, bool linkComand, bool accComand) {
 
     time_t returnedTime;
@@ -708,7 +711,6 @@ void list(char *trozos[]) {
             }
         }
     } else stats(trozos);
-
 }
 
 
