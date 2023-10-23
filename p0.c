@@ -587,7 +587,9 @@ void listContentReca(char *filename, bool longComand, bool linkComand, bool accC
                 }
                 if ((bufrec.st_mode & S_IFMT) == S_IFDIR && -strcmp(files->d_name, ".") &&
                     -strcmp(files->d_name, "..")) {
-                    listContentReca(files->d_name, longComand, linkComand, accComand, hidComand, iniDir);
+                    if (hidComand || files->d_name[0] != '.') {
+                        listContentReca(files->d_name, longComand, linkComand, accComand, hidComand, iniDir);
+                    }
                 }
             }
             chdir(ogDir);
@@ -625,7 +627,9 @@ void listContentRecb(char *filename, bool longComand, bool linkComand, bool accC
                 }
                 if ((bufrec.st_mode & S_IFMT) == S_IFDIR && -strcmp(files->d_name, ".") &&
                     -strcmp(files->d_name, "..")) {
-                    listContentRecb(files->d_name, longComand, linkComand, accComand, hidComand, iniDir);
+                    if (hidComand || files->d_name[0] != '.') {
+                        listContentRecb(files->d_name, longComand, linkComand, accComand, hidComand, iniDir);
+                    }
                 }
             }
             getcwd(path, 1000);
