@@ -1,0 +1,1 @@
+/usr/bin/cc --coverage -g CMakeFiles/P0.dir/p0.c.o CMakeFiles/P0.dir/lista.c.o CMakeFiles/P0.dir/listaficheros.c.o -o P0 
