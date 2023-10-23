@@ -555,9 +555,7 @@ void removeSubstring(char *string, char *substring) {
 }
 
 void readDirFiles(struct dirent *files,struct stat* bufrec,DIR *dir,tParametros parametros){
-
     while ((files = readdir(dir)) != NULL) {
-
         if (lstat(files->d_name, bufrec) == -1) {
             perror("****error al acceder");
             return;
