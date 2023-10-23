@@ -17,7 +17,11 @@
 #include <pwd.h>
 #include <grp.h>
 #include <dirent.h>
+#include <errno.h>
 
+typedef struct parametros{
+    bool longComand, linkComand, accComand, recaComand, recbComand, hidComand;
+}tParametros;
 
 void imprimirPrompt();
 
@@ -59,9 +63,13 @@ void Help(char *trozos[]);
 
 void list(char *trozos[]);
 
-typedef struct parametros{
-    bool longComand, linkComand, accComand, recaComand, recbComand, hidComand;
-}tParametros;
+void delete(char *trozos[]);
+
+void listContent(char *filename, tParametros parametros, char iniDir[]);
+
+void deltree(char *trozos[]);
+
+
 
 int main() {
     bool terminado = false;
@@ -134,6 +142,10 @@ void procesarComando(char *trozos[], tList *L, tListF *F) {
         stats(trozos);
     } else if (strcmp(trozos[0], "list") == 0) {
         list(trozos);
+    } else if (strcmp(trozos[0], "delete") == 0) {
+        delete(trozos);
+    } else if (strcmp(trozos[0], "deltree") == 0) {
+        deltree(trozos);
     } else if (strcmp(trozos[0], "help") == 0) {
         Help(trozos);
     } else {
@@ -421,14 +433,17 @@ char *ConvierteModo(mode_t m, char *permisos) {
     return permisos;
 }
 
-int leerParametros(char *trozos[], tParametros *parametros) {
-    int dirIndex = 0;
+void inicializarParametros(tParametros *parametros){
     parametros->longComand=false;
     parametros->linkComand=false;
     parametros->accComand = false;
     parametros->recaComand = false;
     parametros->recbComand = false;
     parametros->hidComand = false;
+}
+int leerParametros(char *trozos[], tParametros *parametros) {
+    int dirIndex = 0;
+    inicializarParametros(parametros);
     bool continuar = true;
 
     do {
@@ -475,7 +490,6 @@ void create(char *trozos[]) {
 
 }
 void statOneFile(char *file, tParametros parametros) {
-
     time_t returnedTime;
     int size = 400;
     char date[20], permisos[20], directorioLink[size];
@@ -515,7 +529,6 @@ void statOneFile(char *file, tParametros parametros) {
 
 void stats(char *trozos[]) {
     tParametros parametros;
-
     //variables que indican si se escribieron
     int size = 400, dirIndex;
     char directorio[size];
@@ -524,7 +537,6 @@ void stats(char *trozos[]) {
         getcwd(directorio, size); //Devuelve el directorio de trabajo actual
         printf("%s", directorio);
     } else {
-
         dirIndex = leerParametros(trozos, &parametros);
         //guarda direccion del indice del primer archivo
         for (int j = dirIndex; trozos[j] != NULL; j++) {
@@ -542,19 +554,50 @@ void removeSubstring(char *string, char *substring) {
     }
 }
 
-void listContentReca(char *filename, tParametros parametros, char iniDir[]) {
+void readDirFiles(struct dirent *files,struct stat* bufrec,DIR *dir,tParametros parametros){
+
+    while ((files = readdir(dir)) != NULL) {
+
+        if (lstat(files->d_name, bufrec) == -1) {
+            perror("****error al acceder");
+            return;
+        } else if (-strcmp(files->d_name, ".") && -strcmp(files->d_name, "..") || parametros.hidComand) {
+            if (parametros.hidComand || files->d_name[0] != '.') {
+                printf("\t");
+                statOneFile(files->d_name, parametros);
+            }
+        }
+    }
+}
+
+void recurseFile(struct dirent *files,struct stat* bufrec,DIR *dir,tParametros parametros,char iniDir[]){
+    while ((files = readdir(dir)) != NULL) {
+        if (lstat(files->d_name, bufrec) == -1) {
+            perror("****error al acceder");
+            return;
+        }
+        if ((bufrec->st_mode & S_IFMT) == S_IFDIR && -strcmp(files->d_name, ".") &&
+            -strcmp(files->d_name, "..")) {
+            if (parametros.hidComand || files->d_name[0] != '.') {
+                listContent(files->d_name, parametros, iniDir);
+            }
+        }
+    }
+}
+
+void listContent(char *filename, tParametros parametros, char iniDir[]) {
     struct stat buf, bufrec;
     DIR *dir = NULL;
     struct dirent *files = NULL;
     char ogDir[1000];
     char path[1000];
     if (lstat(filename, &buf) == -1) {
-        printf("%s\n", filename);
         perror("****error al acceder");
         return;
     }
     if ((buf.st_mode & S_IFMT) == S_IFDIR) {
         getcwd(ogDir, 1000);
+        if(!parametros.recaComand && !parametros.recbComand) printf("************%s\n", filename);
         dir = opendir(filename);
         if (dir == NULL) {
             perror("Error al acceder al directorio");
@@ -562,148 +605,50 @@ void listContentReca(char *filename, tParametros parametros, char iniDir[]) {
         }
         if (chdir(filename) == -1) {
             perror("No se pudo cambiar el directorio");
-        } else {
-            getcwd(path, 1000);
-            removeSubstring(path, iniDir);
-            printf("************%s\n", path);
-            while ((files = readdir(dir)) != NULL) {
-                if (lstat(files->d_name, &bufrec) == -1) {
-                    perror("****error al acceder");
-                    return;
-                } else if (-strcmp(files->d_name, ".") && -strcmp(files->d_name, "..") || parametros.hidComand) {
-                    if (parametros.hidComand || files->d_name[0] != '.') {
-                        printf("\t");
-                        statOneFile(files->d_name, parametros);
-                    }
-                }
-            }
-            chdir(ogDir);
-            closedir(dir);
-            dir = opendir(filename);
-            if (dir == NULL) {
-                perror("Error al acceder al directorio");
-                return;
-            }
-            if (chdir(filename) == -1) {
-                perror("No se pudo cambiar el directorio");
-            }
-            while ((files = readdir(dir)) != NULL) {
-                if (lstat(files->d_name, &bufrec) == -1) {
-                    perror("****error al acceder");
-                    return;
-                }
-                if ((bufrec.st_mode & S_IFMT) == S_IFDIR && -strcmp(files->d_name, ".") &&
-                    -strcmp(files->d_name, "..")) {
-                    if (parametros.hidComand || files->d_name[0] != '.') {
-                        listContentReca(files->d_name, parametros, iniDir);
-                    }
-                }
-            }
-            chdir(ogDir);
-            closedir(dir);
         }
-    } else statOneFile(filename, parametros);
-
-}
-
-void listContentRecb(char *filename, tParametros parametros, char iniDir[]) {
-    struct stat buf, bufrec;
-    DIR *dir = NULL;
-    struct dirent *files = NULL;
-    char ogDir[1000];
-    char path[1000];
-    if (lstat(filename, &buf) == -1) {
-        printf("%s\n", filename);
-        perror("****error al acceder");
-        return;
-    }
-    if ((buf.st_mode & S_IFMT) == S_IFDIR) {
-        getcwd(ogDir, 1000);
-        dir = opendir(filename);
-        if (dir == NULL) {
-            perror("Error al acceder al directorio");
-            return;
-        }
-        if (chdir(filename) == -1) {
-            perror("No se pudo cambiar el directorio");
-        } else {
-            while ((files = readdir(dir)) != NULL) {
-                if (lstat(files->d_name, &bufrec) == -1) {
-                    perror("****error al acceder");
+        else {
+            if(parametros.recaComand){
+                getcwd(path, 1000);
+                removeSubstring(path, iniDir);
+                printf("************%s\n", path);
+                readDirFiles(files,&bufrec,dir,parametros);
+                chdir(ogDir);
+                closedir(dir);
+                dir = opendir(filename);
+                if (dir == NULL) {
+                    perror("Error al acceder al directorio");
                     return;
                 }
-                if ((bufrec.st_mode & S_IFMT) == S_IFDIR && -strcmp(files->d_name, ".") &&
-                    -strcmp(files->d_name, "..")) {
-                    if (parametros.hidComand || files->d_name[0] != '.') {
-                        listContentRecb(files->d_name, parametros, iniDir);
-                    }
+                if (chdir(filename) == -1) perror("No se pudo cambiar el directorio");
+                recurseFile(files,&bufrec,dir,parametros,iniDir);
+                chdir(ogDir);
+                closedir(dir);
+            }
+            else if(parametros.recbComand){
+                recurseFile(files,&bufrec,dir,parametros,iniDir);
+                getcwd(path, 1000);
+                removeSubstring(path, iniDir);
+                printf("************%s\n", path);
+                chdir(ogDir);
+                closedir(dir);
+                dir = opendir(filename);
+                if (dir == NULL) {
+                    perror("Error al acceder al directorio");
+                    return;
                 }
+                if (chdir(filename) == -1) perror("No se pudo cambiar el directorio");
+                readDirFiles(files,&bufrec,dir,parametros);
+                chdir(ogDir);
+                closedir(dir);
             }
-            getcwd(path, 1000);
-            removeSubstring(path, iniDir);
-            printf("************%s\n", path);
-            chdir(ogDir);
-            closedir(dir);
-            dir = opendir(filename);
-            if (dir == NULL) {
-                perror("Error al acceder al directorio");
-                return;
+            else{
+                readDirFiles(files,&bufrec,dir,parametros);
+                chdir(ogDir);
+                closedir(dir);
             }
-            if (chdir(filename) == -1) {
-                perror("No se pudo cambiar el directorio");
-            }
-            while ((files = readdir(dir)) != NULL) {
-                if (-strcmp(files->d_name, ".") && -strcmp(files->d_name, "..") || parametros.hidComand) {
-                    if (parametros.hidComand || files->d_name[0] != '.') {
-                        printf("\t");
-                        statOneFile(files->d_name, parametros);
-                    }
-                }
-            }
-            chdir(ogDir);
-            closedir(dir);
         }
     } else statOneFile(filename, parametros);
 }
-
-void listContentRegular(char *filename, tParametros parametros) {
-    struct stat buf, bufrec;
-    DIR *dir = NULL;
-    struct dirent *files = NULL;
-    char ogDir[1000];
-    if (lstat(filename, &buf) == -1) {
-        printf("%s\n", filename);
-        perror("****error al acceder");
-        return;
-    }
-    if ((buf.st_mode & S_IFMT) == S_IFDIR) {
-        getcwd(ogDir, 1000);
-        printf("************%s\n", filename);
-        dir = opendir(filename);
-        if (dir == NULL) {
-            perror("Error al acceder al directorio");
-            return;
-        }
-        if (chdir(filename) == -1) {
-            perror("No se pudo cambiar el directorio");
-        } else {
-            while ((files = readdir(dir)) != NULL) {
-                if (lstat(files->d_name, &bufrec) == -1) {
-                    perror("****error al acceder");
-                    return;
-                } else if (-strcmp(files->d_name, ".") && -strcmp(files->d_name, "..") || parametros.hidComand) {
-                    if (parametros.hidComand || files->d_name[0] != '.') {
-                        printf("\t");
-                        statOneFile(files->d_name, parametros);
-                    }
-                }
-            }
-            chdir(ogDir);
-            closedir(dir);
-        }
-    } else statOneFile(filename, parametros);
-}
-
 
 void list(char *trozos[]) {
     tParametros parametros;
@@ -714,16 +659,128 @@ void list(char *trozos[]) {
         dirIndex = leerParametros(trozos, &parametros);
         if (trozos[dirIndex] == NULL) printf("%s", iniDir);
         else {
-            for (int j = dirIndex; trozos[j] != NULL; j++) {
-                if (parametros.recaComand) listContentReca(trozos[j], parametros, iniDir);
-                else if (parametros.recbComand) listContentRecb(trozos[j], parametros, iniDir);
-                else listContentRegular(trozos[j], parametros);
-                printf("\n");
-            }
+            for (int j = dirIndex; trozos[j] != NULL; j++) listContent(trozos[j],parametros,iniDir);
         }
     } else stats(trozos);
 }
 
+int isDirectory(char* fileName) {    //si es directorio retorna 1, sino 0, si hay un error distinto de no such files retorna -1 y sino 2
+    struct stat buf;
+
+    char error[30];
+    if (lstat(fileName, &buf) == -1) {
+
+        if (strcmp(strerror(errno), "No such file or directory") !=
+            0) {    //para que no se pare la ejecucion al no encontrar un fichero o dir
+            return 2;
+        } else return -1;
+
+    }return (buf.st_mode & S_IFMT) == S_IFDIR;
+}
+
+
+int isEmptyDir(char* fileName){ //prcd: solo recibe directorios
+    int cont=0;
+    struct dirent *files = NULL;
+    DIR *dir = NULL;
+
+    dir = opendir(fileName);
+    if (dir == NULL) {
+        perror("Error al acceder al directorio");
+        return -1;
+    }
+
+    while ((files = readdir(dir)) != NULL) {
+        cont++;
+
+    }
+    closedir(dir);
+    return cont==2;
+}
+void delete(char *trozos[]){
+    char error[30];
+    if(trozos[1]!=NULL){
+        for(int i = 1; trozos[i]!=NULL; i++){
+
+            switch (isDirectory(trozos[i])) {
+                case 0:
+                    if(remove(trozos[i])==-1){
+                        sprintf(error,"Imposible borrar %s", trozos[i]);
+                        perror(error);
+                        break;
+                    }
+                    break;
+                case 1:
+                    if(isEmptyDir(trozos[i])){
+                        rmdir(trozos[i]);
+                    }
+                    else{
+                        errno= ENOTEMPTY;
+                        sprintf(error,"Imposible borrar %s", trozos[i]);
+                        perror(error);
+                        break;
+                    }
+                    break;
+                case -1:
+                    sprintf(error,"Imposible borrar %s", trozos[i]);
+                    perror(error);
+                    break;
+            }
+
+        }
+    }else stats(trozos);
+
+}
+
+void deltree(char *trozos[]){
+    char error[30];
+    char* fileName=malloc(256);
+    DIR *dir;
+    struct dirent *file;
+    int i=1;
+
+    if(fileName==NULL){
+        perror("Insuficiente memoria");
+        return;
+    }
+    if(trozos[1]!=NULL){
+        if(isDirectory(trozos[i])==-1){
+            sprintf(error,"Imposible borrar %s", trozos[i]);
+            perror(error);
+        }
+        if(isEmptyDir("."))
+            chdir("..");
+        if(!isDirectory(trozos[i]))
+            delete(&trozos[i]);
+
+        else{
+            if(isEmptyDir(trozos[i]))
+                delete(&trozos[i]);
+            else{
+                chdir(trozos[i]);
+                dir = opendir(".");
+                if(dir==NULL){
+                    perror("Error al abrir directorio");
+                    return;
+                }
+
+                while ((file = readdir(dir)) != NULL) // lee cada entrada del directorio
+                {
+                    if(-strcmp(file->d_name, ".") && -strcmp(file->d_name, "..")){
+                        sprintf(fileName, "%s", file->d_name);
+                        deltree(&fileName);
+                    }
+
+                }
+                closedir(dir);
+                free(fileName);
+
+            }
+        }
+
+    }else stats(trozos);
+
+}
 
 void Help(char *trozos[]) {
     if (trozos[1] != NULL) {

@@ -220,8 +220,22 @@ CMakeFiles/P0.dir/p0.c.o: /home/yago/CLionProjects/SO/p0.c \
   /usr/include/linux/limits.h \
   /usr/include/x86_64-linux-gnu/bits/pthread_stack_min-dynamic.h \
   /usr/include/x86_64-linux-gnu/bits/pthread_stack_min.h \
-  /usr/include/x86_64-linux-gnu/bits/dirent_ext.h
+  /usr/include/x86_64-linux-gnu/bits/dirent_ext.h \
+  /usr/include/errno.h \
+  /usr/include/x86_64-linux-gnu/bits/errno.h \
+  /usr/include/linux/errno.h \
+  /usr/include/x86_64-linux-gnu/asm/errno.h \
+  /usr/include/asm-generic/errno.h \
+  /usr/include/asm-generic/errno-base.h
 
+
+/usr/include/asm-generic/errno-base.h:
+
+/usr/include/asm-generic/errno.h:
+
+/usr/include/linux/errno.h:
+
+/usr/include/errno.h:
 
 /usr/include/x86_64-linux-gnu/bits/dirent_ext.h:
 
@@ -323,6 +337,8 @@ CMakeFiles/P0.dir/p0.c.o: /home/yago/CLionProjects/SO/p0.c \
 
 /home/yago/CLionProjects/SO/lista.c:
 
+/usr/include/x86_64-linux-gnu/bits/errno.h:
+
 /usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h:
 
 /usr/include/x86_64-linux-gnu/gnu/stubs-64.h:
@@ -376,6 +392,8 @@ CMakeFiles/P0.dir/p0.c.o: /home/yago/CLionProjects/SO/p0.c \
 /usr/include/x86_64-linux-gnu/bits/types.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/FILE.h:
+
+/usr/include/x86_64-linux-gnu/asm/errno.h:
 
 /home/yago/CLionProjects/SO/listaficheros.c:
 
