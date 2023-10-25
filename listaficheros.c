@@ -1,12 +1,9 @@
-#include "listaficheros.h"
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-#include <fcntl.h>
+#include "includes.h"
 
 void createEmptyListF(tListF* L){
     *L=LFNULL;
 }
+bool isEmptyListF(tListF L) { return (L == LFNULL); }
 
 tPosLF findPosition(tListF L, const tItemLF d){
     tPosLF p, tmp;
@@ -92,6 +89,16 @@ void deleteAtPositionF(tPosLF p, tListF *L){
         p = q;
     }
     free(p);
+}
+
+void deleteListF(tListF *L){
+    tPosLF p;
+    while (!isEmptyListF(*L))
+    {
+        p = *L;
+        *L = (*L)->next;
+        free(p);
+    }
 }
 
 tPosLF findItemF(int descriptor, tListF L){

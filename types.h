@@ -3,6 +3,7 @@
 #define MAX 100
 #define MAXF 300
 #define MAXM 60
+#include "includes.h"
 #include <stdbool.h>
 
 typedef char comando[MAX];
@@ -18,5 +19,8 @@ typedef struct tItemLF{
     tMode mode;
     int olddf;
 }tItemLF;
+typedef struct parametros{
+    bool longComand, linkComand, accComand, recaComand, recbComand, hidComand;
+}tParametros;
 
 #endif

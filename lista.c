@@ -1,8 +1,5 @@
 
-#include "lista.h"
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
+#include "includes.h"
 
 void createEmptyList(tList* L){
     *L=LNULL;

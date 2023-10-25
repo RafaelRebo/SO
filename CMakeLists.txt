@@ -9,4 +9,10 @@ add_executable(P0 p0.c
         lista.h
         listaficheros.c
         listaficheros.h
+        p1.c
+        p1.h
+        generalfunctions.c
+        generalfunctions.h
+        p0.h
+        includes.h
 )

@@ -3,9 +3,9 @@
 #ifndef DYNAMIC_LIST_H
 #define DYNAMIC_LIST_H
 
-#include "types.h"
 
-#include <stdbool.h>
+#include "includes.h"
+
 #define LNULL NULL
 
 
@@ -15,7 +15,6 @@ struct tNode{
     tPosL next;
 };
 typedef tPosL tList;
-
 
 void createEmptyList(tList* L);
 bool insertItem(tItemL d,tList* L);
