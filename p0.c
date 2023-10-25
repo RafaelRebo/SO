@@ -74,7 +74,7 @@ void deltree(char *trozos[]);
 int main() {
     bool terminado = false;
     tComando comando;
-    char *trozos[10];
+    char *trozos[20];
     tList L;
     tListF F;
     createDefaultListF(&F);
@@ -465,28 +465,26 @@ void create(char *trozos[]) {
     getcwd(dir, 1000);
     if (trozos[1] == NULL) {
         printf("%s", dir);
-    } else if (trozos[1][0] == '-') {
-        if (strcmp(trozos[1], "-f") == 0) {
-            if(trozos[2]==NULL){
-                printf("%s", dir);
-            }
-            else if (open(trozos[2], O_CREAT, 0777) == -1) perror("Imposible crear fichero");
-            else {
-                strcat(dir, "/");
-                strcat(dir, trozos[2]);
-                printf("Fichero %s creado satisfactoriamente en < %s >", trozos[2], dir);
-            }
-        } else {
-            printf("create: opcion incorrecta < %s >. Ver 'help create' para ayuda", trozos[1]);
+    }
+    else if (strcmp(trozos[1], "-f") == 0) {
+        if (trozos[2] == NULL) {
+            printf("%s", dir);
         }
-    } else {
+        else if (open(trozos[2], O_CREAT, 0777) == -1) perror("Imposible crear fichero");
+        else {
+            strcat(dir, "/");
+            strcat(dir, trozos[2]);
+            printf("Fichero %s creado satisfactoriamente en < %s >", trozos[2], dir);
+        }
+    }
+    else {
         if (mkdir(trozos[1], 0777) == -1) perror("Imposible crear directorio");
         else {
             strcat(dir, "/");
             strcat(dir, trozos[1]);
             printf("Directorio creado en < %s >", dir);
+        }
     }
-}
 
 }
 void statOneFile(char *file, tParametros parametros) {
@@ -523,7 +521,7 @@ void statOneFile(char *file, tParametros parametros) {
             } else puts("");
         } else puts("");
     } else {
-        printf("%-8jd\t%s\n", buf.st_size, file);
+        printf("\t%-8jd\t%s\n", buf.st_size, file);
     }
 }
 
@@ -539,6 +537,7 @@ void stats(char *trozos[]) {
     } else {
         dirIndex = leerParametros(trozos, &parametros);
         //guarda direccion del indice del primer archivo
+        if(trozos[dirIndex]==NULL) printf("stat: No se ha especificado ningún fichero");
         for (int j = dirIndex; trozos[j] != NULL; j++) {
             statOneFile(trozos[j], parametros);
         }
@@ -605,6 +604,7 @@ void listContent(char *filename, tParametros parametros, char iniDir[]) {
             perror("No se pudo cambiar el directorio");
         }
         else {
+
             if(parametros.recaComand){
                 getcwd(path, 1000);
                 removeSubstring(path, iniDir);
@@ -652,6 +652,9 @@ void list(char *trozos[]) {
     tParametros parametros;
     int dirIndex;
     char iniDir[1000];
+    char test[1000];
+    char* Ptest=test;
+    strcpy(Ptest,"");
     getcwd(iniDir, 1000);
     if (trozos[1] != NULL) {
         dirIndex = leerParametros(trozos, &parametros);
@@ -660,20 +663,21 @@ void list(char *trozos[]) {
             for (int j = dirIndex; trozos[j] != NULL; j++) listContent(trozos[j],parametros,iniDir);
         }
     } else stats(trozos);
+
 }
 
 int isDirectory(char* fileName) {    //si es directorio retorna 1, sino 0, si hay un error distinto de no such files retorna -1 y sino 2
     struct stat buf;
 
-    char error[30];
     if (lstat(fileName, &buf) == -1) {
-
         if (strcmp(strerror(errno), "No such file or directory") !=
             0) {    //para que no se pare la ejecucion al no encontrar un fichero o dir
             return 2;
         } else return -1;
 
-    }return (buf.st_mode & S_IFMT) == S_IFDIR;
+    }
+
+    return (buf.st_mode & S_IFMT) == S_IFDIR;
 }
 
 
@@ -681,16 +685,15 @@ int isEmptyDir(char* fileName){ //prcd: solo recibe directorios
     int cont=0;
     struct dirent *files = NULL;
     DIR *dir = NULL;
-
     dir = opendir(fileName);
     if (dir == NULL) {
+        //printf("%s",fileName);
         perror("Error al acceder al directorio");
         return -1;
     }
 
     while ((files = readdir(dir)) != NULL) {
         cont++;
-
     }
     closedir(dir);
     return cont==2;
@@ -699,7 +702,6 @@ void delete(char *trozos[]){
     char error[30];
     if(trozos[1]!=NULL){
         for(int i = 1; trozos[i]!=NULL; i++){
-
             switch (isDirectory(trozos[i])) {
                 case 0:
                     if(remove(trozos[i])==-1){
@@ -713,7 +715,7 @@ void delete(char *trozos[]){
                         rmdir(trozos[i]);
                     }
                     else{
-                        errno= ENOTEMPTY;
+                        errno=ENOTEMPTY;
                         sprintf(error,"Imposible borrar %s", trozos[i]);
                         perror(error);
                         break;
@@ -724,60 +726,45 @@ void delete(char *trozos[]){
                     perror(error);
                     break;
             }
-
         }
     }else stats(trozos);
 
 }
 
-void deltree(char *trozos[]){
+void recDelete(char* filename){
     char error[30];
-    char* fileName=malloc(256);
-    DIR *dir;
-    struct dirent *file;
-    int i=1;
-
-    if(fileName==NULL){
-        perror("Insuficiente memoria");
-        return;
+    DIR *dir=NULL;
+    struct dirent *file=NULL;
+    if (isDirectory(filename) == -1) {
+        sprintf(error, "Imposible borrar %s", filename);
+        perror(error);
     }
-    if(trozos[1]!=NULL){
-        if(isDirectory(trozos[i])==-1){
-            sprintf(error,"Imposible borrar %s", trozos[i]);
-            perror(error);
+    else if(!isDirectory(filename)) remove(filename);
+    else if(isEmptyDir(filename)) rmdir(filename);
+    else{
+        dir = opendir(filename);
+        if (dir == NULL) {
+            perror("Error al abrir directorio");
+            return;
         }
-        if(isEmptyDir("."))
-            chdir("..");
-        if(!isDirectory(trozos[i]))
-            delete(&trozos[i]);
-
-        else{
-            if(isEmptyDir(trozos[i]))
-                delete(&trozos[i]);
-            else{
-                chdir(trozos[i]);
-                dir = opendir(".");
-                if(dir==NULL){
-                    perror("Error al abrir directorio");
-                    return;
-                }
-
-                while ((file = readdir(dir)) != NULL) // lee cada entrada del directorio
-                {
-                    if(-strcmp(file->d_name, ".") && -strcmp(file->d_name, "..")){
-                        sprintf(fileName, "%s", file->d_name);
-                        deltree(&fileName);
-                    }
-
-                }
-                closedir(dir);
-                free(fileName);
-
+        chdir(filename);
+        while ((file = readdir(dir)) != NULL) {
+            if (-strcmp(file->d_name, ".") && -strcmp(file->d_name, "..")) {
+                recDelete(file->d_name);
             }
         }
+        chdir("..");
+        rmdir(filename);
+        closedir(dir);
+    }
+}
 
-    }else stats(trozos);
-
+void deltree(char *trozos[]) {
+    if (trozos[1] != NULL) {
+        for (int i = 1; trozos[i] != NULL; i++) {
+            recDelete(trozos[i]);
+        }
+    } else stats(trozos);
 }
 
 void Help(char *trozos[]) {
