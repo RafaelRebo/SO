@@ -313,6 +313,7 @@ int isEmptyDir(char* fileName){ //prcd: solo recibe directorios
     closedir(dir);
     return cont==2;
 }
+
 void delete(char *trozos[]){
     char error[30];
     if(trozos[1]!=NULL){
