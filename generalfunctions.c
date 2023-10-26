@@ -70,7 +70,7 @@ int TrocearCadena(char *cadena, char *trozos[]) {
     //Hace una separacion del string cadena en funcion a los caracteres espacio, \n y \t
     if ((trozos[0] = strtok(cadena, " \n\t")) == NULL)
         return 0;
-    // Continuamos obteniendo trozos subsiguientes utilizando NULL como primer argumento(la funcion continua donde lo dejo la primera vez
+    // Continuamos obteniendo trozos subsiguientes utilizando NULL como primer argumento (la funcion continua donde lo dejo la primera vez)
     while ((trozos[i] = strtok(NULL, " \n\t")) != NULL)
         i++;
     return i;

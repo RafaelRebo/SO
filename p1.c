@@ -100,6 +100,7 @@ void create(char *trozos[]) {
         //Si el comando no tiene el parámetro -f se entiende que se quiere crear un directorio
         if (mkdir(trozos[1], 0777) == -1) perror("Imposible crear directorio"); //Si no se puede crear se muestra error
         else {
+            //Si no da error, se informa de que el directorio se creó con éxito
             strcat(dir, "/");
             strcat(dir, trozos[1]);
             printf("Directorio creado en < %s >", dir);
@@ -115,15 +116,16 @@ void statOneFile(char *file, tParametros parametros) {
     struct passwd *user;
     struct group *group;
 
-    if (lstat(file, &buf) == -1) {
+    if (lstat(file, &buf) == -1) { //No se han podido volcar los datos del fichero
         perror("No ejecutado");
         return;
     }
-    if (parametros.longComand) {
-        ConvierteModo(buf.st_mode, permisos);
-        if (parametros.accComand) returnedTime = buf.st_atime;
-        else returnedTime = buf.st_mtime;
-        strftime(date, sizeof(date), "%d/%m/%y - %H:%M", localtime(&(returnedTime)));
+    if (parametros.longComand) { //Si el comando incluye -long se deben mostrar mas datos
+        ConvierteModo(buf.st_mode, permisos); //Función que a partir de la información del fichero devuelve un string con la información de los permisos
+        if (parametros.accComand) returnedTime = buf.st_atime; //Usamos la hora de ultimo acceso si es -acc
+        else returnedTime = buf.st_mtime; //Y si no la de última modificación
+        strftime(date, sizeof(date), "%d/%m/%y - %H:%M", localtime(&(returnedTime))); //Guardamos la información de fecha y hora en date
+        //Obtenemos la información de usuario y grupo
         if ((user = getpwuid(buf.st_uid)) == NULL) {
             perror("Error obtener nombre de usuario");
             return;
@@ -132,8 +134,10 @@ void statOneFile(char *file, tParametros parametros) {
             perror("Error obtener nombre del grupo");
             return;
         }
+        //Imprimimos todos los datos del fichero
         printf("\t%s\t%ld (%ld)\t%s\t%s %s\t%jd\t%s", date, buf.st_nlink, buf.st_ino, user->pw_name, group->gr_name,
                permisos, buf.st_size, file);
+        //Si es -link, incluimos además el fichero al que apunta el link simbólico del fichero
         if (parametros.linkComand) {
             if (readlink(file, directorioLink, buf.st_size + 1) != -1) {
                 directorioLink[buf.st_size] = '\0';
@@ -141,13 +145,13 @@ void statOneFile(char *file, tParametros parametros) {
             } else puts("");
         } else puts("");
     } else {
+        //Imprimimos la información si no es comando -long
         printf("\t%-8jd\t%s\n", buf.st_size, file);
     }
 }
 
 void stats(char *trozos[]) {
-    tParametros parametros;
-    //variables que indican si se escribieron
+    tParametros parametros; //Cargamos los parámetros del comando
     int size = 400, dirIndex;
     char directorio[size];
 
@@ -155,16 +159,16 @@ void stats(char *trozos[]) {
         getcwd(directorio, size); //Devuelve el directorio de trabajo actual
         printf("%s", directorio);
     } else {
-        dirIndex = leerParametros(trozos, &parametros);
-        //guarda direccion del indice del primer archivo
+        dirIndex = leerParametros(trozos, &parametros);  //Guarda direccion del indice del primer archivo
         if(trozos[dirIndex]==NULL) printf("stat: No se ha especificado ningún fichero");
         for (int j = dirIndex; trozos[j] != NULL; j++) {
-            statOneFile(trozos[j], parametros);
+            statOneFile(trozos[j], parametros); //Llamamos a la función que imprime la información para cada fichero que se pida
         }
     }
 }
 
 void removeSubstring(char *string, char *substring) {
+    //Esta función busca y elimina de string todas las apariciones de substring. Usada para obtener la dirección relativa de las carpetas que se listan con "list"
     char *match;
     int len = strlen(substring);
     while ((match = strstr(string, substring))) {
@@ -174,6 +178,7 @@ void removeSubstring(char *string, char *substring) {
 }
 
 void readDirFiles(struct dirent *files,struct stat* bufrec,DIR *dir,tParametros parametros){
+    //Pasado un parámetro files que conntiene la información de todos los ficheros de un directorio, imprime la información de cada uno de ellos
     while ((files = readdir(dir)) != NULL) {
         if (lstat(files->d_name, bufrec) == -1) {
             perror("****error al acceder");
@@ -188,6 +193,8 @@ void readDirFiles(struct dirent *files,struct stat* bufrec,DIR *dir,tParametros 
 }
 
 void recurseFile(struct dirent *files,struct stat* bufrec,DIR *dir,tParametros parametros,char iniDir[]){
+    //Pasado un parámetro files que conntiene la información de todos los ficheros de un directorio, si el fichero que se evalúa es un directorio, se llama recursivamente
+    //a listContent para imprimir también la información de los ficheros que estén dentro de ese directorio evaluado
     while ((files = readdir(dir)) != NULL) {
         if (lstat(files->d_name, bufrec) == -1) {
             perror("****error al acceder");
@@ -208,13 +215,14 @@ void listContent(char *filename, tParametros parametros, char iniDir[]) {
     struct dirent *files = NULL;
     char ogDir[1000];
     char path[1000];
-    if (lstat(filename, &buf) == -1) {
+    if (lstat(filename, &buf) == -1) { //No se han podido volcar los datos del fichero
         perror("****error al acceder");
         return;
     }
-    if ((buf.st_mode & S_IFMT) == S_IFDIR) {
+    if ((buf.st_mode & S_IFMT) == S_IFDIR) { //Si el fichero es un directorio
         getcwd(ogDir, 1000);
         if(!parametros.recaComand && !parametros.recbComand) printf("************%s\n", filename);
+        //Abrimos dicho directorio y nos cambiamos a él
         dir = opendir(filename);
         if (dir == NULL) {
             perror("Error al acceder al directorio");
@@ -224,12 +232,13 @@ void listContent(char *filename, tParametros parametros, char iniDir[]) {
             perror("No se pudo cambiar el directorio");
         }
         else {
-
             if(parametros.recaComand){
+                //Si tenemos parámetro -reca, primero se imprime la información de los directorios
+                //antes de acceder recursivamente a sus posibles subdirectorios
                 getcwd(path, 1000);
                 removeSubstring(path, iniDir);
                 printf("************%s\n", path);
-                readDirFiles(files,&bufrec,dir,parametros);
+                readDirFiles(files,&bufrec,dir,parametros); //Primero se lee
                 chdir(ogDir);
                 closedir(dir);
                 dir = opendir(filename);
@@ -237,13 +246,16 @@ void listContent(char *filename, tParametros parametros, char iniDir[]) {
                     perror("Error al acceder al directorio");
                     return;
                 }
+
                 if (chdir(filename) == -1) perror("No se pudo cambiar el directorio");
-                recurseFile(files,&bufrec,dir,parametros,iniDir);
+                recurseFile(files,&bufrec,dir,parametros,iniDir); //Luego se accede a subdirectorios recursivamente
                 chdir(ogDir);
                 closedir(dir);
             }
             else if(parametros.recbComand){
-                recurseFile(files,&bufrec,dir,parametros,iniDir);
+                //Si tenemos parámetro -recb, primero se accede recursivamente a todos los subdirectorios que existan,
+                //y luego se imprime toda su información desde dentro hacia afuera
+                recurseFile(files,&bufrec,dir,parametros,iniDir); //Primero se accede a subdirectorios recursivamente
                 getcwd(path, 1000);
                 removeSubstring(path, iniDir);
                 printf("************%s\n", path);
@@ -255,34 +267,33 @@ void listContent(char *filename, tParametros parametros, char iniDir[]) {
                     return;
                 }
                 if (chdir(filename) == -1) perror("No se pudo cambiar el directorio");
-                readDirFiles(files,&bufrec,dir,parametros);
+                readDirFiles(files,&bufrec,dir,parametros); //Luego se lee
                 chdir(ogDir);
                 closedir(dir);
             }
             else{
+                //No hay recursividad, se leen los ficheros del directorio sin acceder a subdirectorios y luego se cierra
                 readDirFiles(files,&bufrec,dir,parametros);
                 chdir(ogDir);
                 closedir(dir);
             }
         }
-    } else statOneFile(filename, parametros);
+    } else statOneFile(filename, parametros); //El fichero pasado no es un directorio, imprimimos su información
 }
 
 void list(char *trozos[]) {
     tParametros parametros;
     int dirIndex;
     char iniDir[1000];
-    char test[1000];
-    char* Ptest=test;
-    strcpy(Ptest,"");
     getcwd(iniDir, 1000);
     if (trozos[1] != NULL) {
+        //Leemos todos los parámetros del comando introducido
         dirIndex = leerParametros(trozos, &parametros);
         if (trozos[dirIndex] == NULL) printf("%s", iniDir);
         else {
             for (int j = dirIndex; trozos[j] != NULL; j++) listContent(trozos[j],parametros,iniDir);
         }
-    } else stats(trozos);
+    } else stats(trozos); //Sin parámetros, imprime el directorio actual
 
 }
 
@@ -301,7 +312,7 @@ int isDirectory(char* fileName) {    //si es directorio retorna 1, sino 0, si ha
 }
 
 
-int isEmptyDir(char* fileName){ //prcd: solo recibe directorios
+int isEmptyDir(char* fileName){ //PreCD: Solo recibe directorios
     int cont=0;
     struct dirent *files=NULL;
     DIR *dir = NULL;
@@ -318,36 +329,34 @@ int isEmptyDir(char* fileName){ //prcd: solo recibe directorios
     return cont==2;
 }
 
-void delete(char *trozos[]){
+void delete(char *trozos[]) {
     char error[30];
-    if(trozos[1]!=NULL){
-        for(int i = 1; trozos[i]!=NULL; i++){
-            switch (isDirectory(trozos[i])) {
-                case 0:
-                    if(remove(trozos[i])==-1){
-                        sprintf(error,"Imposible borrar %s", trozos[i]);
+    if (trozos[1] != NULL) {
+        //Leemos todos los ficheros que el comando nos pide borrar
+        for (int i = 1; trozos[i] != NULL; i++) {
+            switch (isDirectory(trozos[i])) { //Evaluamos el resultado de isDirectory para el fichero
+                case 0: //Es un fichero
+                    if (remove(trozos[i]) == -1) { //Si remove devuelve -1 es que no se pudo borrar el fichero
+                        sprintf(error, "Imposible borrar %s", trozos[i]);
                         perror(error);
                         break;
                     }
                     break;
-                case 1:
-                    if(isEmptyDir(trozos[i])){
-                        rmdir(trozos[i]);
-                    }
-                    else{
-                        errno=ENOTEMPTY;
-                        sprintf(error,"Imposible borrar %s", trozos[i]);
+                case 1: //Es un directorio
+                    if (rmdir(trozos[i]) == -1) {
+                        sprintf(error, "Imposible borrar %s", trozos[i]);
                         perror(error);
-                        break;
                     }
+                    else printf("Directorio %s borrado con éxito", trozos[i]);
                     break;
                 case -1:
-                    sprintf(error,"Imposible borrar %s", trozos[i]);
+                    //Ha habido algún error para obtener la información del fichero con lstat
+                    sprintf(error, "Imposible borrar %s", trozos[i]);
                     perror(error);
                     break;
             }
         }
-    }else stats(trozos);
+    } else stats(trozos);
 
 }
 
@@ -355,13 +364,14 @@ void recDelete(char* filename){
     char error[30];
     DIR *dir=NULL;
     struct dirent *file=NULL;
-    if (isDirectory(filename) == -1) {
+    if (isDirectory(filename) == -1) { //No se pudo obtener la información del fichero filename por alguna razón
         sprintf(error, "Imposible borrar %s", filename);
         perror(error);
     }
-    else if(!isDirectory(filename)) remove(filename);
-    else if(isEmptyDir(filename)) rmdir(filename);
+    else if(!isDirectory(filename)) remove(filename); //Si se trata de un fichero se borra directamente
+    else if(isEmptyDir(filename)) rmdir(filename); //Si se trata de un directorio vacío se borra directamente
     else{
+        //Es un directorio lleno, se abre su contenido y accedemos a el
         dir = opendir(filename);
         if (dir == NULL) {
             perror("Error al abrir directorio");
@@ -369,10 +379,12 @@ void recDelete(char* filename){
         }
         chdir(filename);
         while ((file = readdir(dir)) != NULL) {
-            if (-strcmp(file->d_name, ".") && -strcmp(file->d_name, "..")) {
+            //Recorremos todos los ficheros, incluidos posibles subdirectorios, del directorio filename borrándolos todos recursivamente
+            if (-strcmp(file->d_name, ".") && -strcmp(file->d_name, "..")) { //Excepto el .. y el . para no acceder recursivamente al directorio padre!
                 recDelete(file->d_name);
             }
         }
+        //Finalmente cerramos y borramos el directorio original
         chdir("..");
         rmdir(filename);
         closedir(dir);
@@ -381,6 +393,7 @@ void recDelete(char* filename){
 
 void deltree(char *trozos[]) {
     if (trozos[1] != NULL) {
+        //Se intenta borrar recursivamente cada fichero listado en el comando
         for (int i = 1; trozos[i] != NULL; i++) {
             recDelete(trozos[i]);
         }
