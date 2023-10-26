@@ -43,6 +43,7 @@ char *ConvierteModo(mode_t m, char *permisos) {
 }
 
 void inicializarParametros(tParametros *parametros){
+    //Inicializa un struct con todos los parámetros disponibles de los comandos "stat" y "list" a falso
     parametros->longComand=false;
     parametros->linkComand=false;
     parametros->accComand = false;
@@ -52,6 +53,7 @@ void inicializarParametros(tParametros *parametros){
 }
 
 int leerParametros(char *trozos[], tParametros *parametros) {
+    //Dado un comando, lee cuales de los 6 parámetros posibles de los comandos "stat" o "list" están en el comando del usuario
     int dirIndex = 0;
     inicializarParametros(parametros);
     bool continuar = true;
@@ -73,28 +75,30 @@ int leerParametros(char *trozos[], tParametros *parametros) {
         else if (strcmp(trozos[dirIndex], "-hid") == 0) parametros->hidComand = true;
         else continuar = false;
     } while (continuar);
-    return dirIndex;
+    return dirIndex; //Devuelve el primer índice de trozos que no es un parámetro del comando, sino que es algún tipo de fichero
 }
 
 void create(char *trozos[]) {
     char dir[1000];
     getcwd(dir, 1000);
     if (trozos[1] == NULL) {
-        printf("%s", dir);
+        printf("%s", dir); //Si el comando no tiene parámetros se imprime el directorio actual
     }
     else if (strcmp(trozos[1], "-f") == 0) {
         if (trozos[2] == NULL) {
             printf("%s", dir);
         }
-        else if (open(trozos[2], O_CREAT, 0777) == -1) perror("Imposible crear fichero");
+        else if (open(trozos[2], O_CREAT, 0777) == -1) perror("Imposible crear fichero"); //Si create -f fichero da error se muestra por pantalla
         else {
+            //Si no da error, se informa de que el fichero se creó con éxito
             strcat(dir, "/");
             strcat(dir, trozos[2]);
             printf("Fichero %s creado satisfactoriamente en < %s >", trozos[2], dir);
         }
     }
     else {
-        if (mkdir(trozos[1], 0777) == -1) perror("Imposible crear directorio");
+        //Si el comando no tiene el parámetro -f se entiende que se quiere crear un directorio
+        if (mkdir(trozos[1], 0777) == -1) perror("Imposible crear directorio"); //Si no se puede crear se muestra error
         else {
             strcat(dir, "/");
             strcat(dir, trozos[1]);
