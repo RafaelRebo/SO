@@ -111,6 +111,25 @@ void Help(char *trozos[]) {
         } else if (strcmp(trozos[1], "help") == 0) {
             printf(" [cmd]\tMuestra ayuda sobre los comandos\n"
                    "\tcmd: info sobre el comando cmd\n");
+        } else if (strcmp(trozos[1], "create") == 0) {
+            printf(" [-f] [name]\tCrea un directorio o un fichero (-f)");
+        } else if (strcmp(trozos[1], "stat") == 0) {
+            printf(" [-long][-link][-acc] name1 name2 ..\tlista ficheros;\n"
+                   "\t-long: listado largo\n"
+
+                   "\t-acc: acesstime\n"
+                   "\t-link: si es enlace simbolico, el path contenido\n"
+            );
+        } else if (strcmp(trozos[1], "delete") == 0) {
+            printf(" [name1 name2 ..]\tBorra ficheros o directorios vacios\n");
+        } else if (strcmp(trozos[1], "deltree") == 0) {
+            printf(" [name1 name2 ..]\tBorra ficheros o directorios no vacios recursivamente\n");
+        } else if (strcmp(trozos[1], "list") == 0) {
+            printf(" [-reca] [-recb] [-hid][-long][-link][-acc]\tn1 n2 ..\tlista contenidos de directorios\n"
+                   "\t-hid: incluye los ficheros ocultos\n"
+                   "\t-recb: recursivo (antes)\n"
+                   "\t-reca: recursivo (despues)\n"
+                   "\tresto parametros como stat\n");
         } else if (strcmp(trozos[1], "quit") == 0 || strcmp(trozos[1], "exit") == 0 || strcmp(trozos[1], "bye") == 0) {
             printf(" \tTermina la ejecucion del shell\n");
         } else {
