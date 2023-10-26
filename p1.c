@@ -299,7 +299,7 @@ int isDirectory(char* fileName) {    //si es directorio retorna 1, sino 0, si ha
 
 int isEmptyDir(char* fileName){ //prcd: solo recibe directorios
     int cont=0;
-    struct dirent *files = NULL;
+    struct dirent *files=NULL;
     DIR *dir = NULL;
     dir = opendir(fileName);
     if (dir == NULL) {
