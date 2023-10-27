@@ -213,14 +213,14 @@ void listContent(char *filename, tParametros parametros, char iniDir[]) {
     struct stat buf, bufrec;
     DIR *dir = NULL;
     struct dirent *files = NULL;
-    char ogDir[1000];
     char path[1000];
+    char ogDir[1000];
     if (lstat(filename, &buf) == -1) { //No se han podido volcar los datos del fichero
         perror("****error al acceder");
         return;
     }
     if ((buf.st_mode & S_IFMT) == S_IFDIR) { //Si el fichero es un directorio
-        getcwd(ogDir, 1000);
+        getcwd(ogDir,1000);
         if(!parametros.recaComand && !parametros.recbComand) printf("************%s\n", filename);
         //Abrimos dicho directorio y nos cambiamos a él
         dir = opendir(filename);
@@ -297,24 +297,15 @@ void list(char *trozos[]) {
 
 }
 
-int isDirectory(char* fileName) {    //si es directorio retorna 1, sino 0, si hay un error distinto de no such files retorna -1 y sino 2
+int isDirectory(char* fileName) {    //si es directorio retorna 1, sino 0, si hay un error -1
     struct stat buf;
-
-    if (lstat(fileName, &buf) == -1) {
-        if (strcmp(strerror(errno), "No such file or directory") !=
-            0) {    //para que no se pare la ejecucion al no encontrar un fichero o dir
-            return 2;
-        } else return -1;
-
-    }
-
-    return (buf.st_mode & S_IFMT) == S_IFDIR;
+    if (lstat(fileName, &buf) == -1) return -1;
+    else return (buf.st_mode & S_IFMT) == S_IFDIR;
 }
 
 
 int isEmptyDir(char* fileName){ //PreCD: Solo recibe directorios
     int cont=0;
-    struct dirent *files=NULL;
     DIR *dir = NULL;
     dir = opendir(fileName);
     if (dir == NULL) {
@@ -322,7 +313,7 @@ int isEmptyDir(char* fileName){ //PreCD: Solo recibe directorios
         return -1;
     }
 
-    while ((files = readdir(dir)) != NULL) {
+    while (readdir(dir) != NULL) {
         cont++;
     }
     closedir(dir);
@@ -341,6 +332,7 @@ void delete(char *trozos[]) {
                         perror(error);
                         break;
                     }
+                    else printf("Fichero %s borrado con éxito", trozos[i]);
                     break;
                 case 1: //Es un directorio
                     if (rmdir(trozos[i]) == -1) {
@@ -392,10 +384,18 @@ void recDelete(char* filename){
 }
 
 void deltree(char *trozos[]) {
+    char error[30];
     if (trozos[1] != NULL) {
         //Se intenta borrar recursivamente cada fichero listado en el comando
         for (int i = 1; trozos[i] != NULL; i++) {
             recDelete(trozos[i]);
+            isDirectory(trozos[i]);
+            //Si errno=ENOENT es que el fichero no existe en el directorio, es decir, el borrado ha sido exitoso
+            if(errno==ENOENT) printf("Directorio < %s > borrado con exito.",trozos[i]);
+            else{
+                sprintf(error, "Imposible borrar %s", trozos[i]);
+                perror(error);
+            }
         }
     } else stats(trozos);
 }
