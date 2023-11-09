@@ -8,18 +8,18 @@
 		<Option virtualFolders="CMake Files\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="/home/yago/CLionProjects/SO/cmake-build-debug"/>
+				<Option working_dir="/home/yago/CLionProjects/SO3/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO3/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO3/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="P0">
-				<Option output="/home/yago/CLionProjects/SO/cmake-build-debug/P0" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/yago/CLionProjects/SO/cmake-build-debug"/>
+				<Option output="/home/yago/CLionProjects/SO3/cmake-build-debug/P0" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/yago/CLionProjects/SO3/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
@@ -30,15 +30,15 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO/cmake-build-debug/Makefile&quot;  VERBOSE=1 P0"/>
-					<CompileFile command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO3/cmake-build-debug/Makefile&quot;  VERBOSE=1 P0"/>
+					<CompileFile command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO3/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="P0/fast">
-				<Option output="/home/yago/CLionProjects/SO/cmake-build-debug/P0" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/yago/CLionProjects/SO/cmake-build-debug"/>
+				<Option output="/home/yago/CLionProjects/SO3/cmake-build-debug/P0" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/yago/CLionProjects/SO3/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
@@ -49,52 +49,82 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO/cmake-build-debug/Makefile&quot;  VERBOSE=1 P0/fast"/>
-					<CompileFile command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO3/cmake-build-debug/Makefile&quot;  VERBOSE=1 P0/fast"/>
+					<CompileFile command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO3/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="edit_cache">
-				<Option working_dir="/home/yago/CLionProjects/SO/cmake-build-debug"/>
+				<Option working_dir="/home/yago/CLionProjects/SO3/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO3/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO3/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="rebuild_cache">
-				<Option working_dir="/home/yago/CLionProjects/SO/cmake-build-debug"/>
+				<Option working_dir="/home/yago/CLionProjects/SO3/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO3/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO3/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j16 -f &quot;/home/yago/CLionProjects/SO3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/yago/CLionProjects/SO/lista.c">
+		<Unit filename="/home/yago/CLionProjects/SO3/generalfunctions.c">
 			<Option target="P0"/>
 		</Unit>
-		<Unit filename="/home/yago/CLionProjects/SO/lista.h">
+		<Unit filename="/home/yago/CLionProjects/SO3/generalfunctions.h">
 			<Option target="P0"/>
 		</Unit>
-		<Unit filename="/home/yago/CLionProjects/SO/listaficheros.c">
+		<Unit filename="/home/yago/CLionProjects/SO3/includes.h">
 			<Option target="P0"/>
 		</Unit>
-		<Unit filename="/home/yago/CLionProjects/SO/listaficheros.h">
+		<Unit filename="/home/yago/CLionProjects/SO3/lista.c">
 			<Option target="P0"/>
 		</Unit>
-		<Unit filename="/home/yago/CLionProjects/SO/p0.c">
+		<Unit filename="/home/yago/CLionProjects/SO3/lista.h">
 			<Option target="P0"/>
 		</Unit>
-		<Unit filename="/home/yago/CLionProjects/SO/types.h">
+		<Unit filename="/home/yago/CLionProjects/SO3/listaficheros.c">
 			<Option target="P0"/>
 		</Unit>
-		<Unit filename="/home/yago/CLionProjects/SO/CMakeLists.txt">
+		<Unit filename="/home/yago/CLionProjects/SO3/listaficheros.h">
+			<Option target="P0"/>
+		</Unit>
+		<Unit filename="/home/yago/CLionProjects/SO3/listamemoria.c">
+			<Option target="P0"/>
+		</Unit>
+		<Unit filename="/home/yago/CLionProjects/SO3/listamemoria.h">
+			<Option target="P0"/>
+		</Unit>
+		<Unit filename="/home/yago/CLionProjects/SO3/p0.c">
+			<Option target="P0"/>
+		</Unit>
+		<Unit filename="/home/yago/CLionProjects/SO3/p0.h">
+			<Option target="P0"/>
+		</Unit>
+		<Unit filename="/home/yago/CLionProjects/SO3/p1.c">
+			<Option target="P0"/>
+		</Unit>
+		<Unit filename="/home/yago/CLionProjects/SO3/p1.h">
+			<Option target="P0"/>
+		</Unit>
+		<Unit filename="/home/yago/CLionProjects/SO3/p2.c">
+			<Option target="P0"/>
+		</Unit>
+		<Unit filename="/home/yago/CLionProjects/SO3/p2.h">
+			<Option target="P0"/>
+		</Unit>
+		<Unit filename="/home/yago/CLionProjects/SO3/types.h">
+			<Option target="P0"/>
+		</Unit>
+		<Unit filename="/home/yago/CLionProjects/SO3/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
 	</Project>
