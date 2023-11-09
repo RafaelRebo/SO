@@ -11,16 +11,19 @@ int main() {
     char *trozos[20];
     tList L;
     tListF F;
+    tListLM memL;
     createDefaultListF(&F);
     createEmptyList(&L);
+    createEmptyListM(&memL);
     while (!terminado) {
         puts("");
         imprimirPrompt();
         leerEntrada(comando);
-        terminado = procesarEntrada(comando, &L, trozos, &F);
+        terminado = procesarEntrada(comando, &L, trozos, &F, &memL);
     }
     deleteList(&L);
     deleteListF(&F);
+    deleteListM(&memL);
     exit(0);
 }
 
@@ -106,7 +109,7 @@ void hist(char *trozos[], tList *L) {
     }
 }
 
-void command(char *trozos[], tList *L, tListF *F) {
+void command(char *trozos[], tList *L, tListF *F, tListLM *memL) {
     int n;
     tPosL p;
     tComando comando;
@@ -124,7 +127,7 @@ void command(char *trozos[], tList *L, tListF *F) {
                 if (p != LNULL) { //Si se encuentra el comando buscado en la lista se vuelve a ejecutar
                     getItem(p, *L, &comando);
                     printf("Repitiendo comando:   [%d] %s\n", n, comando);
-                    procesarEntrada(comando, L, trozos, F);
+                    procesarEntrada(comando, L, trozos, F, memL);
                 } else {
                     printf("No se encuentra el comando %d en el historico.", n);
                 }

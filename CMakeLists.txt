@@ -15,4 +15,8 @@ add_executable(P0 p0.c
         generalfunctions.h
         p0.h
         includes.h
+        p2.c
+        p2.h
+        listamemoria.c
+        listamemoria.h
 )

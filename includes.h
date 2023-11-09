@@ -2,10 +2,12 @@
 #define P0_INCLUDES_H
 
 #include "types.h"
+#include "p2.h"
 #include "p1.h"
 #include "p0.h"
 #include "lista.h"
 #include "listaficheros.h"
+#include "listamemoria.h"
 #include "generalfunctions.h"
 #include "types.h"
 #include <stdio.h>

@@ -8,7 +8,7 @@ void leerEntrada(char *comando) {
     fgets(comando, MAX, stdin);
 }
 
-bool procesarEntrada(tComando comando, tList *L, char *trozos[], tListF *F) {
+bool procesarEntrada(tComando comando, tList *L, char *trozos[], tListF *F, tListLM *memL) {
     tComando fullcommand;
     strcpy(fullcommand, comando);
     bool terminado = false;
@@ -20,12 +20,12 @@ bool procesarEntrada(tComando comando, tList *L, char *trozos[], tListF *F) {
         terminado = true;
         printf("Shell finalizado.\n");
     } else {
-        procesarComando(trozos, L, F); //Funcion para seleccionar la funcion asociada al comando que se quiere ejecutar
+        procesarComando(trozos, L, F, memL); //Funcion para seleccionar la funcion asociada al comando que se quiere ejecutar
     }
     return terminado;
 }
 
-void procesarComando(char *trozos[], tList *L, tListF *F) {
+void procesarComando(char *trozos[], tList *L, tListF *F, tListLM *memL) {
     if (strcmp(trozos[0], "authors") == 0) {
         authors(trozos);
     } else if (strcmp(trozos[0], "pid") == 0) {
@@ -37,7 +37,7 @@ void procesarComando(char *trozos[], tList *L, tListF *F) {
     } else if (strcmp(trozos[0], "hist") == 0) {
         hist(trozos, L);
     } else if (strcmp(trozos[0], "command") == 0) {
-        command(trozos, L, F);
+        command(trozos, L, F, memL);
     } else if (strcmp(trozos[0], "open") == 0) {
         Cmd_open(trozos, F);
     } else if (strcmp(trozos[0], "close") == 0) {
@@ -58,6 +58,8 @@ void procesarComando(char *trozos[], tList *L, tListF *F) {
         delete(trozos);
     } else if (strcmp(trozos[0], "deltree") == 0) {
         deltree(trozos);
+    } else if (strcmp(trozos[0], "malloc") == 0) {
+        Cmd_malloc(trozos,memL);
     } else if (strcmp(trozos[0], "help") == 0) {
         Help(trozos);
     } else {

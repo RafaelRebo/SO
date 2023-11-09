@@ -5,8 +5,8 @@
 
 void imprimirPrompt();
 void leerEntrada(char *comando);
-bool procesarEntrada(tComando comando, tList *L, char *trozos[], tListF *F);
-void procesarComando(char *trozos[], tList *L, tListF *F);
+bool procesarEntrada(tComando comando, tList *L, char *trozos[], tListF *F, tListLM *memL);
+void procesarComando(char *trozos[], tList *L, tListF *F, tListLM *memL);
 int TrocearCadena(char *cadena, char *trozos[]);
 void Help(char *trozos[]);
 
