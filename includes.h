@@ -23,5 +23,6 @@
 #include <grp.h>
 #include <dirent.h>
 #include <errno.h>
+#include <sys/shm.h>
 
 #endif //P0_INCLUDES_H

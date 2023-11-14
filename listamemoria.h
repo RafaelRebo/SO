@@ -20,6 +20,7 @@ void deleteListM(tListLM *M);
 tPosLM firstM(tListLM M);
 tPosLM nextM(tPosLM p,tListLM M);
 tPosLM findItemM(int bytes, tListLM M, tAlloctype alloctype);
+tPosLM findItemMS(int bytes, tListLM M, tAlloctype alloctype);
 void printListM(tListLM M,tAlloctype allocType);
 
 
