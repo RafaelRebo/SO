@@ -5,6 +5,7 @@
 #include "listamemoria.h"
 
 void Cmd_malloc(char* trozos[],tListLM* memL);
+void Cmd_shared(char *trozos[],tListLM* M);
 void * MapearFichero (char * fichero, int protection, tListLM* memL);
 void CmdMmap(char *arg[], tListLM* memL);
 void Cmd_mmap(char* trozos[], tListLM* memL);

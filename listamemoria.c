@@ -93,6 +93,7 @@ void printListM(tListLM M, tAlloctype allocType){ //Imprime la lista completa
         if(!strcmp(item.type,allocType)){
             getMonthName(item.time.tm_mon,string);
             printf("\n\t%p\t\t%d\t %s %2d    %02d:%02d    %s",item.memdir,item.size,string,item.time.tm_mday,item.time.tm_hour,item.time.tm_min,item.type);
+            if(!strcmp(allocType,"shared")) printf(" (key %d)",item.sharedKey);
             if(!strcmp(item.type, "mmap"))
                 printf("\t (descriptor %d)", item.mappedFD);
         }
@@ -123,6 +124,22 @@ tPosLM findItemMmmap(char* fileName, tListLM M){
     do{
         item=getItemM(p,M);
         if(!strcmp(fileName, item.mappedFilename)&&!strcmp("mmap",item.type)){
+            return p;
+        }
+        p=nextM(p,M);
+    }
+    while(p != LMNULL);
+    return p;
+}
+
+tPosLM findItemMS(int key, tListLM M, tAlloctype alloctype){
+    tPosLM p;
+    tItemLM item;
+    if(isEmptyListM(M)) return LMNULL;
+    p= firstM(M);
+    do{
+        item=getItemM(p,M);
+        if(key==item.sharedKey&&!strcmp(alloctype,item.type)){
             return p;
         }
         p=nextM(p,M);

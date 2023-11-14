@@ -60,6 +60,8 @@ void procesarComando(char *trozos[], tList *L, tListF *F, tListLM *memL) {
         deltree(trozos);
     } else if (strcmp(trozos[0], "malloc") == 0) {
         Cmd_malloc(trozos,memL);
+    } else if (strcmp(trozos[0], "shared") == 0) {
+        Cmd_shared(trozos, memL);
     } else if (strcmp(trozos[0], "mmap") == 0) {
         Cmd_mmap(trozos,memL);
     } else if (strcmp(trozos[0], "help") == 0) {

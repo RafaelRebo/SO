@@ -19,6 +19,7 @@ void deleteAtPositionM(tPosLM p, tListLM *M);
 void deleteListM(tListLM *M);
 tPosLM firstM(tListLM M);
 tPosLM nextM(tPosLM p,tListLM M);
+tPosLM findItemMS(int bytes, tListLM M, tAlloctype alloctype);
 tPosLM findItemMmalloc(int bytes, tListLM M);
 tPosLM findItemMmmap(char* fileName, tListLM M);
 void printListM(tListLM M,tAlloctype allocType);
