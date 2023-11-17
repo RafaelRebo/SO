@@ -237,3 +237,69 @@ void Cmd_mmap(char* trozos[], tListLM* memL){
     else
         CmdMmap(&trozos[1], memL);
 }
+
+ssize_t LeerFichero (char *f, void *p, size_t cont){
+    struct stat s;
+    ssize_t  n;
+    int df,aux;
+
+    if (stat (f,&s)==-1 || (df=open(f,O_RDONLY))==-1)
+        return -1;
+    if (cont==-1)   /* si pasamos -1 como bytes a leer lo leemos entero*/
+        cont=s.st_size;
+    if ((n=read(df,p,cont))==-1){
+        aux=errno;
+        close(df);
+        errno=aux;
+        return -1;
+    }
+    close (df);
+    return n;
+}
+
+void CmdRead (char *ar[]){
+
+    size_t cont=-1;  /* -1 indica leer todo el fichero*/
+    ssize_t n;
+    if (ar[0]==NULL || ar[1]==NULL){
+        printf ("faltan parametros\n");
+        return;
+    }
+
+    if (ar[2]!=NULL)
+        cont=(size_t) atoll(ar[2]);
+
+    if ((n=LeerFichero(ar[0],&ar[1],cont))==-1)
+        perror ("Imposible leer fichero");
+    else
+        printf ("leidos %lld bytes de %s en %p\n",(long long) n,ar[0],&ar[1]);
+}
+
+void Cmd_read (char* trozos[]){
+    CmdRead(&trozos[1]);
+}
+
+void imprimirMemDumpHex(void *p, size_t len) {
+    unsigned char *point = (unsigned char*)p;
+    for (size_t i = 0; i < len; i++) {
+        if(i%25==0)
+            printf("\n");
+        printf("%02x ", point[i]);
+    }
+    printf("\n");
+}
+
+void Cmd_memdump (char* trozos[]){
+    void *p;
+    size_t len=25;
+    if(trozos[1]==NULL)
+        return;
+    if (trozos[2]!=NULL)
+        len= atoi(trozos[2]);
+    unsigned long num = strtoul(trozos[1], NULL, 0);
+    p = (void *) num;
+    imprimirMemDumpHex(p, len);
+
+}
+
+
