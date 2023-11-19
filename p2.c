@@ -24,7 +24,7 @@ void Cmd_malloc(char* trozos[],tListLM* memL){
         else{
             byteAmount=getByteAmount(trozos[2]);
             if (byteAmount>0) {
-                p = findItemM(byteAmount, *memL, "malloc");
+                p = findItemMmalloc(byteAmount, *memL);
                 if (p != NULL) {
                     mallocItem=getItemM(p, *memL);
                     printf("Liberados %d bytes de memoria asignada en %p",mallocItem.size,mallocItem.memdir);
@@ -34,15 +34,13 @@ void Cmd_malloc(char* trozos[],tListLM* memL){
                     printf("No hay bloque de ese tamano asignado con malloc");
                 }
             }
-            else printf("No se asignan bloques de 0 bytes");
         }
     }
     else{
-        byteAmount=getByteAmount(trozos[1]);
-        if (byteAmount>0) {
+        if (trozos[1]>0) {
             time_t date = time(NULL);
             struct tm tm = *localtime(&date);
-            int allocatedBytes = byteAmount;
+            int allocatedBytes = getByteAmount(trozos[1]);
             mallocItem.memdir = malloc(allocatedBytes);
             mallocItem.size = allocatedBytes;
             mallocItem.time = tm;
@@ -169,4 +167,73 @@ void Cmd_shared(char *trozos[],tListLM* M){
     else{
         printListM(*M,"shared");
     }
+}
+
+void * MapearFichero (char * fichero, int protection, tListLM* memL){
+    int df, map=MAP_PRIVATE,modo=O_RDONLY;
+    struct stat s;
+    void *p;
+    tItemLM item;
+
+    if (protection&PROT_WRITE)
+        modo=O_RDWR;
+    if (stat(fichero,&s)==-1 || (df=open(fichero, modo))==-1)
+        return NULL;
+
+    if ((p=mmap (NULL,s.st_size, protection,map,df,0))==MAP_FAILED)
+        return NULL;
+
+    item.memdir = p;
+    item.size=(int)s.st_size;
+    strcpy(item.mappedFilename, fichero);
+    item.mappedFD = df;
+    time_t date = time(NULL);
+    struct tm tm = *localtime(&date);
+    item.time = tm;
+    strcpy(item.type, "mmap");
+    insertItemM(item, memL);
+
+    return p;
+}
+
+void CmdMmap(char *arg[], tListLM* memL){
+    char *perm;
+    void *p;
+    int protection=0;
+
+    if (arg[0]==NULL)
+    {printListM(*memL,"mmap"); return;}
+    if ((perm=arg[1])!=NULL && strlen(perm)<4) {
+        if (strchr(perm,'r')!=NULL) protection|=PROT_READ;
+        if (strchr(perm,'w')!=NULL) protection|=PROT_WRITE;
+        if (strchr(perm,'x')!=NULL) protection|=PROT_EXEC;
+    }
+    if ((p=MapearFichero(arg[0],protection, memL))==NULL)
+        perror ("Imposible mapear fichero");
+    else
+        printf ("fichero %s mapeado en %p\n", arg[0], p);
+}
+
+void Cmd_mmap(char* trozos[], tListLM* memL){
+    tPosLM p;
+    tItemLM item;
+    if(trozos[1] != NULL && !strcmp(trozos[1], "-free")){
+        if(trozos[2]==NULL)
+            printListM(*memL, "mmap");
+        else{
+
+            p=findItemMmmap(trozos[2], *memL);
+
+            if(p==LMNULL)
+                printf("Fichero %s no mapeado", trozos[2]);
+            else{
+                item=getItemM(p, *memL);
+                munmap(item.memdir, item.size);
+                deleteAtPositionM(p, memL);
+            }
+
+        }
+    }
+    else
+        CmdMmap(&trozos[1], memL);
 }

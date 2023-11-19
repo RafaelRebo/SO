@@ -87,25 +87,51 @@ void getMonthName(int month, char* string){
 void printListM(tListLM M, tAlloctype allocType){ //Imprime la lista completa
     tItemLM item;
     char string[4];
+    char parameter[20];
+    bool mmap;
     printf("****** Lista de bloques asigandos %s para el proceso %d",allocType,getpid());
     for(tPosLM p=firstM(M); p!=LMNULL; p= nextM(p,M)){
         item=getItemM(p,M);
+        strcpy(parameter, item.type);
         if(!strcmp(item.type,allocType)){
             getMonthName(item.time.tm_mon,string);
-            printf("\n\t%p\t\t%d\t %s %2d    %02d:%02d    %s",item.memdir,item.size,string,item.time.tm_mday,item.time.tm_hour,item.time.tm_min,item.type);
+
+            mmap = !strcmp(item.type, "mmap");
+            if(mmap)
+                strcpy(parameter, item.mappedFilename);
+            printf("\n\t%p\t\t%d\t %s %2d    %02d:%02d    %s",item.memdir,item.size,string,item.time.tm_mday,item.time.tm_hour,item.time.tm_min,parameter);
             if(!strcmp(allocType,"shared")) printf(" (key %d)",item.sharedKey);
+            if(mmap)
+                printf("\t (descriptor %d)", item.mappedFD);
+
         }
     }
 }
 
-tPosLM findItemM(int bytes, tListLM M, tAlloctype alloctype){
+tPosLM findItemMmalloc(int bytes, tListLM M){
     tPosLM p;
     tItemLM item;
     if(isEmptyListM(M)) return LMNULL;
     p= firstM(M);
     do{
         item=getItemM(p,M);
-        if(bytes==item.size&&!strcmp(alloctype,item.type)){
+        if(bytes==item.size&&!strcmp("malloc",item.type)){
+            return p;
+        }
+        p=nextM(p,M);
+    }
+    while(p != LMNULL);
+    return p;
+}
+
+tPosLM findItemMmmap(char* fileName, tListLM M){
+    tPosLM p;
+    tItemLM item;
+    if(isEmptyListM(M)) return LMNULL;
+    p= firstM(M);
+    do{
+        item=getItemM(p,M);
+        if(!strcmp(fileName, item.mappedFilename)&&!strcmp("mmap",item.type)){
             return p;
         }
         p=nextM(p,M);

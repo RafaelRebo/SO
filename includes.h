@@ -24,5 +24,6 @@
 #include <dirent.h>
 #include <errno.h>
 #include <sys/shm.h>
+#include <sys/mman.h>
 
 #endif //P0_INCLUDES_H
