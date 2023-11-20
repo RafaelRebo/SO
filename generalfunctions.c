@@ -74,7 +74,9 @@ void procesarComando(char *trozos[], tList *L, tListF *F, tListLM *memL) {
         Cmd_memdump(trozos);
     } else if (strcmp(trozos[0], "memfill") == 0) {
         Cmd_memfill(trozos);
-    }else if (strcmp(trozos[0], "help") == 0) {
+    } else if (strcmp(trozos[0], "write") == 0) {
+        Cmd_write(trozos);
+    } else if (strcmp(trozos[0], "help") == 0) {
         Help(trozos);
     } else {
         printf("Orden < %s > no encontrada. Ver 'help' para la lista de posibles comandos", trozos[0]);

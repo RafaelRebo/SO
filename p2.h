@@ -13,6 +13,7 @@ void CmdRead (char *ar[]);
 void Cmd_read (char* trozos[]);
 void Cmd_memdump (char* trozos[]);
 void Cmd_memfill (char* trozos[]);
+void Cmd_write(char* trozos[]);
 
 
 #endif //P0_P2_H

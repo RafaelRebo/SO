@@ -288,7 +288,9 @@ ssize_t LeerFichero (char *f, void *p, size_t cont){
 }
 
 void CmdRead (char *ar[]){
-
+    void *p;
+    unsigned long addr = strtoul(ar[1], NULL, 0);
+    p = (void *) addr;
     size_t cont=-1;  /* -1 indica leer todo el fichero*/
     ssize_t n;
     if (ar[0]==NULL || ar[1]==NULL){
@@ -299,10 +301,10 @@ void CmdRead (char *ar[]){
     if (ar[2]!=NULL)
         cont=(size_t) atoll(ar[2]);
 
-    if ((n=LeerFichero(ar[0],&ar[1],cont))==-1)
+    if ((n=LeerFichero(ar[0],p,cont))==-1)
         perror ("Imposible leer fichero");
     else
-        printf ("leidos %lld bytes de %s en %p\n",(long long) n,ar[0],&ar[1]);
+        printf ("leidos %lld bytes de %s en %p\n",(long long) n,ar[0],p);
 }
 
 void Cmd_read (char* trozos[]){
@@ -311,6 +313,16 @@ void Cmd_read (char* trozos[]){
 
 void imprimirMemDumpHex(void *p, size_t len) {
     unsigned char *point = (unsigned char*)p;
+    for (size_t j = 0; j < len; j++){
+        if(j%25==0)
+            printf("\n");
+        if (point[j]>='a' && point[j]<='z' || point[j]>='A' && point[j]<='Z')
+            printf(" %c ", point[j]);
+        else
+            printf("   ");
+    }
+
+
     for (size_t i = 0; i < len; i++) {
         if(i%25==0)
             printf("\n");
@@ -328,6 +340,7 @@ void Cmd_memdump (char* trozos[]){
         len= atoi(trozos[2]);
     unsigned long addr = strtoul(trozos[1], NULL, 0);
     p = (void *) addr;
+    printf("Volcando %d bytes desde la direccion %p", len, p);
     imprimirMemDumpHex(p, len);
 
 }
@@ -350,6 +363,52 @@ void Cmd_memfill (char* trozos[]){
     printf("Llenando %d bytes de memoria con el byte (%02d) a partir de la direccion %p", fillBytes, charBytes, p);
     LlenarMemoria(p, fillBytes, charBytes);//charByte si es mas de un char q sea 0 sino trozos[3][0] <-atoi
     Cmd_memdump(trozos);
+}
+
+
+
+ssize_t EscribirFichero (char *f, void *p, size_t cont,int overwrite)
+{
+    ssize_t  n;
+    int df,aux, flags=O_CREAT | O_EXCL | O_WRONLY;
+
+    if (overwrite)
+        flags=O_CREAT | O_WRONLY | O_TRUNC;
+
+    if ((df=open(f,flags,0777))==-1)
+        return -1;
+
+    if ((n=write(df,p,cont))==-1){
+        aux=errno;
+        close(df);
+        errno=aux;
+        return -1;
+    }
+    close (df);
+    return n;
+}
+
+void Cmd_write(char* trozos[]){
+    int overwrite = 0;
+
+    if(trozos[1]==NULL || trozos[2]==NULL || trozos[3]==NULL){
+        printf("faltan parametros\n");
+        return;
+    }
+    void *p, *fich, *cont;
+    unsigned long addr = strtoul(trozos[1], NULL, 0);
+    p = (void *) addr;
+
+    fich=&trozos[1];
+    cont = &trozos[2];
+
+    if (strcmp(fich, "-o")){
+        overwrite=1;
+        fich=&trozos[2];
+        cont = &trozos[3];
+    }
+
+    EscribirFichero(fich, p, atoi(cont), overwrite);
 }
 
 
