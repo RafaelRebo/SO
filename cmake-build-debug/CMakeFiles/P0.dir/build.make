@@ -53,10 +53,10 @@ RM = /snap/clion/250/bin/cmake/linux/x64/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/yago/CLionProjects/SO3
+CMAKE_SOURCE_DIR = /home/yago/CLionProjects/SO
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/yago/CLionProjects/SO3/cmake-build-debug
+CMAKE_BINARY_DIR = /home/yago/CLionProjects/SO/cmake-build-debug
 
 # Include any dependencies generated for this target.
 include CMakeFiles/P0.dir/depend.make
@@ -70,112 +70,52 @@ include CMakeFiles/P0.dir/progress.make
 include CMakeFiles/P0.dir/flags.make
 
 CMakeFiles/P0.dir/p0.c.o: CMakeFiles/P0.dir/flags.make
-CMakeFiles/P0.dir/p0.c.o: /home/yago/CLionProjects/SO3/p0.c
+CMakeFiles/P0.dir/p0.c.o: /home/yago/CLionProjects/SO/p0.c
 CMakeFiles/P0.dir/p0.c.o: CMakeFiles/P0.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/yago/CLionProjects/SO3/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/P0.dir/p0.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/P0.dir/p0.c.o -MF CMakeFiles/P0.dir/p0.c.o.d -o CMakeFiles/P0.dir/p0.c.o -c /home/yago/CLionProjects/SO3/p0.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/yago/CLionProjects/SO/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/P0.dir/p0.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/P0.dir/p0.c.o -MF CMakeFiles/P0.dir/p0.c.o.d -o CMakeFiles/P0.dir/p0.c.o -c /home/yago/CLionProjects/SO/p0.c
 
 CMakeFiles/P0.dir/p0.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/P0.dir/p0.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/yago/CLionProjects/SO3/p0.c > CMakeFiles/P0.dir/p0.c.i
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/yago/CLionProjects/SO/p0.c > CMakeFiles/P0.dir/p0.c.i
 
 CMakeFiles/P0.dir/p0.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/P0.dir/p0.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/yago/CLionProjects/SO3/p0.c -o CMakeFiles/P0.dir/p0.c.s
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/yago/CLionProjects/SO/p0.c -o CMakeFiles/P0.dir/p0.c.s
 
 CMakeFiles/P0.dir/lista.c.o: CMakeFiles/P0.dir/flags.make
-CMakeFiles/P0.dir/lista.c.o: /home/yago/CLionProjects/SO3/lista.c
+CMakeFiles/P0.dir/lista.c.o: /home/yago/CLionProjects/SO/lista.c
 CMakeFiles/P0.dir/lista.c.o: CMakeFiles/P0.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/yago/CLionProjects/SO3/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/P0.dir/lista.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/P0.dir/lista.c.o -MF CMakeFiles/P0.dir/lista.c.o.d -o CMakeFiles/P0.dir/lista.c.o -c /home/yago/CLionProjects/SO3/lista.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/yago/CLionProjects/SO/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/P0.dir/lista.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/P0.dir/lista.c.o -MF CMakeFiles/P0.dir/lista.c.o.d -o CMakeFiles/P0.dir/lista.c.o -c /home/yago/CLionProjects/SO/lista.c
 
 CMakeFiles/P0.dir/lista.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/P0.dir/lista.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/yago/CLionProjects/SO3/lista.c > CMakeFiles/P0.dir/lista.c.i
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/yago/CLionProjects/SO/lista.c > CMakeFiles/P0.dir/lista.c.i
 
 CMakeFiles/P0.dir/lista.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/P0.dir/lista.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/yago/CLionProjects/SO3/lista.c -o CMakeFiles/P0.dir/lista.c.s
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/yago/CLionProjects/SO/lista.c -o CMakeFiles/P0.dir/lista.c.s
 
 CMakeFiles/P0.dir/listaficheros.c.o: CMakeFiles/P0.dir/flags.make
-CMakeFiles/P0.dir/listaficheros.c.o: /home/yago/CLionProjects/SO3/listaficheros.c
+CMakeFiles/P0.dir/listaficheros.c.o: /home/yago/CLionProjects/SO/listaficheros.c
 CMakeFiles/P0.dir/listaficheros.c.o: CMakeFiles/P0.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/yago/CLionProjects/SO3/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/P0.dir/listaficheros.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/P0.dir/listaficheros.c.o -MF CMakeFiles/P0.dir/listaficheros.c.o.d -o CMakeFiles/P0.dir/listaficheros.c.o -c /home/yago/CLionProjects/SO3/listaficheros.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/yago/CLionProjects/SO/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/P0.dir/listaficheros.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/P0.dir/listaficheros.c.o -MF CMakeFiles/P0.dir/listaficheros.c.o.d -o CMakeFiles/P0.dir/listaficheros.c.o -c /home/yago/CLionProjects/SO/listaficheros.c
 
 CMakeFiles/P0.dir/listaficheros.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/P0.dir/listaficheros.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/yago/CLionProjects/SO3/listaficheros.c > CMakeFiles/P0.dir/listaficheros.c.i
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/yago/CLionProjects/SO/listaficheros.c > CMakeFiles/P0.dir/listaficheros.c.i
 
 CMakeFiles/P0.dir/listaficheros.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/P0.dir/listaficheros.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/yago/CLionProjects/SO3/listaficheros.c -o CMakeFiles/P0.dir/listaficheros.c.s
-
-CMakeFiles/P0.dir/p1.c.o: CMakeFiles/P0.dir/flags.make
-CMakeFiles/P0.dir/p1.c.o: /home/yago/CLionProjects/SO3/p1.c
-CMakeFiles/P0.dir/p1.c.o: CMakeFiles/P0.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/yago/CLionProjects/SO3/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/P0.dir/p1.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/P0.dir/p1.c.o -MF CMakeFiles/P0.dir/p1.c.o.d -o CMakeFiles/P0.dir/p1.c.o -c /home/yago/CLionProjects/SO3/p1.c
-
-CMakeFiles/P0.dir/p1.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/P0.dir/p1.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/yago/CLionProjects/SO3/p1.c > CMakeFiles/P0.dir/p1.c.i
-
-CMakeFiles/P0.dir/p1.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/P0.dir/p1.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/yago/CLionProjects/SO3/p1.c -o CMakeFiles/P0.dir/p1.c.s
-
-CMakeFiles/P0.dir/generalfunctions.c.o: CMakeFiles/P0.dir/flags.make
-CMakeFiles/P0.dir/generalfunctions.c.o: /home/yago/CLionProjects/SO3/generalfunctions.c
-CMakeFiles/P0.dir/generalfunctions.c.o: CMakeFiles/P0.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/yago/CLionProjects/SO3/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building C object CMakeFiles/P0.dir/generalfunctions.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/P0.dir/generalfunctions.c.o -MF CMakeFiles/P0.dir/generalfunctions.c.o.d -o CMakeFiles/P0.dir/generalfunctions.c.o -c /home/yago/CLionProjects/SO3/generalfunctions.c
-
-CMakeFiles/P0.dir/generalfunctions.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/P0.dir/generalfunctions.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/yago/CLionProjects/SO3/generalfunctions.c > CMakeFiles/P0.dir/generalfunctions.c.i
-
-CMakeFiles/P0.dir/generalfunctions.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/P0.dir/generalfunctions.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/yago/CLionProjects/SO3/generalfunctions.c -o CMakeFiles/P0.dir/generalfunctions.c.s
-
-CMakeFiles/P0.dir/p2.c.o: CMakeFiles/P0.dir/flags.make
-CMakeFiles/P0.dir/p2.c.o: /home/yago/CLionProjects/SO3/p2.c
-CMakeFiles/P0.dir/p2.c.o: CMakeFiles/P0.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/yago/CLionProjects/SO3/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building C object CMakeFiles/P0.dir/p2.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/P0.dir/p2.c.o -MF CMakeFiles/P0.dir/p2.c.o.d -o CMakeFiles/P0.dir/p2.c.o -c /home/yago/CLionProjects/SO3/p2.c
-
-CMakeFiles/P0.dir/p2.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/P0.dir/p2.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/yago/CLionProjects/SO3/p2.c > CMakeFiles/P0.dir/p2.c.i
-
-CMakeFiles/P0.dir/p2.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/P0.dir/p2.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/yago/CLionProjects/SO3/p2.c -o CMakeFiles/P0.dir/p2.c.s
-
-CMakeFiles/P0.dir/listamemoria.c.o: CMakeFiles/P0.dir/flags.make
-CMakeFiles/P0.dir/listamemoria.c.o: /home/yago/CLionProjects/SO3/listamemoria.c
-CMakeFiles/P0.dir/listamemoria.c.o: CMakeFiles/P0.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/yago/CLionProjects/SO3/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building C object CMakeFiles/P0.dir/listamemoria.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/P0.dir/listamemoria.c.o -MF CMakeFiles/P0.dir/listamemoria.c.o.d -o CMakeFiles/P0.dir/listamemoria.c.o -c /home/yago/CLionProjects/SO3/listamemoria.c
-
-CMakeFiles/P0.dir/listamemoria.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/P0.dir/listamemoria.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/yago/CLionProjects/SO3/listamemoria.c > CMakeFiles/P0.dir/listamemoria.c.i
-
-CMakeFiles/P0.dir/listamemoria.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/P0.dir/listamemoria.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/yago/CLionProjects/SO3/listamemoria.c -o CMakeFiles/P0.dir/listamemoria.c.s
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/yago/CLionProjects/SO/listaficheros.c -o CMakeFiles/P0.dir/listaficheros.c.s
 
 # Object files for target P0
 P0_OBJECTS = \
 "CMakeFiles/P0.dir/p0.c.o" \
 "CMakeFiles/P0.dir/lista.c.o" \
-"CMakeFiles/P0.dir/listaficheros.c.o" \
-"CMakeFiles/P0.dir/p1.c.o" \
-"CMakeFiles/P0.dir/generalfunctions.c.o" \
-"CMakeFiles/P0.dir/p2.c.o" \
-"CMakeFiles/P0.dir/listamemoria.c.o"
+"CMakeFiles/P0.dir/listaficheros.c.o"
 
 # External object files for target P0
 P0_EXTERNAL_OBJECTS =
@@ -183,13 +123,9 @@ P0_EXTERNAL_OBJECTS =
 P0: CMakeFiles/P0.dir/p0.c.o
 P0: CMakeFiles/P0.dir/lista.c.o
 P0: CMakeFiles/P0.dir/listaficheros.c.o
-P0: CMakeFiles/P0.dir/p1.c.o
-P0: CMakeFiles/P0.dir/generalfunctions.c.o
-P0: CMakeFiles/P0.dir/p2.c.o
-P0: CMakeFiles/P0.dir/listamemoria.c.o
 P0: CMakeFiles/P0.dir/build.make
 P0: CMakeFiles/P0.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/yago/CLionProjects/SO3/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking C executable P0"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/yago/CLionProjects/SO/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking C executable P0"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/P0.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -201,6 +137,6 @@ CMakeFiles/P0.dir/clean:
 .PHONY : CMakeFiles/P0.dir/clean
 
 CMakeFiles/P0.dir/depend:
-	cd /home/yago/CLionProjects/SO3/cmake-build-debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/yago/CLionProjects/SO3 /home/yago/CLionProjects/SO3 /home/yago/CLionProjects/SO3/cmake-build-debug /home/yago/CLionProjects/SO3/cmake-build-debug /home/yago/CLionProjects/SO3/cmake-build-debug/CMakeFiles/P0.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/yago/CLionProjects/SO/cmake-build-debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/yago/CLionProjects/SO /home/yago/CLionProjects/SO /home/yago/CLionProjects/SO/cmake-build-debug /home/yago/CLionProjects/SO/cmake-build-debug /home/yago/CLionProjects/SO/cmake-build-debug/CMakeFiles/P0.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/P0.dir/depend
 

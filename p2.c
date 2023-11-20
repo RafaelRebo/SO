@@ -37,7 +37,8 @@ void Cmd_malloc(char* trozos[],tListLM* memL){
         }
     }
     else{
-        if (trozos[1]>0) {
+        byteAmount= getByteAmount(trozos[1]);
+        if (byteAmount>0) {
             time_t date = time(NULL);
             struct tm tm = *localtime(&date);
             int allocatedBytes = getByteAmount(trozos[1]);
@@ -96,7 +97,7 @@ void SharedCreate(char *trozos[],tListLM* M){
     size_t tam;
     void *p;
 
-    if (trozos[1]==NULL || trozos[2]==NULL) {
+    if (trozos[1]==NULL || trozos[2]==NULL || trozos[3]==NULL) {
         printListM(*M,"shared");
         return;
     }
@@ -121,7 +122,6 @@ void SharedFree(char *trozos[],tListLM* M){
         printListM(*M,"shared");
     } else {
         key=getByteAmount(trozos[2]);
-        printf("%d",key);
         p = findItemMS(key,*M, "shared");
         if (p != NULL) {
             item = getItemM(p, *M);
@@ -152,6 +152,32 @@ void SharedDelkey (char *args[]){
         perror ("shmctl: imposible eliminar id de memoria compartida\n");
 }
 
+void sharedAttach(char *trozos[],tListLM* M){
+    void * p;
+    tItemLM item;
+    int key=getByteAmount(trozos[1]);
+    int id;
+    struct shmid_ds s;
+    if((id=shmget(key,0,0777))==-1){
+        printf ("Imposible asignar memoria compartida clave %lu:%s\n",(unsigned long) key,strerror(errno));
+    }
+    if((p=shmat(id,NULL,0))==(void*)-1){
+        printf ("Imposible asignar memoria compartida clave %lu:%s\n",(unsigned long) key,strerror(errno));
+    }
+    shmctl (id,IPC_STAT,&s);
+    time_t date = time(NULL);
+    struct tm tm = *localtime(&date);
+    item.memdir = p;
+    item.size = (int) s.shm_segsz;
+    item.time = tm;
+    strcpy(item.type, "shared");
+    item.mappedFD = -1;
+    strcpy(item.mappedFilename, "");
+    item.sharedKey = key;
+    printf("Memoria compartida de clave %d en %p",key,item.memdir);
+    insertItemM(item, M);
+}
+
 void Cmd_shared(char *trozos[],tListLM* M){
     if(trozos[1]!=NULL){
         if(strcmp(trozos[1],"-create")==0){
@@ -162,6 +188,9 @@ void Cmd_shared(char *trozos[],tListLM* M){
         }
         else if(strcmp(trozos[1],"-delkey")==0){
             SharedDelkey(trozos);
+        }
+        else if(trozos[1][0]>='0'&&trozos[1][0]<='9'){
+            sharedAttach(trozos,M);
         }
     }
     else{
@@ -221,9 +250,7 @@ void Cmd_mmap(char* trozos[], tListLM* memL){
         if(trozos[2]==NULL)
             printListM(*memL, "mmap");
         else{
-
             p=findItemMmmap(trozos[2], *memL);
-
             if(p==LMNULL)
                 printf("Fichero %s no mapeado", trozos[2]);
             else{
@@ -236,4 +263,41 @@ void Cmd_mmap(char* trozos[], tListLM* memL){
     }
     else
         CmdMmap(&trozos[1], memL);
+}
+
+ssize_t LeerFichero (char *f, void *p, size_t cont){
+    struct stat s;
+    ssize_t  n;
+    int df,aux;
+
+    if (stat (f,&s)==-1 || (df=open(f,O_RDONLY))==-1)
+        return -1;
+    if (cont==-1)   /* si pasamos -1 como bytes a leer lo leemos entero*/
+        cont=s.st_size;
+    if ((n=read(df,p,cont))==-1){
+        aux=errno;
+        close(df);
+        errno=aux;
+        return -1;
+    }
+    close (df);
+    return n;
+}
+
+void CmdRead (char *trozos[]){
+    void *p;
+    size_t cont=-1;  /* -1 indica leer todo el fichero*/
+    ssize_t n;
+    if (trozos[1]==NULL || trozos[2]==NULL){
+        printf ("faltan parametros\n");
+        return;
+    }
+    p=trozos[2];  /*convertimos de cadena a puntero*/
+    printf("%p",p);
+    if (trozos[3]!=NULL)
+        cont=(size_t) atoll(trozos[3]);
+    if ((n=LeerFichero(trozos[1],p,cont))==-1)
+        perror ("Imposible leer fichero");
+    else
+        printf ("leidos %lld bytes de %s en %p\n",(long long) n,trozos[1],p);
 }

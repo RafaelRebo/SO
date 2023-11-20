@@ -1,1 +1,1 @@
-/usr/bin/cc -g CMakeFiles/P0.dir/p0.c.o CMakeFiles/P0.dir/lista.c.o CMakeFiles/P0.dir/listaficheros.c.o CMakeFiles/P0.dir/p1.c.o CMakeFiles/P0.dir/generalfunctions.c.o CMakeFiles/P0.dir/p2.c.o CMakeFiles/P0.dir/listamemoria.c.o -o P0 
+/usr/bin/cc -g CMakeFiles/P0.dir/p0.c.o CMakeFiles/P0.dir/lista.c.o CMakeFiles/P0.dir/listaficheros.c.o -o P0 
