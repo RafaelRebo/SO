@@ -34,13 +34,15 @@ void Cmd_malloc(char* trozos[],tListLM* memL){
                     printf("No hay bloque de ese tamano asignado con malloc");
                 }
             }
+            else printf("No se asignan bloques de 0 bytes");
         }
     }
     else{
-        if (trozos[1]>0) {
+        byteAmount=getByteAmount(trozos[1]);
+        if (byteAmount>0) {
             time_t date = time(NULL);
             struct tm tm = *localtime(&date);
-            int allocatedBytes = getByteAmount(trozos[1]);
+            int allocatedBytes = byteAmount;
             mallocItem.memdir = malloc(allocatedBytes);
             mallocItem.size = allocatedBytes;
             mallocItem.time = tm;
@@ -276,7 +278,7 @@ void CmdRead (char *ar[]){
 }
 
 void Cmd_read (char* trozos[]){
-    CmdRead(&trozos[1]);
+    CmdRead(&trozos[1]);    //ver como funciona tanto el read como el write
 }
 
 void imprimirMemDumpHex(void *p, size_t len) {
@@ -296,10 +298,30 @@ void Cmd_memdump (char* trozos[]){
         return;
     if (trozos[2]!=NULL)
         len= atoi(trozos[2]);
-    unsigned long num = strtoul(trozos[1], NULL, 0);
-    p = (void *) num;
+    unsigned long addr = strtoul(trozos[1], NULL, 0);
+    p = (void *) addr;
     imprimirMemDumpHex(p, len);
 
+}
+
+void LlenarMemoria (void *p, size_t cont, unsigned char byte){
+    unsigned char *arr=(unsigned char *) p;
+    size_t i;
+    for (i=0; i<cont;i++)
+        arr[i]=byte;
+}
+
+void Cmd_memfill (char* trozos[]){
+    void *p;
+    int fillBytes = atoi(trozos[2]), charBytes= 'A';
+    unsigned long addr = strtoul(trozos[1], NULL, 0);
+    p = (void *) addr;
+    if (trozos[3]!=NULL) {
+        charBytes=atoi(trozos[3]);
+    }
+    printf("Llenando %d bytes de memoria con el byte (%02d) a partir de la direccion %p", fillBytes, charBytes, p);
+    LlenarMemoria(p, fillBytes, charBytes);//charByte si es mas de un char q sea 0 sino trozos[3][0] <-atoi
+    Cmd_memdump(trozos);
 }
 
 

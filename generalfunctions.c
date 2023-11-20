@@ -26,7 +26,11 @@ bool procesarEntrada(tComando comando, tList *L, char *trozos[], tListF *F, tLis
 }
 
 void procesarComando(char *trozos[], tList *L, tListF *F, tListLM *memL) {
-    if (strcmp(trozos[0], "authors") == 0) {
+    if(!strcmp(trozos[1], "-?") || !strcmp(trozos[1], "-help")){
+        trozos[1]=trozos[0];
+        Help(&trozos[0]);
+    }
+    else if (strcmp(trozos[0], "authors") == 0) {
         authors(trozos);
     } else if (strcmp(trozos[0], "pid") == 0) {
         pid(trozos);
@@ -68,6 +72,8 @@ void procesarComando(char *trozos[], tList *L, tListF *F, tListLM *memL) {
         Cmd_read(trozos);
     } else if (strcmp(trozos[0], "memdump") == 0) {
         Cmd_memdump(trozos);
+    } else if (strcmp(trozos[0], "memfill") == 0) {
+        Cmd_memfill(trozos);
     }else if (strcmp(trozos[0], "help") == 0) {
         Help(trozos);
     } else {
