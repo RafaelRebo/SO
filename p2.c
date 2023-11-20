@@ -38,7 +38,7 @@ void Cmd_malloc(char* trozos[],tListLM* memL){
         }
     }
     else{
-        byteAmount=getByteAmount(trozos[1]);
+        byteAmount= getByteAmount(trozos[1]);
         if (byteAmount>0) {
             time_t date = time(NULL);
             struct tm tm = *localtime(&date);
@@ -98,7 +98,7 @@ void SharedCreate(char *trozos[],tListLM* M){
     size_t tam;
     void *p;
 
-    if (trozos[1]==NULL || trozos[2]==NULL) {
+    if (trozos[1]==NULL || trozos[2]==NULL || trozos[3]==NULL) {
         printListM(*M,"shared");
         return;
     }
@@ -123,7 +123,6 @@ void SharedFree(char *trozos[],tListLM* M){
         printListM(*M,"shared");
     } else {
         key=getByteAmount(trozos[2]);
-        printf("%d",key);
         p = findItemMS(key,*M, "shared");
         if (p != NULL) {
             item = getItemM(p, *M);
@@ -154,6 +153,32 @@ void SharedDelkey (char *args[]){
         perror ("shmctl: imposible eliminar id de memoria compartida\n");
 }
 
+void sharedAttach(char *trozos[],tListLM* M){
+    void * p;
+    tItemLM item;
+    int key=getByteAmount(trozos[1]);
+    int id;
+    struct shmid_ds s;
+    if((id=shmget(key,0,0777))==-1){
+        printf ("Imposible asignar memoria compartida clave %lu:%s\n",(unsigned long) key,strerror(errno));
+    }
+    if((p=shmat(id,NULL,0))==(void*)-1){
+        printf ("Imposible asignar memoria compartida clave %lu:%s\n",(unsigned long) key,strerror(errno));
+    }
+    shmctl (id,IPC_STAT,&s);
+    time_t date = time(NULL);
+    struct tm tm = *localtime(&date);
+    item.memdir = p;
+    item.size = (int) s.shm_segsz;
+    item.time = tm;
+    strcpy(item.type, "shared");
+    item.mappedFD = -1;
+    strcpy(item.mappedFilename, "");
+    item.sharedKey = key;
+    printf("Memoria compartida de clave %d en %p",key,item.memdir);
+    insertItemM(item, M);
+}
+
 void Cmd_shared(char *trozos[],tListLM* M){
     if(trozos[1]!=NULL){
         if(strcmp(trozos[1],"-create")==0){
@@ -164,6 +189,9 @@ void Cmd_shared(char *trozos[],tListLM* M){
         }
         else if(strcmp(trozos[1],"-delkey")==0){
             SharedDelkey(trozos);
+        }
+        else if(trozos[1][0]>='0'&&trozos[1][0]<='9'){
+            sharedAttach(trozos,M);
         }
     }
     else{

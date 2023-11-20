@@ -86,7 +86,7 @@ void getMonthName(int month, char* string){
 
 void printListM(tListLM M, tAlloctype allocType){ //Imprime la lista completa
     tItemLM item;
-    char string[4];
+    char string[5];
     char parameter[20];
     bool mmap;
     printf("****** Lista de bloques asigandos %s para el proceso %d",allocType,getpid());

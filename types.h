@@ -3,7 +3,7 @@
 #define MAX 100
 #define MAXF 300
 #define MAXM 60
-#define MAXT 7
+#define MAXT 5
 #include "includes.h"
 #include <stdbool.h>
 #include <time.h>

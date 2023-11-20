@@ -57,10 +57,10 @@ RM = /snap/clion/250/bin/cmake/linux/x64/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/yago/CLionProjects/SO3
+CMAKE_SOURCE_DIR = /home/yago/CLionProjects/SO
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/yago/CLionProjects/SO3/cmake-build-debug
+CMAKE_BINARY_DIR = /home/yago/CLionProjects/SO/cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/yago/CLionProjects/SO3/cmake-build-debug/CMakeFiles /home/yago/CLionProjects/SO3/cmake-build-debug//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/yago/CLionProjects/SO/cmake-build-debug/CMakeFiles /home/yago/CLionProjects/SO/cmake-build-debug//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/yago/CLionProjects/SO3/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/yago/CLionProjects/SO/cmake-build-debug/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -128,30 +128,6 @@ P0: cmake_check_build_system
 P0/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/P0.dir/build.make CMakeFiles/P0.dir/build
 .PHONY : P0/fast
-
-generalfunctions.o: generalfunctions.c.o
-.PHONY : generalfunctions.o
-
-# target to build an object file
-generalfunctions.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/P0.dir/build.make CMakeFiles/P0.dir/generalfunctions.c.o
-.PHONY : generalfunctions.c.o
-
-generalfunctions.i: generalfunctions.c.i
-.PHONY : generalfunctions.i
-
-# target to preprocess a source file
-generalfunctions.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/P0.dir/build.make CMakeFiles/P0.dir/generalfunctions.c.i
-.PHONY : generalfunctions.c.i
-
-generalfunctions.s: generalfunctions.c.s
-.PHONY : generalfunctions.s
-
-# target to generate assembly for a file
-generalfunctions.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/P0.dir/build.make CMakeFiles/P0.dir/generalfunctions.c.s
-.PHONY : generalfunctions.c.s
 
 lista.o: lista.c.o
 .PHONY : lista.o
@@ -201,30 +177,6 @@ listaficheros.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/P0.dir/build.make CMakeFiles/P0.dir/listaficheros.c.s
 .PHONY : listaficheros.c.s
 
-listamemoria.o: listamemoria.c.o
-.PHONY : listamemoria.o
-
-# target to build an object file
-listamemoria.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/P0.dir/build.make CMakeFiles/P0.dir/listamemoria.c.o
-.PHONY : listamemoria.c.o
-
-listamemoria.i: listamemoria.c.i
-.PHONY : listamemoria.i
-
-# target to preprocess a source file
-listamemoria.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/P0.dir/build.make CMakeFiles/P0.dir/listamemoria.c.i
-.PHONY : listamemoria.c.i
-
-listamemoria.s: listamemoria.c.s
-.PHONY : listamemoria.s
-
-# target to generate assembly for a file
-listamemoria.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/P0.dir/build.make CMakeFiles/P0.dir/listamemoria.c.s
-.PHONY : listamemoria.c.s
-
 p0.o: p0.c.o
 .PHONY : p0.o
 
@@ -249,54 +201,6 @@ p0.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/P0.dir/build.make CMakeFiles/P0.dir/p0.c.s
 .PHONY : p0.c.s
 
-p1.o: p1.c.o
-.PHONY : p1.o
-
-# target to build an object file
-p1.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/P0.dir/build.make CMakeFiles/P0.dir/p1.c.o
-.PHONY : p1.c.o
-
-p1.i: p1.c.i
-.PHONY : p1.i
-
-# target to preprocess a source file
-p1.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/P0.dir/build.make CMakeFiles/P0.dir/p1.c.i
-.PHONY : p1.c.i
-
-p1.s: p1.c.s
-.PHONY : p1.s
-
-# target to generate assembly for a file
-p1.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/P0.dir/build.make CMakeFiles/P0.dir/p1.c.s
-.PHONY : p1.c.s
-
-p2.o: p2.c.o
-.PHONY : p2.o
-
-# target to build an object file
-p2.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/P0.dir/build.make CMakeFiles/P0.dir/p2.c.o
-.PHONY : p2.c.o
-
-p2.i: p2.c.i
-.PHONY : p2.i
-
-# target to preprocess a source file
-p2.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/P0.dir/build.make CMakeFiles/P0.dir/p2.c.i
-.PHONY : p2.c.i
-
-p2.s: p2.c.s
-.PHONY : p2.s
-
-# target to generate assembly for a file
-p2.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/P0.dir/build.make CMakeFiles/P0.dir/p2.c.s
-.PHONY : p2.c.s
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -306,27 +210,15 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... P0"
-	@echo "... generalfunctions.o"
-	@echo "... generalfunctions.i"
-	@echo "... generalfunctions.s"
 	@echo "... lista.o"
 	@echo "... lista.i"
 	@echo "... lista.s"
 	@echo "... listaficheros.o"
 	@echo "... listaficheros.i"
 	@echo "... listaficheros.s"
-	@echo "... listamemoria.o"
-	@echo "... listamemoria.i"
-	@echo "... listamemoria.s"
 	@echo "... p0.o"
 	@echo "... p0.i"
 	@echo "... p0.s"
-	@echo "... p1.o"
-	@echo "... p1.i"
-	@echo "... p1.s"
-	@echo "... p2.o"
-	@echo "... p2.i"
-	@echo "... p2.s"
 .PHONY : help
 
 
