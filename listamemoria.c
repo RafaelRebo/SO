@@ -89,23 +89,26 @@ void printListM(tListLM M, tAlloctype allocType){ //Imprime la lista completa
     char string[5];
     char parameter[20];
     bool mmap;
-    printf("****** Lista de bloques asigandos %s para el proceso %d",allocType,getpid());
-    for(tPosLM p=firstM(M); p!=LMNULL; p= nextM(p,M)){
-        item=getItemM(p,M);
-        strcpy(parameter, item.type);
-        if(!strcmp(item.type,allocType)){
-            getMonthName(item.time.tm_mon,string);
+    if(strcmp(allocType,"all")!=0) printf("****** Lista de bloques asignados %s para el proceso %d",allocType,getpid());
+    else printf("****** Lista de bloques asignados para el proceso %d",getpid());
+        for (tPosLM p = firstM(M); p != LMNULL; p = nextM(p, M)) {
+            item = getItemM(p, M);
+            strcpy(parameter, item.type);
+            if (!strcmp(item.type, allocType)||strcmp(allocType,"all")==0) {
+                getMonthName(item.time.tm_mon, string);
 
-            mmap = !strcmp(item.type, "mmap");
-            if(mmap)
-                strcpy(parameter, item.mappedFilename);
-            printf("\n\t%p\t\t%d\t %s %2d    %02d:%02d    %s",item.memdir,item.size,string,item.time.tm_mday,item.time.tm_hour,item.time.tm_min,parameter);
-            if(!strcmp(allocType,"shared")) printf(" (key %d)",item.sharedKey);
-            if(mmap)
-                printf("\t (descriptor %d)", item.mappedFD);
+                mmap = !strcmp(item.type, "mmap");
+                if (mmap)
+                    strcpy(parameter, item.mappedFilename);
+                printf("\n\t%p\t\t%-8d\t %s %2d    %02d:%02d    %s", item.memdir, item.size, string, item.time.tm_mday,
+                       item.time.tm_hour, item.time.tm_min, parameter);
+                if (!strcmp(item.type, "shared")) printf(" (key %d)", item.sharedKey);
+                if (mmap)
+                    printf("\t (descriptor %d)", item.mappedFD);
 
+            }
         }
-    }
+
 }
 
 tPosLM findItemMmalloc(int bytes, tListLM M){

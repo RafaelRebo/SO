@@ -14,6 +14,8 @@ void Cmd_read (char* trozos[]);
 void Cmd_memdump (char* trozos[]);
 void Cmd_memfill (char* trozos[]);
 void Cmd_write(char* trozos[]);
+void Cmd_mem(char* trozos[],tListLM M);
+void Cmd_recurse(char* trozos[]);
 
 
 #endif //P0_P2_H

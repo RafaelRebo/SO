@@ -1,4 +1,9 @@
 #include "includes.h"
+#define TAMANO 2048
+
+int vg1=2,vg2=4,vg3=6;
+
+int vgn1,vgn2,vgn3;
 
 int getByteAmount(const char string[]){
     char bytes[100]="";
@@ -161,9 +166,11 @@ void sharedAttach(char *trozos[],tListLM* M){
     struct shmid_ds s;
     if((id=shmget(key,0,0777))==-1){
         printf ("Imposible asignar memoria compartida clave %lu:%s\n",(unsigned long) key,strerror(errno));
+        return;
     }
     if((p=shmat(id,NULL,0))==(void*)-1){
         printf ("Imposible asignar memoria compartida clave %lu:%s\n",(unsigned long) key,strerror(errno));
+        return;
     }
     shmctl (id,IPC_STAT,&s);
     time_t date = time(NULL);
@@ -308,27 +315,36 @@ void CmdRead (char *ar[]){
 }
 
 void Cmd_read (char* trozos[]){
-    CmdRead(&trozos[1]);    //ver como funciona tanto el read como el write
+    CmdRead(&trozos[1]);
+}
+
+void printCharacter(size_t j, unsigned char *point){
+    if ((point[j] >= 32 && point[j] <= 126)||point[j]==10){
+        if(point[j]==10) printf("\\n");
+        else printf(" %c ", point[j]);
+    }
+    else
+        printf("   ");
 }
 
 void imprimirMemDumpHex(void *p, size_t len) {
     unsigned char *point = (unsigned char*)p;
-    for (size_t j = 0; j < len; j++){
-        if(j%25==0)
+    int cont=0;
+    for (size_t j = 0; j <= len; j++){
+        if((j%25!=0||j==0)&&j!=len)printCharacter(j,point);
+        else{
             printf("\n");
-        if (point[j]>='a' && point[j]<='z' || point[j]>='A' && point[j]<='Z')
-            printf(" %c ", point[j]);
-        else
-            printf("   ");
+            for (size_t i = j - cont; i < j; i++) {
+                if (i == j - 1) {
+                    printf("%02x ", point[i]);
+                    printf("\n");
+                } else printf("%02x ", point[i]);
+            }
+            cont = 0;
+            if(j!=len) printCharacter(j,point);
+        }
+        cont++;
     }
-
-
-    for (size_t i = 0; i < len; i++) {
-        if(i%25==0)
-            printf("\n");
-        printf("%02x ", point[i]);
-    }
-    printf("\n");
 }
 
 void Cmd_memdump (char* trozos[]){
@@ -340,7 +356,7 @@ void Cmd_memdump (char* trozos[]){
         len= atoi(trozos[2]);
     unsigned long addr = strtoul(trozos[1], NULL, 0);
     p = (void *) addr;
-    printf("Volcando %d bytes desde la direccion %p", len, p);
+    printf("Volcando %ld bytes desde la direccion %p;\n\n", len, p);
     imprimirMemDumpHex(p, len);
 
 }
@@ -354,15 +370,19 @@ void LlenarMemoria (void *p, size_t cont, unsigned char byte){
 
 void Cmd_memfill (char* trozos[]){
     void *p;
-    int fillBytes = atoi(trozos[2]), charBytes= 'A';
+    int fillBytes = atoi(trozos[2]);
+    char charBytes= 'A';
     unsigned long addr = strtoul(trozos[1], NULL, 0);
     p = (void *) addr;
     if (trozos[3]!=NULL) {
-        charBytes=atoi(trozos[3]);
+        if (trozos[3][0]==39&&trozos[3][2]==39) {
+            charBytes = trozos[3][1];
+        } else {
+            charBytes=0;
+        }
     }
-    printf("Llenando %d bytes de memoria con el byte (%02d) a partir de la direccion %p", fillBytes, charBytes, p);
-    LlenarMemoria(p, fillBytes, charBytes);//charByte si es mas de un char q sea 0 sino trozos[3][0] <-atoi
-    Cmd_memdump(trozos);
+    printf("Llenando %d bytes de memoria con el byte ' %c ' (%02x) a partir de la direccion %p", fillBytes, charBytes, charBytes, p);
+    LlenarMemoria(p, fillBytes, charBytes);
 }
 
 
@@ -375,13 +395,16 @@ ssize_t EscribirFichero (char *f, void *p, size_t cont,int overwrite)
     if (overwrite)
         flags=O_CREAT | O_WRONLY | O_TRUNC;
 
-    if ((df=open(f,flags,0777))==-1)
+    if ((df=open(f,flags,0777))==-1){
+        perror("Imposible abrir fichero: ");
         return -1;
+    }
 
     if ((n=write(df,p,cont))==-1){
         aux=errno;
         close(df);
         errno=aux;
+        perror("Imposible escribir fichero: ");
         return -1;
     }
     close (df);
@@ -390,25 +413,131 @@ ssize_t EscribirFichero (char *f, void *p, size_t cont,int overwrite)
 
 void Cmd_write(char* trozos[]){
     int overwrite = 0;
+    size_t writtenBytes;
 
-    if(trozos[1]==NULL || trozos[2]==NULL || trozos[3]==NULL){
-        printf("faltan parametros\n");
+    if(trozos[1]!=NULL){
+        if(strcmp(trozos[1],"-o")==0){
+            if(trozos[2]==NULL || trozos[3]==NULL || trozos[4]==NULL){
+                printf("faltan parametros");
+                return;
+            }
+        }
+        else if(trozos[2]==NULL || trozos[3]==NULL){
+            printf("faltan parametros");
+            return;
+        }
+    }
+    else{
+        printf("faltan parametros");
         return;
     }
-    void *p, *fich, *cont;
-    unsigned long addr = strtoul(trozos[1], NULL, 0);
-    p = (void *) addr;
+    void *p;
+    tFilename fich;
+    int cont;
 
-    fich=&trozos[1];
-    cont = &trozos[2];
+    strcpy(fich,trozos[1]);
+    p = (void *) strtoul(trozos[2], NULL, 0);
+    cont = atoi(trozos[3]);
 
-    if (strcmp(fich, "-o")){
+    if (strcmp(trozos[1], "-o")==0){
         overwrite=1;
-        fich=&trozos[2];
-        cont = &trozos[3];
+        strcpy(fich,trozos[2]);
+        p = (void *) strtoul(trozos[3], NULL, 0);
+        cont=atoi(trozos[4]);
     }
 
-    EscribirFichero(fich, p, atoi(cont), overwrite);
+    writtenBytes=EscribirFichero(fich, p, cont, overwrite);
+
+    if(writtenBytes!=-1){
+        printf("Escritos %ld bytes en %s desde %p",writtenBytes,fich,p);
+    }
 }
+
+void Do_MemPmap (void) /*sin argumentos*/{
+    pid_t pid;       /*hace el pmap (o equivalente) del proceso actual*/
+    char elpid[32];
+    char *argv[4]={"pmap",elpid,NULL};
+
+    sprintf (elpid,"%d", (int) getpid());
+    if ((pid=fork())==-1){
+        perror ("Imposible crear proceso");
+        return;
+    }
+    if (pid==0){ /*proceso hijo*/
+        if (execvp(argv[0],argv)==-1)
+            perror("cannot execute pmap (linux, solaris)");
+
+        argv[0]="vmmap"; argv[1]="-interleave"; argv[2]=elpid;argv[3]=NULL;
+        if (execvp(argv[0],argv)==-1) /*probamos vmmap Mac-OS*/
+            perror("cannot execute vmmap (Mac-OS)");
+
+        argv[0]="procstat"; argv[1]="vm"; argv[2]=elpid; argv[3]=NULL;
+        if (execvp(argv[0],argv)==-1)/*No hay pmap, probamos procstat FreeBSD */
+            perror("cannot execute procstat (FreeBSD)");
+
+        argv[0]="procmap",argv[1]=elpid;argv[2]=NULL;
+        if (execvp(argv[0],argv)==-1)  /*probamos procmap OpenBSD*/
+            perror("cannot execute procmap (OpenBSD)");
+
+        exit(1);
+    }
+    waitpid (pid,NULL,0);
+}
+
+void Cmd_mem(char* trozos[],tListLM M){
+    int var1=2,var2=3,var3=4;
+    static int svar1=2,svar2=3,svar3=4;
+    static int snvar1,snvar2,snvar3;
+    if(trozos[1]!=NULL&&strcmp(trozos[1],"-all")!=0){
+        if(strcmp(trozos[1],"-blocks")==0){
+            printListM(M,"all");
+        }
+        else if(strcmp(trozos[1],"-vars")==0){
+            printf("Variables locales: %19p, %17p, %17p\n",&var1,&var2,&var3);
+            printf("Variables globales: %18p, %17p, %17p\n",&vg1,&vg2,&vg3);
+            printf("Var(N.I.) globales: %18p, %17p, %17p\n",&vgn1,&vgn2,&vgn3);
+            printf("Variables estaticas: %17p, %17p, %17p\n",&svar1,&svar2,&svar3);
+            printf("Var(N.I.) estaticas: %17p, %17p, %17p\n",&snvar1,&snvar2,&snvar3);
+        }
+        else if(strcmp(trozos[1],"-funcs")==0){
+            printf("Funciones de programa: %18p, %17p, %17p\n",&getByteAmount,&Cmd_shared,&printCharacter);
+            printf("Funciones de liberia: %19p, %17p, %17p\n",&printf,&strcmp,&scanf);
+        }
+        else if(strcmp(trozos[1],"-pmap")==0){
+            Do_MemPmap();
+        }
+    }
+    else{
+        printf("Variables locales: %19p, %17p, %17p\n",&var1,&var2,&var3);
+        printf("Variables globales: %18p, %17p, %17p\n",&vg1,&vg2,&vg3);
+        printf("Var(N.I.) globales: %18p, %17p, %17p\n",&vgn1,&vgn2,&vgn3);
+        printf("Variables estaticas: %17p, %17p, %17p\n",&svar1,&svar2,&svar3);
+        printf("Var(N.I.) estaticas: %17p, %17p, %17p\n",&snvar1,&snvar2,&snvar3);
+        printf("\n");
+        printf("Funciones de programa: %15p, %17p, %17p\n",&getByteAmount,&Cmd_shared,&printCharacter);
+        printf("Funciones de liberia: %16p, %17p, %17p\n",&printf,&strcmp,&scanf);
+        printf("\n");
+        printListM(M,"all");
+    }
+}
+
+void Recursiva (int n){
+    char automatico[TAMANO];
+    static char estatico[TAMANO];
+
+    printf ("parametro:%3d(%p) array %p, arr estatico %p\n",n,&n,automatico, estatico);
+
+    if (n>0)
+        Recursiva(n-1);
+}
+
+void Cmd_recurse(char* trozos[]){
+    int n;
+    if(trozos[1]!=NULL){
+        n=getByteAmount(trozos[1]);
+        Recursiva(n);
+    }
+}
+
 
 
