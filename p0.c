@@ -41,7 +41,6 @@ void authors(char *trozos[]) {
     } else {
         printf("Rafael Reboredo (rafael.reboredo@udc.es) & Yago Manuel Sanchez (yago.sanchezm@udc.es)");
     }
-
 }
 
 void pid(char *trozos[]) {

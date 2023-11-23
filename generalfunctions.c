@@ -98,6 +98,15 @@ int TrocearCadena(char *cadena, char *trozos[]) {
     return i;
 }
 
+bool tests_run_within_valgrind (void){
+    //Devuelve 1 si se est
+    char *p = getenv ("LD_PRELOAD");
+    if (p == NULL)
+        return 0;
+    return (strstr (p, "/valgrind/") != NULL ||
+            strstr (p, "/vgpreload") != NULL);
+}
+
 void Help(char *trozos[]) {
     if (trozos[1] != NULL) {
         printf("%s", trozos[1]);
