@@ -19,12 +19,14 @@ void Cmd_malloc(char* trozos[],tListLM* memL){
     tItemLM mallocItem;
     tPosLM p;
     int byteAmount;
+    tAlloctype alloctype;
+    strcpy(alloctype,"malloc");
     if(trozos[1]==NULL){
-        printListM(*memL,"malloc");
+        printListM(*memL,alloctype);
     }
     else if(strcmp(trozos[1],"-free")==0){
         if(trozos[2]==NULL){
-            printListM(*memL,"malloc");
+            printListM(*memL,alloctype);
         }
         else{
             byteAmount=getByteAmount(trozos[2]);
@@ -102,9 +104,11 @@ void SharedCreate(char *trozos[],tListLM* M){
     key_t cl;
     size_t tam;
     void *p;
+    tAlloctype alloctype;
+    strcpy(alloctype,"shared");
 
     if (trozos[1]==NULL || trozos[2]==NULL || trozos[3]==NULL) {
-        printListM(*M,"shared");
+        printListM(*M,alloctype);
         return;
     }
 
@@ -124,11 +128,13 @@ void SharedFree(char *trozos[],tListLM* M){
     tItemLM item;
     tPosLM p;
     int key;
+    tAlloctype alloctype;
+    strcpy(alloctype,"shared");
     if(trozos[2]==NULL){
-        printListM(*M,"shared");
+        printListM(*M,alloctype);
     } else {
         key=getByteAmount(trozos[2]);
-        p = findItemMS(key,*M, "shared");
+        p = findItemMS(key,*M, alloctype);
         if (p != NULL) {
             item = getItemM(p, *M);
             printf("Liberados %d bytes de memoria compartida en %p", item.size, item.memdir);
@@ -187,6 +193,8 @@ void sharedAttach(char *trozos[],tListLM* M){
 }
 
 void Cmd_shared(char *trozos[],tListLM* M){
+    tAlloctype alloctype;
+    strcpy(alloctype,"shared");
     if(trozos[1]!=NULL){
         if(strcmp(trozos[1],"-create")==0){
             SharedCreate(trozos,M);
@@ -202,7 +210,7 @@ void Cmd_shared(char *trozos[],tListLM* M){
         }
     }
     else{
-        printListM(*M,"shared");
+        printListM(*M,alloctype);
     }
 }
 
@@ -237,9 +245,11 @@ void CmdMmap(char *arg[], tListLM* memL){
     char *perm;
     void *p;
     int protection=0;
+    tAlloctype alloctype;
+    strcpy(alloctype,"mmap");
 
     if (arg[0]==NULL)
-    {printListM(*memL,"mmap"); return;}
+    {printListM(*memL,alloctype); return;}
     if ((perm=arg[1])!=NULL && strlen(perm)<4) {
         if (strchr(perm,'r')!=NULL) protection|=PROT_READ;
         if (strchr(perm,'w')!=NULL) protection|=PROT_WRITE;
@@ -254,9 +264,11 @@ void CmdMmap(char *arg[], tListLM* memL){
 void Cmd_mmap(char* trozos[], tListLM* memL){
     tPosLM p;
     tItemLM item;
+    tAlloctype alloctype;
+    strcpy(alloctype,"mmap");
     if(trozos[1] != NULL && !strcmp(trozos[1], "-free")){
         if(trozos[2]==NULL)
-            printListM(*memL, "mmap");
+            printListM(*memL, alloctype);
         else{
 
             p=findItemMmmap(trozos[2], *memL);
@@ -488,9 +500,11 @@ void Cmd_mem(char* trozos[],tListLM M){
     int var1=2,var2=3,var3=4;
     static int svar1=2,svar2=3,svar3=4;
     static int snvar1,snvar2,snvar3;
+    tAlloctype alloctype;
+    strcpy(alloctype,"all");
     if(trozos[1]!=NULL&&strcmp(trozos[1],"-all")!=0){
         if(strcmp(trozos[1],"-blocks")==0){
-            printListM(M,"all");
+            printListM(M,alloctype);
         }
         else if(strcmp(trozos[1],"-vars")==0){
             printf("Variables locales: %19p, %17p, %17p\n",&var1,&var2,&var3);
@@ -517,7 +531,7 @@ void Cmd_mem(char* trozos[],tListLM M){
         printf("Funciones de programa: %15p, %17p, %17p\n",&getByteAmount,&Cmd_shared,&printCharacter);
         printf("Funciones de liberia: %16p, %17p, %17p\n",&printf,&strcmp,&scanf);
         printf("\n");
-        printListM(M,"all");
+        printListM(M,alloctype);
     }
 }
 
