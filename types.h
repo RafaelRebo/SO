@@ -3,7 +3,6 @@
 #define MAX 100
 #define MAXF 300
 #define MAXM 60
-#define MAXT 10
 #include "includes.h"
 #include <stdbool.h>
 #include <time.h>
@@ -14,7 +13,13 @@ typedef char filename[MAXF];
 typedef filename tFilename;
 typedef char mode[MAXM];
 typedef mode tMode;
-typedef char allocType[MAXT];
+typedef enum allocType{
+    Tmalloc,
+    Tshared,
+    Tmmap,
+    Tall
+}allocType;
+
 typedef allocType tAlloctype;
 typedef tComando tItemL;
 

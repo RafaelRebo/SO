@@ -83,27 +83,31 @@ void getMonthName(int month, char* string){
             break;
     }
 }
+const char* enumToString(tAlloctype alloctype){
+    const char *strings[] = {"malloc", "shared", "mmap", "all"};
+    return strings[alloctype];
+}
 
 void printListM(tListLM M, tAlloctype allocType){ //Imprime la lista completa
     tItemLM item;
     char string[5];
     char parameter[20];
-    bool mmap;
-    if(strcmp(allocType,"all")!=0) printf("****** Lista de bloques asignados %s para el proceso %d",allocType,getpid());
+    bool mmapT;
+    if(allocType!=Tall) printf("****** Lista de bloques asignados %s para el proceso %d", enumToString(allocType),getpid());
     else printf("****** Lista de bloques asignados para el proceso %d",getpid());
         for (tPosLM p = firstM(M); p != LMNULL; p = nextM(p, M)) {
             item = getItemM(p, M);
-            strcpy(parameter, item.type);
-            if (!strcmp(item.type, allocType)||strcmp(allocType,"all")==0) {
+            strcpy(parameter, enumToString(item.type));
+            if (allocType==item.type||allocType==Tall) {
                 getMonthName(item.time.tm_mon, string);
 
-                mmap = !strcmp(item.type, "mmap");
-                if (mmap)
+                mmapT = item.type==Tmmap;
+                if (mmapT)
                     strcpy(parameter, item.mappedFilename);
                 printf("\n\t%p\t\t%-8d\t %s %2d    %02d:%02d    %s", item.memdir, item.size, string, item.time.tm_mday,
                        item.time.tm_hour, item.time.tm_min, parameter);
-                if (!strcmp(item.type, "shared")) printf(" (key %d)", item.sharedKey);
-                if (mmap)
+                if (item.type==Tshared) printf(" (key %d)", item.sharedKey);
+                if (mmapT)
                     printf("\t (descriptor %d)", item.mappedFD);
 
             }
@@ -118,7 +122,7 @@ tPosLM findItemMmalloc(int bytes, tListLM M){
     p= firstM(M);
     do{
         item=getItemM(p,M);
-        if(bytes==item.size&&!strcmp("malloc",item.type)){
+        if(bytes==item.size&&item.type==Tmalloc){
             return p;
         }
         p=nextM(p,M);
@@ -134,7 +138,7 @@ tPosLM findItemMmmap(char* fileName, tListLM M){
     p= firstM(M);
     do{
         item=getItemM(p,M);
-        if(!strcmp(fileName, item.mappedFilename)&&!strcmp("mmap",item.type)){
+        if(!strcmp(fileName, item.mappedFilename)&&item.type==Tmmap){
             return p;
         }
         p=nextM(p,M);
@@ -150,7 +154,7 @@ tPosLM findItemMS(int key, tListLM M, tAlloctype alloctype){
     p= firstM(M);
     do{
         item=getItemM(p,M);
-        if(key==item.sharedKey&&!strcmp(alloctype,item.type)){
+        if(key==item.sharedKey&&item.type==alloctype){
             return p;
         }
         p=nextM(p,M);

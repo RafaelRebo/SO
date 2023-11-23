@@ -25,8 +25,8 @@ void Cmd_malloc(char* trozos[],tListLM* memL){
     tItemLM mallocItem;
     tPosLM p;
     int byteAmount;
-    tAlloctype alloctype;
-    strcpy(alloctype,"malloc");
+    tAlloctype alloctype=Tmalloc;
+
     if(trozos[1]==NULL){
         printListM(*memL,alloctype);
     }
@@ -59,7 +59,8 @@ void Cmd_malloc(char* trozos[],tListLM* memL){
             mallocItem.memdir = malloc(allocatedBytes);
             mallocItem.size = allocatedBytes;
             mallocItem.time = tm;
-            strcpy(mallocItem.type, "malloc");
+            mallocItem.type=Tmalloc;
+
             mallocItem.mappedFD = -1;
             strcpy(mallocItem.mappedFilename, "");
             mallocItem.sharedKey = -1;
@@ -98,7 +99,7 @@ void * ObtenerMemoriaShmget (key_t clave, size_t tam, tListLM* M){
     item.memdir = p;
     item.size = (int) tam;
     item.time = tm;
-    strcpy(item.type, "shared");
+    item.type=Tshared;
     item.mappedFD = -1;
     strcpy(item.mappedFilename, "");
     item.sharedKey = clave;
@@ -110,9 +111,7 @@ void SharedCreate(char *trozos[],tListLM* M){
     key_t cl;
     size_t tam;
     void *p;
-    tAlloctype alloctype;
-    strcpy(alloctype,"shared");
-
+    tAlloctype alloctype=Tshared;
     if (trozos[1]==NULL || trozos[2]==NULL || trozos[3]==NULL) {
         printListM(*M,alloctype);
         return;
@@ -134,8 +133,7 @@ void SharedFree(char *trozos[],tListLM* M){
     tItemLM item;
     tPosLM p;
     int key;
-    tAlloctype alloctype;
-    strcpy(alloctype,"shared");
+    tAlloctype alloctype=Tshared;
     if(trozos[2]==NULL){
         printListM(*M,alloctype);
     } else {
@@ -190,7 +188,7 @@ void sharedAttach(char *trozos[],tListLM* M){
     item.memdir = p;
     item.size = (int) s.shm_segsz;
     item.time = tm;
-    strcpy(item.type, "shared");
+    item.type=Tshared;
     item.mappedFD = -1;
     strcpy(item.mappedFilename, "");
     item.sharedKey = key;
@@ -199,8 +197,7 @@ void sharedAttach(char *trozos[],tListLM* M){
 }
 
 void Cmd_shared(char *trozos[],tListLM* M){
-    tAlloctype alloctype;
-    strcpy(alloctype,"shared");
+    tAlloctype alloctype=Tshared;
     if(trozos[1]!=NULL){
         if(strcmp(trozos[1],"-create")==0){
             SharedCreate(trozos,M);
@@ -241,7 +238,7 @@ void * MapearFichero (char * fichero, int protection, tListLM* memL){
     time_t date = time(NULL);
     struct tm tm = *localtime(&date);
     item.time = tm;
-    strcpy(item.type, "mmap");
+    item.type=Tmmap;
     insertItemM(item, memL);
 
     return p;
@@ -251,9 +248,7 @@ void CmdMmap(char *arg[], tListLM* memL){
     char *perm;
     void *p;
     int protection=0;
-    tAlloctype alloctype;
-    strcpy(alloctype,"mmap");
-
+    tAlloctype alloctype=Tmmap;
     if (arg[0]==NULL)
     {printListM(*memL,alloctype); return;}
     if ((perm=arg[1])!=NULL && strlen(perm)<4) {
@@ -270,8 +265,7 @@ void CmdMmap(char *arg[], tListLM* memL){
 void Cmd_mmap(char* trozos[], tListLM* memL){
     tPosLM p;
     tItemLM item;
-    tAlloctype alloctype;
-    strcpy(alloctype,"mmap");
+    tAlloctype alloctype=Tmmap;
     if(trozos[1] != NULL && !strcmp(trozos[1], "-free")){
         if(trozos[2]==NULL)
             printListM(*memL, alloctype);
@@ -503,8 +497,7 @@ void Cmd_mem(char* trozos[],tListLM M){
     int var1=2,var2=3,var3=4;
     static int svar1=2,svar2=3,svar3=4;
     static int snvar1,snvar2,snvar3;
-    tAlloctype alloctype;
-    strcpy(alloctype,"all");
+    tAlloctype alloctype=Tall;
     if(trozos[1]!=NULL&&strcmp(trozos[1],"-all")!=0){
         if(strcmp(trozos[1],"-blocks")==0){
             printListM(M,alloctype);

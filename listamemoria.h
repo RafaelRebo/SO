@@ -23,6 +23,7 @@ tPosLM findItemMS(int bytes, tListLM M, tAlloctype alloctype);
 tPosLM findItemMmalloc(int bytes, tListLM M);
 tPosLM findItemMmmap(char* fileName, tListLM M);
 void printListM(tListLM M,tAlloctype allocType);
+const char* enumToString(tAlloctype alloctype);
 
 
 #endif //P0_LISTAMEMORIA_H
