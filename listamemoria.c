@@ -108,7 +108,7 @@ void printListM(tListLM M, tAlloctype allocType){ //Imprime la lista completa
                        item.time.tm_hour, item.time.tm_min, parameter);
                 if (item.type==Tshared) printf(" (key %d)", item.sharedKey);
                 if (mmapT)
-                    printf("\t (descriptor %d)", item.mappedFD);
+                    printf(" (descriptor %d)", item.mappedFD);
 
             }
         }

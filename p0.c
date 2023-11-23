@@ -176,7 +176,6 @@ void Cmd_open(char *trozos[], tListF *F) {
 void Cmd_close(char *trozos[], tListF *F) {
     tPosLF p;
     int df;
-    tItemLF item, dup;
     if (trozos[1] == NULL || (df = atoi(trozos[1])) < 0) { //close sin argumentos
         printListF(*F);
         return;

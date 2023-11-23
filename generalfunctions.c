@@ -29,6 +29,7 @@ void procesarComando(char *trozos[], tList *L, tListF *F, tListLM *memL) {
     if(trozos[1]!=NULL && (!strcmp(trozos[1], "-?") || !strcmp(trozos[1], "-help"))){
         trozos[1]=trozos[0];
         Help(&trozos[0]);
+        return;
     }
     if (strcmp(trozos[0], "authors") == 0) {
         authors(trozos);
@@ -164,30 +165,30 @@ void Help(char *trozos[]) {
             printf(" [-free] [tam]\tasigna un bloque memoria de tamano tam con malloc\n"
                    "\t-free: desasigna un bloque de memoria de tamano tam asignado con malloc");
         } else if (strcmp(trozos[1], "shared") == 0) {
-            printf(" shared [-free|-create|-delkey] cl [tam]\tasigna memoria compartida con clave cl en el programa\n"
+            printf(" [-free|-create|-delkey] cl [tam]\tasigna memoria compartida con clave cl en el programa\n"
                    "\t-create cl tam: asigna (creando) el bloque de memoria compartida de clave cl y tamano tam\n"
                    "\t-free cl: desmapea el bloque de memoria compartida de clave cl\n"
                    "\t-delkey cl: elimina del sistema (sin desmapear) la clave de memoria cl");
         } else if (strcmp(trozos[1], "mmap") == 0) {
-            printf(" mmap [-free] fich prm\tmapea el fichero fich con permisos prm\n"
+            printf(" [-free] fich prm\tmapea el fichero fich con permisos prm\n"
                    "\t-free fich: desmapea el fichero fich");
         } else if (strcmp(trozos[1], "read") == 0) {
-            printf(" read fiche addr cont \tLee cont bytes desde fich a la direccion addr");
+            printf(" fiche addr cont \tLee cont bytes desde fich a la direccion addr");
         } else if (strcmp(trozos[1], "write") == 0) {
-            printf(" write [-o] fiche addr cont \tEscribe cont bytes desde la direccion addr a fich (-o sobreescribe)");
+            printf(" [-o] fiche addr cont \tEscribe cont bytes desde la direccion addr a fich (-o sobreescribe)");
         } else if (strcmp(trozos[1], "memdump") == 0) {
-            printf(" memdump addr cont \tVuelca en pantallas los contenidos (cont bytes) de la posicion de memoria addr");
+            printf(" addr cont \tVuelca en pantallas los contenidos (cont bytes) de la posicion de memoria addr");
         } else if (strcmp(trozos[1], "memfill") == 0) {
-            printf(" memfill addr cont byte \tLlena la memoria a partir de addr con byte");
+            printf(" addr cont byte \tLlena la memoria a partir de addr con byte");
         } else if (strcmp(trozos[1], "mem") == 0) {
-            printf(" mem [-blocks|-funcs|-vars|-all|-pmap] ..\tMuestra muestra detalles de la memoria del proceso\n"
+            printf(" [-blocks|-funcs|-vars|-all|-pmap] ..\tMuestra muestra detalles de la memoria del proceso\n"
                    "\t\t-blocks: los bloques de memoria asignados\n"
                    "\t\t-funcs: las direcciones de las funciones\n"
                    "\t\t-vars: las direcciones de las variables\n"
                    "\t\t:-all: todo\n"
                    "\t\t-pmap: muestra la salida del comando pmap(o similar)");
         } else if (strcmp(trozos[1], "recurse") == 0) {
-            printf(" recurse [n]\tInvoca a la funcion recursiva n veces");
+            printf(" [n]\tInvoca a la funcion recursiva n veces");
         } else if (strcmp(trozos[1], "quit") == 0 || strcmp(trozos[1], "exit") == 0 || strcmp(trozos[1], "bye") == 0) {
             printf(" \tTermina la ejecucion del shell\n");
         } else {
