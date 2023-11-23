@@ -543,6 +543,9 @@ void Cmd_mem(char* trozos[],tListLM M){
             //Da una salida similar a pmap [pid]
             Do_MemPmap();
         }
+        else{
+            printf("Opcion %s no contemplada",trozos[1]);
+        }
     }
     else{
         //Imprime junto todo lo anterior
