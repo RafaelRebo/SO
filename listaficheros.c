@@ -127,6 +127,12 @@ void createDefaultListF(tListF* L){ //Crea los ficheros de entrada, salida y err
         strcpy(item.mode,"O_RDWR");
         insertItemF(item,L);
     }
+    if(tests_run_within_valgrind()){
+        item.descriptor=3;
+        strcpy(item.filename, "valgrind_report.txt");
+        strcpy(item.mode,"O_RDWR");
+        insertItemF(item,L);
+    }
 }
 
 
