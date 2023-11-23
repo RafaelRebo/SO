@@ -99,7 +99,7 @@ int TrocearCadena(char *cadena, char *trozos[]) {
 }
 
 bool tests_run_within_valgrind (void){
-    //Devuelve 1 si se est
+    //Devuelve true si se esta usando valgrind al compilar
     char *p = getenv ("LD_PRELOAD");
     if (p == NULL)
         return 0;

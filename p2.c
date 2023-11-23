@@ -1,6 +1,7 @@
 #include "includes.h"
 #define TAMANO 2048
 
+//Variables globales para mem
 int vg1=2,vg2=4,vg3=6;
 
 int vgn1,vgn2,vgn3;
