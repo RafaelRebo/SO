@@ -5,6 +5,12 @@ int vg1=2,vg2=4,vg3=6;
 
 int vgn1,vgn2,vgn3;
 
+void* stringToAdress(char* stringAdress){
+
+    unsigned long addr = strtoul(stringAdress, NULL, 0);
+    return (void *) addr;
+}
+
 int getByteAmount(const char string[]){
     char bytes[100]="";
     char letter;
@@ -308,8 +314,7 @@ ssize_t LeerFichero (char *f, void *p, size_t cont){
 
 void CmdRead (char *ar[]){
     void *p;
-    unsigned long addr = strtoul(ar[1], NULL, 0);
-    p = (void *) addr;
+    p=stringToAdress(ar[1]);
     size_t cont=-1;  /* -1 indica leer todo el fichero*/
     ssize_t n;
     if (ar[0]==NULL || ar[1]==NULL){
@@ -366,8 +371,7 @@ void Cmd_memdump (char* trozos[]){
         return;
     if (trozos[2]!=NULL)
         len= atoi(trozos[2]);
-    unsigned long addr = strtoul(trozos[1], NULL, 0);
-    p = (void *) addr;
+    p=stringToAdress(trozos[1]);
     printf("Volcando %ld bytes desde la direccion %p;\n\n", len, p);
     imprimirMemDumpHex(p, len);
 
@@ -384,8 +388,7 @@ void Cmd_memfill (char* trozos[]){
     void *p;
     int fillBytes = atoi(trozos[2]);
     char charBytes= 'A';
-    unsigned long addr = strtoul(trozos[1], NULL, 0);
-    p = (void *) addr;
+    p=stringToAdress(trozos[1]);
     if (trozos[3]!=NULL) {
         if (trozos[3][0]==39&&trozos[3][2]==39) {
             charBytes = trozos[3][1];
