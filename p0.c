@@ -19,15 +19,15 @@ int main() {
         puts("");
         imprimirPrompt();
         leerEntrada(comando);
-        terminado = procesarEntrada(comando, &L, trozos, &F, &memL);
+        if (strcmp(comando,"\n")!=0) {
+            terminado = procesarEntrada(comando, &L, trozos, &F, &memL);
+        }
     }
     deleteList(&L);
     deleteListF(&F);
     deleteListM(&memL);
     exit(0);
 }
-
-
 
 void authors(char *trozos[]) {
     if (trozos[1] != NULL) {
