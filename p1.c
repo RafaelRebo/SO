@@ -88,7 +88,7 @@ void create(char *trozos[]) {
         if (trozos[2] == NULL) {
             printf("%s", dir);
         }
-        else if (open(trozos[2], O_CREAT, 0777) == -1) perror("Imposible crear fichero"); //Si create -f fichero da error se muestra por pantalla
+        else if (open(trozos[2], O_CREAT, 0777) == -1) perror("create: Imposible crear fichero"); //Si create -f fichero da error se muestra por pantalla
         else {
             //Si no da error, se informa de que el fichero se creó con éxito
             strcat(dir, "/");
@@ -98,7 +98,7 @@ void create(char *trozos[]) {
     }
     else {
         //Si el comando no tiene el parámetro -f se entiende que se quiere crear un directorio
-        if (mkdir(trozos[1], 0777) == -1) perror("Imposible crear directorio"); //Si no se puede crear se muestra error
+        if (mkdir(trozos[1], 0777) == -1) perror("create: Imposible crear directorio"); //Si no se puede crear se muestra error
         else {
             //Si no da error, se informa de que el directorio se creó con éxito
             strcat(dir, "/");
@@ -117,7 +117,7 @@ void statOneFile(char *file, tParametros parametros) {
     struct group *group;
 
     if (lstat(file, &buf) == -1) { //No se han podido volcar los datos del fichero
-        perror("No ejecutado");
+        perror("stat: Imposible obtener datos del fichero");
         return;
     }
     if (parametros.longComand) { //Si el comando incluye -long se deben mostrar mas datos
@@ -127,11 +127,11 @@ void statOneFile(char *file, tParametros parametros) {
         strftime(date, sizeof(date), "%d/%m/%y - %H:%M", localtime(&(returnedTime))); //Guardamos la información de fecha y hora en date
         //Obtenemos la información de usuario y grupo
         if ((user = getpwuid(buf.st_uid)) == NULL) {
-            perror("Error obtener nombre de usuario");
+            perror("stat: Error al obtener nombre de usuario");
             return;
         }
         if ((group = getgrgid(buf.st_gid)) == NULL) {
-            perror("Error obtener nombre del grupo");
+            perror("stat: Error al obtener nombre del grupo");
             return;
         }
         //Imprimimos todos los datos del fichero
@@ -178,10 +178,10 @@ void removeSubstring(char *string, char *substring) {
 }
 
 void readDirFiles(struct dirent *files,struct stat* bufrec,DIR *dir,tParametros parametros){
-    //Pasado un parámetro files que conntiene la información de todos los ficheros de un directorio, imprime la información de cada uno de ellos
+    //Pasado un parámetro files que contiene la información de todos los ficheros de un directorio, imprime la información de cada uno de ellos
     while ((files = readdir(dir)) != NULL) {
         if (lstat(files->d_name, bufrec) == -1) {
-            perror("****error al acceder");
+            perror("stat: Imposible obtener datos del fichero");
             return;
         } else if (-strcmp(files->d_name, ".") && -strcmp(files->d_name, "..") || parametros.hidComand) {
             if (parametros.hidComand || files->d_name[0] != '.') {
@@ -197,7 +197,7 @@ void recurseFile(struct dirent *files,struct stat* bufrec,DIR *dir,tParametros p
     //a listContent para imprimir también la información de los ficheros que estén dentro de ese directorio evaluado
     while ((files = readdir(dir)) != NULL) {
         if (lstat(files->d_name, bufrec) == -1) {
-            perror("****error al acceder");
+            perror("stat: Imposible obtener datos del fichero");
             return;
         }
         if ((bufrec->st_mode & S_IFMT) == S_IFDIR && -strcmp(files->d_name, ".") &&
@@ -216,7 +216,7 @@ void listContent(char *filename, tParametros parametros, char iniDir[]) {
     char path[1000];
     char ogDir[1000];
     if (lstat(filename, &buf) == -1) { //No se han podido volcar los datos del fichero
-        perror("****error al acceder");
+        perror("stat: Imposible obtener datos del fichero");
         return;
     }
     if ((buf.st_mode & S_IFMT) == S_IFDIR) { //Si el fichero es un directorio
@@ -225,11 +225,11 @@ void listContent(char *filename, tParametros parametros, char iniDir[]) {
         //Abrimos dicho directorio y nos cambiamos a él
         dir = opendir(filename);
         if (dir == NULL) {
-            perror("Error al acceder al directorio");
+            perror("list: Error al acceder al directorio");
             return;
         }
         if (chdir(filename) == -1) {
-            perror("No se pudo cambiar el directorio");
+            perror("list: No se pudo cambiar el directorio");
         }
         else {
             if(parametros.recaComand){
@@ -243,11 +243,10 @@ void listContent(char *filename, tParametros parametros, char iniDir[]) {
                 closedir(dir);
                 dir = opendir(filename);
                 if (dir == NULL) {
-                    perror("Error al acceder al directorio");
+                    perror("list: Error al acceder al directorio");
                     return;
                 }
-
-                if (chdir(filename) == -1) perror("No se pudo cambiar el directorio");
+                if (chdir(filename) == -1) perror("list: No se pudo cambiar el directorio");
                 recurseFile(files,&bufrec,dir,parametros,iniDir); //Luego se accede a subdirectorios recursivamente
                 chdir(ogDir);
                 closedir(dir);
@@ -263,10 +262,10 @@ void listContent(char *filename, tParametros parametros, char iniDir[]) {
                 closedir(dir);
                 dir = opendir(filename);
                 if (dir == NULL) {
-                    perror("Error al acceder al directorio");
+                    perror("list: Error al acceder al directorio");
                     return;
                 }
-                if (chdir(filename) == -1) perror("No se pudo cambiar el directorio");
+                if (chdir(filename) == -1) perror("list: No se pudo cambiar el directorio");
                 readDirFiles(files,&bufrec,dir,parametros); //Luego se lee
                 chdir(ogDir);
                 closedir(dir);
@@ -309,7 +308,7 @@ int isEmptyDir(char* fileName){ //PreCD: Solo recibe directorios
     DIR *dir = NULL;
     dir = opendir(fileName);
     if (dir == NULL) {
-        perror("Error al acceder al directorio");
+        perror("deltree: Error al acceder al directorio");
         return -1;
     }
 
@@ -328,7 +327,7 @@ void delete(char *trozos[]) {
             switch (isDirectory(trozos[i])) { //Evaluamos el resultado de isDirectory para el fichero
                 case 0: //Es un fichero
                     if (remove(trozos[i]) == -1) { //Si remove devuelve -1 es que no se pudo borrar el fichero
-                        sprintf(error, "Imposible borrar %s", trozos[i]);
+                        sprintf(error, "delete: Imposible borrar %s", trozos[i]);
                         perror(error);
                         break;
                     }
@@ -336,14 +335,14 @@ void delete(char *trozos[]) {
                     break;
                 case 1: //Es un directorio
                     if (rmdir(trozos[i]) == -1) {
-                        sprintf(error, "Imposible borrar %s", trozos[i]);
+                        sprintf(error, "delete: Imposible borrar %s", trozos[i]);
                         perror(error);
                     }
                     else printf("Directorio %s borrado con éxito", trozos[i]);
                     break;
                 case -1:
                     //Ha habido algún error para obtener la información del fichero con lstat
-                    sprintf(error, "Imposible borrar %s", trozos[i]);
+                    sprintf(error, "delete: Imposible borrar %s", trozos[i]);
                     perror(error);
                     break;
             }
@@ -357,7 +356,7 @@ void recDelete(char* filename){
     DIR *dir=NULL;
     struct dirent *file=NULL;
     if (isDirectory(filename) == -1) { //No se pudo obtener la información del fichero filename por alguna razón
-        sprintf(error, "Imposible borrar %s", filename);
+        sprintf(error, "deltree: Imposible borrar %s", filename);
         perror(error);
     }
     else if(!isDirectory(filename)) remove(filename); //Si se trata de un fichero se borra directamente
@@ -366,7 +365,7 @@ void recDelete(char* filename){
         //Es un directorio lleno, se abre su contenido y accedemos a el
         dir = opendir(filename);
         if (dir == NULL) {
-            perror("Error al abrir directorio");
+            perror("deltree: Error al abrir directorio");
             return;
         }
         chdir(filename);
@@ -393,7 +392,7 @@ void deltree(char *trozos[]) {
             //Si errno=ENOENT es que el fichero no existe en el directorio, es decir, el borrado ha sido exitoso
             if(errno==ENOENT) printf("Directorio < %s > borrado con exito.",trozos[i]);
             else{
-                sprintf(error, "Imposible borrar %s", trozos[i]);
+                sprintf(error, "deltree: Imposible borrar %s", trozos[i]);
                 perror(error);
             }
         }

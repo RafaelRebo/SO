@@ -147,8 +147,7 @@ void Help(char *trozos[]) {
         } else if (strcmp(trozos[1], "stat") == 0) {
             printf(" [-long][-link][-acc] name1 name2 ..\tlista ficheros;\n"
                    "\t-long: listado largo\n"
-
-                   "\t-acc: acesstime\n"
+                   "\t-acc: accesstime\n"
                    "\t-link: si es enlace simbolico, el path contenido\n"
             );
         } else if (strcmp(trozos[1], "delete") == 0) {
@@ -161,6 +160,34 @@ void Help(char *trozos[]) {
                    "\t-recb: recursivo (antes)\n"
                    "\t-reca: recursivo (despues)\n"
                    "\tresto parametros como stat\n");
+        } else if (strcmp(trozos[1], "malloc") == 0) {
+            printf(" [-free] [tam]\tasigna un bloque memoria de tamano tam con malloc\n"
+                   "\t-free: desasigna un bloque de memoria de tamano tam asignado con malloc");
+        } else if (strcmp(trozos[1], "shared") == 0) {
+            printf(" shared [-free|-create|-delkey] cl [tam]\tasigna memoria compartida con clave cl en el programa\n"
+                   "\t-create cl tam: asigna (creando) el bloque de memoria compartida de clave cl y tamano tam\n"
+                   "\t-free cl: desmapea el bloque de memoria compartida de clave cl\n"
+                   "\t-delkey cl: elimina del sistema (sin desmapear) la clave de memoria cl");
+        } else if (strcmp(trozos[1], "mmap") == 0) {
+            printf(" mmap [-free] fich prm\tmapea el fichero fich con permisos prm\n"
+                   "\t-free fich: desmapea el fichero fich");
+        } else if (strcmp(trozos[1], "read") == 0) {
+            printf(" read fiche addr cont \tLee cont bytes desde fich a la direccion addr");
+        } else if (strcmp(trozos[1], "write") == 0) {
+            printf(" write [-o] fiche addr cont \tEscribe cont bytes desde la direccion addr a fich (-o sobreescribe)");
+        } else if (strcmp(trozos[1], "memdump") == 0) {
+            printf(" memdump addr cont \tVuelca en pantallas los contenidos (cont bytes) de la posicion de memoria addr");
+        } else if (strcmp(trozos[1], "memfill") == 0) {
+            printf(" memfill addr cont byte \tLlena la memoria a partir de addr con byte");
+        } else if (strcmp(trozos[1], "mem") == 0) {
+            printf(" mem [-blocks|-funcs|-vars|-all|-pmap] ..\tMuestra muestra detalles de la memoria del proceso\n"
+                   "\t\t-blocks: los bloques de memoria asignados\n"
+                   "\t\t-funcs: las direcciones de las funciones\n"
+                   "\t\t-vars: las direcciones de las variables\n"
+                   "\t\t:-all: todo\n"
+                   "\t\t-pmap: muestra la salida del comando pmap(o similar)");
+        } else if (strcmp(trozos[1], "recurse") == 0) {
+            printf(" recurse [n]\tInvoca a la funcion recursiva n veces");
         } else if (strcmp(trozos[1], "quit") == 0 || strcmp(trozos[1], "exit") == 0 || strcmp(trozos[1], "bye") == 0) {
             printf(" \tTermina la ejecucion del shell\n");
         } else {
@@ -168,7 +195,10 @@ void Help(char *trozos[]) {
         }
 
     } else {
-        printf("authors [-n|-l] pid [-p] chdir [dir] date time hist [-c|-N] command [N]"
-               " open [filepath flags] close [df] dup [df] listopen infosys create [-f] stat [-long|-link|-acc] list [-long|-link|-acc|-reca|-recb|-hid] delete deltree help [cmd] quit exit bye\n");
+        printf("\n>authors [-n|-l] \n>pid [-p] \n>chdir [dir] \n>date \n>time \n>hist [-c|-N] \n>command [N]"
+               "\n>open [filepath flags] \n>close [df] \n>dup [df] \n>listopen \n>infosys \n>create [-f] \n>stat [-long|-link|-acc] "
+               "\n>list [-long|-link|-acc|-reca|-recb|-hid] \n>delete \n>deltree \n>malloc [-free][tam] \n>shared [-free|-create|-delkey] cl [tam]"
+               "\n>mmap [-free] fich prm \n>read fiche addr cont \n>write [-o] fiche addr cont \n>memdump addr cont \n>memfill addr cont byte"
+               "\n>mem [-blocks|-funcs|-vars|-all|-pmap] \n>recurse [n] \n>help [cmd] \n>quit \n>exit \n>bye\n");
     }
 }

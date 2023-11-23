@@ -128,10 +128,10 @@ void command(char *trozos[], tList *L, tListF *F, tListLM *memL) {
                     printf("Repitiendo comando:   [%d] %s\n", n, comando);
                     procesarEntrada(comando, L, trozos, F, memL);
                 } else {
-                    printf("No se encuentra el comando %d en el historico.", n);
+                    printf("command: No se encuentra el comando %d en el historico.", n);
                 }
             } else {
-                printf("El historico de comandos esta vacio.");
+                printf("command: El historico de comandos esta vacio.");
             }
         }
     } else {
@@ -162,7 +162,7 @@ void Cmd_open(char *trozos[], tListF *F) {
 
     if ((df = open(trozos[1], mode, 0777)) ==
         -1) { //0777: representacion octal de los permisos asignados a la funcion open
-        perror("Imposible abrir fichero");
+        perror("open: Imposible abrir fichero");
     } else {
         //Se crea una nueva entrada en la lista con el fichero
         printf("Anadida entrada %d a la tabla ficheros abiertos", df);
@@ -183,7 +183,7 @@ void Cmd_close(char *trozos[], tListF *F) {
     } else if (trozos[1][0] >= '0' && trozos[1][0] <= '9') {
         if (df != 1 && df != 0) { //Evita cerrar los descriptores de entrada y salida estandar para evitar cuelgues
             if (close(df) == -1) {
-                perror("Imposible cerrar descriptor");
+                perror("close: Imposible cerrar descriptor");
             } else {
                 //Si se encuentra el fichero buscado en la lista se cierra
                 printf("Cerrando fichero con entrada %d", df);
@@ -191,10 +191,10 @@ void Cmd_close(char *trozos[], tListF *F) {
                 if (p != LFNULL) deleteAtPositionF(p, F);
             }
         } else {
-            printf("No se pueden cerrar los ficheros de entrada y salida estandar");
+            printf("close: No se pueden cerrar los ficheros de entrada y salida estandar");
         }
     } else {
-        printf("El argumento < %s > no es un descriptor. Por favor, especifique un descriptor valido.", trozos[1]);
+        printf("close: El argumento < %s > no es un descriptor. Por favor, especifique un descriptor valido.", trozos[1]);
     }
 }
 
@@ -211,7 +211,7 @@ void Cmd_dup(char *trozos[], tListF *F) {
         if (trozos[1][0] >= '0' && trozos[1][0] <= '9') {
             newdf = dup(df);
             if (newdf == -1) {
-                perror("Imposible duplicar descriptor.");
+                perror("dup: Imposible duplicar descriptor.");
             } else {
                 //Busca el item a duplicar en la lista, y copia sus datos en un duplicado para luego insertarlo en la lista
                 item = getItemF(findItemF(df, *F), *F);
@@ -225,7 +225,7 @@ void Cmd_dup(char *trozos[], tListF *F) {
                 printf("Duplicado fichero con descriptor %d", df);
             }
         } else {
-            printf("El argumento < %s > no es un descriptor. Por favor, especifique un descriptor valido.", trozos[1]);
+            printf("dup: El argumento < %s > no es un descriptor. Por favor, especifique un descriptor valido.", trozos[1]);
         }
     }
 }

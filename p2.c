@@ -45,10 +45,10 @@ void Cmd_malloc(char* trozos[],tListLM* memL){
                     free(getItemM(p, *memL).memdir);
                     deleteAtPositionM(p, memL);
                 } else {
-                    printf("No hay bloque de ese tamano asignado con malloc");
+                    printf("malloc: No hay bloque de ese tamano asignado con malloc");
                 }
             }
-            else printf("No se asignan bloques de 0 bytes");
+            else printf("malloc: No se asignan bloques de 0 bytes");
         }
     }
     else{
@@ -68,7 +68,7 @@ void Cmd_malloc(char* trozos[],tListLM* memL){
             printf("Asignados %d bytes en %p", allocatedBytes, mallocItem.memdir);
             insertItemM(mallocItem, memL);
         }
-        else printf("No se asignan bloques de 0 bytes");
+        else printf("malloc: No se asignan bloques de 0 bytes");
     }
 }
 
@@ -121,13 +121,13 @@ void SharedCreate(char *trozos[],tListLM* M){
     cl=(key_t) strtoul(trozos[2],NULL,10);
     tam=(size_t) strtoul(trozos[3],NULL,10);
     if (tam==0) {
-        printf ("No se asignan bloques de 0 bytes\n");
+        printf ("shared: No se asignan bloques de 0 bytes\n");
         return;
     }
     if ((p=ObtenerMemoriaShmget(cl,tam,M))!=NULL)
         printf ("Asignados %lu bytes en %p\n",(unsigned long) tam, p);
     else
-        printf ("Imposible asignar memoria compartida clave %lu:%s\n",(unsigned long) cl,strerror(errno));
+        printf ("shared: Imposible asignar memoria compartida clave %lu:%s\n",(unsigned long) cl,strerror(errno));
 }
 
 void SharedFree(char *trozos[],tListLM* M){
@@ -147,7 +147,7 @@ void SharedFree(char *trozos[],tListLM* M){
             shmctl((unsigned long int) item.memdir,IPC_RMID,NULL);
             deleteAtPositionM(p, M);
         } else {
-            printf("No hay bloque con esa clave asignado con shared");
+            printf("shared: No hay bloque con esa clave asignado con shared");
         }
     }
 }
@@ -158,15 +158,15 @@ void SharedDelkey (char *args[]){
     char *key=args[2];
 
     if (key==NULL || (clave=(key_t) strtoul(key,NULL,10))==IPC_PRIVATE){
-        printf ("      delkey necesita clave_valida\n");
+        printf ("shared: shared -delkey necesita clave valida\n");
         return;
     }
     if ((id=shmget(clave,0,0666))==-1){
-        perror ("shmget: imposible obtener memoria compartida");
+        perror ("shared: imposible obtener memoria compartida");
         return;
     }
     if (shmctl(id,IPC_RMID,NULL)==-1)
-        perror ("shmctl: imposible eliminar id de memoria compartida\n");
+        perror ("shared: imposible eliminar id de memoria compartida\n");
 }
 
 void sharedAttach(char *trozos[],tListLM* M){
@@ -176,11 +176,11 @@ void sharedAttach(char *trozos[],tListLM* M){
     int id;
     struct shmid_ds s;
     if((id=shmget(key,0,0777))==-1){
-        printf ("Imposible asignar memoria compartida clave %lu:%s\n",(unsigned long) key,strerror(errno));
+        printf ("shared: Imposible asignar memoria compartida clave %lu:%s\n",(unsigned long) key,strerror(errno));
         return;
     }
     if((p=shmat(id,NULL,0))==(void*)-1){
-        printf ("Imposible asignar memoria compartida clave %lu:%s\n",(unsigned long) key,strerror(errno));
+        printf ("shared: Imposible asignar memoria compartida clave %lu:%s\n",(unsigned long) key,strerror(errno));
         return;
     }
     shmctl (id,IPC_STAT,&s);
@@ -258,9 +258,9 @@ void CmdMmap(char *arg[], tListLM* memL){
         if (strchr(perm,'x')!=NULL) protection|=PROT_EXEC;
     }
     if ((p=MapearFichero(arg[0],protection, memL))==NULL)
-        perror ("Imposible mapear fichero");
+        perror ("mmap: Imposible mapear fichero");
     else
-        printf ("fichero %s mapeado en %p\n", arg[0], p);
+        printf ("Fichero %s mapeado en %p\n", arg[0], p);
 }
 
 void Cmd_mmap(char* trozos[], tListLM* memL){
@@ -275,13 +275,12 @@ void Cmd_mmap(char* trozos[], tListLM* memL){
             p=findItemMmmap(trozos[2], *memL);
 
             if(p==LMNULL)
-                printf("Fichero %s no mapeado", trozos[2]);
+                printf("mmap: Fichero %s no mapeado", trozos[2]);
             else{
                 item=getItemM(p, *memL);
                 munmap(item.memdir, item.size);
                 deleteAtPositionM(p, memL);
             }
-
         }
     }
     else
@@ -313,7 +312,7 @@ void CmdRead (char *ar[]){
     size_t cont=-1;  /* -1 indica leer todo el fichero*/
     ssize_t n;
     if (ar[0]==NULL || ar[1]==NULL){
-        printf ("faltan parametros\n");
+        printf ("read: Faltan parametros\n");
         return;
     }
 
@@ -321,9 +320,9 @@ void CmdRead (char *ar[]){
         cont=(size_t) atoll(ar[2]);
 
     if ((n=LeerFichero(ar[0],p,cont))==-1)
-        perror ("Imposible leer fichero");
+        perror ("read: Imposible leer fichero");
     else
-        printf ("leidos %lld bytes de %s en %p\n",(long long) n,ar[0],p);
+        printf ("read: Leidos %lld bytes de %s en %p\n",(long long) n,ar[0],p);
 }
 
 void Cmd_read (char* trozos[]){
@@ -406,7 +405,7 @@ ssize_t EscribirFichero (char *f, void *p, size_t cont,int overwrite)
         flags=O_CREAT | O_WRONLY | O_TRUNC;
 
     if ((df=open(f,flags,0777))==-1){
-        perror("Imposible abrir fichero: ");
+        perror("write: Imposible abrir fichero: ");
         return -1;
     }
 
@@ -414,7 +413,7 @@ ssize_t EscribirFichero (char *f, void *p, size_t cont,int overwrite)
         aux=errno;
         close(df);
         errno=aux;
-        perror("Imposible escribir fichero: ");
+        perror("write: Imposible escribir fichero: ");
         return -1;
     }
     close (df);
@@ -428,17 +427,17 @@ void Cmd_write(char* trozos[]){
     if(trozos[1]!=NULL){
         if(strcmp(trozos[1],"-o")==0){
             if(trozos[2]==NULL || trozos[3]==NULL || trozos[4]==NULL){
-                printf("faltan parametros");
+                printf("write: Faltan parametros");
                 return;
             }
         }
         else if(trozos[2]==NULL || trozos[3]==NULL){
-            printf("faltan parametros");
+            printf("write: Faltan parametros");
             return;
         }
     }
     else{
-        printf("faltan parametros");
+        printf("write: Faltan parametros");
         return;
     }
     void *p;
@@ -470,7 +469,7 @@ void Do_MemPmap (void) /*sin argumentos*/{
 
     sprintf (elpid,"%d", (int) getpid());
     if ((pid=fork())==-1){
-        perror ("Imposible crear proceso");
+        perror ("mem: Imposible crear proceso");
         return;
     }
     if (pid==0){ /*proceso hijo*/
