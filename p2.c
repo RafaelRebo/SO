@@ -7,12 +7,14 @@ int vg1=2,vg2=4,vg3=6;
 int vgn1,vgn2,vgn3;
 
 void* stringToAdress(char* stringAdress){
-
+    //Recibe una direccion de memoria en formato string y devuelve un puntero a dicha direccion
     unsigned long addr = strtoul(stringAdress, NULL, 0);
     return (void *) addr;
 }
 
 int getByteAmount(const char string[]){
+    //Transforma un string que contiene numeros en el int correspondiente, deshaciendose de otros caracteres
+    //Se usa en malloc, shared, etc para obtener el numero de bytes de memoria a reservar
     char bytes[100]="";
     char letter;
     for(int i=0;string[i]>='0'&&string[i]<='9';i++){
@@ -29,13 +31,16 @@ void Cmd_malloc(char* trozos[],tListLM* memL){
     tAlloctype alloctype=Tmalloc;
 
     if(trozos[1]==NULL){
+        //Sin argumentos imprime lista de mallocs
         printListM(*memL,alloctype);
     }
     else if(strcmp(trozos[1],"-free")==0){
+        //malloc -free sin argumentos imprime la lista
         if(trozos[2]==NULL){
             printListM(*memL,alloctype);
         }
         else{
+            //malloc -free tamaño busca el item de la lista que tenga el tamaño especificado, libera su dirección de memoria y lo borra de la lista
             byteAmount=getByteAmount(trozos[2]);
             if (byteAmount>0) {
                 p = findItemMmalloc(byteAmount, *memL);
@@ -52,6 +57,7 @@ void Cmd_malloc(char* trozos[],tListLM* memL){
         }
     }
     else{
+        //malloc tamaño reserva tamaño bytes de memoria, devuelve su direccion, y guarda los datos de esa reserva en la lista de mallocs
         byteAmount= getByteAmount(trozos[1]);
         if (byteAmount>0) {
             time_t date = time(NULL);
@@ -94,7 +100,7 @@ void * ObtenerMemoriaShmget (key_t clave, size_t tam, tListLM* M){
         return (NULL);
     }
     shmctl (id,IPC_STAT,&s);
-    /** Guardar en la lista, p.e.  InsertarNodoShared (&L, p, s.shm_segsz, clave); */
+    //Guardamos en la lista de shared un nuevo item con los datos obtenidos
     time_t date = time(NULL);
     struct tm tm = *localtime(&date);
     item.memdir = p;
@@ -114,10 +120,10 @@ void SharedCreate(char *trozos[],tListLM* M){
     void *p;
     tAlloctype alloctype=Tshared;
     if (trozos[1]==NULL || trozos[2]==NULL || trozos[3]==NULL) {
+        //Sin argumentos suficientes imprime la lista
         printListM(*M,alloctype);
         return;
     }
-
     cl=(key_t) strtoul(trozos[2],NULL,10);
     tam=(size_t) strtoul(trozos[3],NULL,10);
     if (tam==0) {
@@ -125,6 +131,7 @@ void SharedCreate(char *trozos[],tListLM* M){
         return;
     }
     if ((p=ObtenerMemoriaShmget(cl,tam,M))!=NULL)
+        //Si los argumentos son correctos y se pudo asignar el bloque de memoria compartida, devuelve su direccion y mete los datos en la lista
         printf ("Asignados %lu bytes en %p\n",(unsigned long) tam, p);
     else
         printf ("shared: Imposible asignar memoria compartida clave %lu:%s\n",(unsigned long) cl,strerror(errno));
@@ -136,15 +143,16 @@ void SharedFree(char *trozos[],tListLM* M){
     int key;
     tAlloctype alloctype=Tshared;
     if(trozos[2]==NULL){
+        //Sin argumentos suficientes imprime la lista
         printListM(*M,alloctype);
     } else {
+        //Busca si hay algún item de la lista con la clave buscada y si lo encuentra lo libera
         key=getByteAmount(trozos[2]);
         p = findItemMS(key,*M, alloctype);
         if (p != NULL) {
             item = getItemM(p, *M);
             printf("Liberados %d bytes de memoria compartida en %p", item.size, item.memdir);
             shmdt(item.memdir);
-            shmctl((unsigned long int) item.memdir,IPC_RMID,NULL);
             deleteAtPositionM(p, M);
         } else {
             printf("shared: No hay bloque con esa clave asignado con shared");
@@ -156,17 +164,17 @@ void SharedDelkey (char *args[]){
     key_t clave;
     int id;
     char *key=args[2];
-
+    //Se busca si hay una clave válida que coincida con la pasada por argumentos y si la hay, la borra sin liberar su memoria
     if (key==NULL || (clave=(key_t) strtoul(key,NULL,10))==IPC_PRIVATE){
-        printf ("shared: shared -delkey necesita clave valida\n");
+        printf ("shared: Shared -delkey necesita clave valida\n");
         return;
     }
     if ((id=shmget(clave,0,0666))==-1){
-        perror ("shared: imposible obtener memoria compartida");
+        perror ("shared: Imposible obtener memoria compartida");
         return;
     }
     if (shmctl(id,IPC_RMID,NULL)==-1)
-        perror ("shared: imposible eliminar id de memoria compartida\n");
+        perror ("shared: Imposible eliminar ID de memoria compartida\n");
 }
 
 void sharedAttach(char *trozos[],tListLM* M){
@@ -175,6 +183,8 @@ void sharedAttach(char *trozos[],tListLM* M){
     int key=getByteAmount(trozos[1]);
     int id;
     struct shmid_ds s;
+    //Busca si la clave pasada por argumentos referencia a algún bloque de memoria compartida existente en el sistema, y si es así
+    //lo vincula al proceso actual (esta misma shell)
     if((id=shmget(key,0,0777))==-1){
         printf ("shared: Imposible asignar memoria compartida clave %lu:%s\n",(unsigned long) key,strerror(errno));
         return;
@@ -214,6 +224,7 @@ void Cmd_shared(char *trozos[],tListLM* M){
         }
     }
     else{
+        //Sin argumentos imprime la lista de shared
         printListM(*M,alloctype);
     }
 }
@@ -232,6 +243,7 @@ void * MapearFichero (char * fichero, int protection, tListLM* memL){
     if ((p=mmap (NULL,s.st_size, protection,map,df,0))==MAP_FAILED)
         return NULL;
 
+    //Introduce los datos del ítem en la lista de ficheros mapeados
     item.memdir = p;
     item.size=(int)s.st_size;
     strcpy(item.mappedFilename, fichero);
@@ -269,21 +281,26 @@ void Cmd_mmap(char* trozos[], tListLM* memL){
     tAlloctype alloctype=Tmmap;
     if(trozos[1] != NULL && !strcmp(trozos[1], "-free")){
         if(trozos[2]==NULL)
+            //mmap -free imprime la lista de ficheros mapeados
             printListM(*memL, alloctype);
         else{
-
+            //Se busca el fichero que se desea desmapear en la lista de ficheros mapeados
             p=findItemMmmap(trozos[2], *memL);
-
             if(p==LMNULL)
                 printf("mmap: Fichero %s no mapeado", trozos[2]);
             else{
+                //Libera el fichero mapeado si este es encontrado en la lista
                 item=getItemM(p, *memL);
-                munmap(item.memdir, item.size);
+                if(munmap(item.memdir, item.size)==-1){
+                    perror("mmap: Error al desmapear el fichero: ");
+                }
+                else printf("Desmapeado fichero %s correctamente",trozos[2]);
                 deleteAtPositionM(p, memL);
             }
         }
     }
     else
+        //No es un -free, se ejecuta la función para mapear el fichero especificado
         CmdMmap(&trozos[1], memL);
 }
 
@@ -330,6 +347,7 @@ void Cmd_read (char* trozos[]){
 }
 
 void printCharacter(size_t j, unsigned char *point){
+    //Imprime los caracteres de cada línea del comando memdump si son imprimibles
     if ((point[j] >= 32 && point[j] <= 126)||point[j]==10){
         if(point[j]==10) printf("\\n");
         else printf(" %c ", point[j]);
@@ -342,8 +360,10 @@ void imprimirMemDumpHex(void *p, size_t len) {
     unsigned char *point = (unsigned char*)p;
     int cont=0;
     for (size_t j = 0; j <= len; j++){
+        //Imprimimos 25 caracteres por línea
         if((j%25!=0||j==0)&&j!=len)printCharacter(j,point);
         else{
+            //Al llegar a los 25, imprimimos debajo de cada uno su representación hexadecimal
             printf("\n");
             for (size_t i = j - cont; i < j; i++) {
                 if (i == j - 1) {
@@ -384,7 +404,8 @@ void Cmd_memfill (char* trozos[]){
     char charBytes= 'A';
     p=stringToAdress(trozos[1]);
     if (trozos[3]!=NULL) {
-        if (trozos[3][0]==39&&trozos[3][2]==39) {
+        //El caracter con el que se va a llenar la memoria debe ir entre ''
+        if (trozos[3][0]=='\''&&trozos[3][2]=='\'') {
             charBytes = trozos[3][1];
         } else {
             charBytes=0;
@@ -396,8 +417,7 @@ void Cmd_memfill (char* trozos[]){
 
 
 
-ssize_t EscribirFichero (char *f, void *p, size_t cont,int overwrite)
-{
+ssize_t EscribirFichero (char *f, void *p, size_t cont,int overwrite){
     ssize_t  n;
     int df,aux, flags=O_CREAT | O_EXCL | O_WRONLY;
 
@@ -424,6 +444,7 @@ void Cmd_write(char* trozos[]){
     int overwrite = 0;
     size_t writtenBytes;
 
+    //Detecta si falta algún argumento para ejecutar write
     if(trozos[1]!=NULL){
         if(strcmp(trozos[1],"-o")==0){
             if(trozos[2]==NULL || trozos[3]==NULL || trozos[4]==NULL){
@@ -440,6 +461,7 @@ void Cmd_write(char* trozos[]){
         printf("write: Faltan parametros");
         return;
     }
+
     void *p;
     tFilename fich;
     int cont;
@@ -449,6 +471,7 @@ void Cmd_write(char* trozos[]){
     cont = atoi(trozos[3]);
 
     if (strcmp(trozos[1], "-o")==0){
+        //Si es -o, cada parámetro del comando se encuentra en una posición distinta, hay que reasignarlos
         overwrite=1;
         strcpy(fich,trozos[2]);
         p = (void *) strtoul(trozos[3], NULL, 0);
@@ -500,9 +523,11 @@ void Cmd_mem(char* trozos[],tListLM M){
     tAlloctype alloctype=Tall;
     if(trozos[1]!=NULL&&strcmp(trozos[1],"-all")!=0){
         if(strcmp(trozos[1],"-blocks")==0){
+            //Imprime la lista entera de bloques de memoria
             printListM(M,alloctype);
         }
         else if(strcmp(trozos[1],"-vars")==0){
+            //Variables de cada tipo creadas dentro del programa
             printf("Variables locales: %19p, %17p, %17p\n",&var1,&var2,&var3);
             printf("Variables globales: %18p, %17p, %17p\n",&vg1,&vg2,&vg3);
             printf("Var(N.I.) globales: %18p, %17p, %17p\n",&vgn1,&vgn2,&vgn3);
@@ -510,14 +535,17 @@ void Cmd_mem(char* trozos[],tListLM M){
             printf("Var(N.I.) estaticas: %17p, %17p, %17p\n",&snvar1,&snvar2,&snvar3);
         }
         else if(strcmp(trozos[1],"-funcs")==0){
+            //Funciones de cada tipo creadas dentro del programa
             printf("Funciones de programa: %18p, %17p, %17p\n",&getByteAmount,&Cmd_shared,&printCharacter);
             printf("Funciones de liberia: %19p, %17p, %17p\n",&printf,&strcmp,&scanf);
         }
         else if(strcmp(trozos[1],"-pmap")==0){
+            //Da una salida similar a pmap [pid]
             Do_MemPmap();
         }
     }
     else{
+        //Imprime junto todo lo anterior
         printf("Variables locales: %19p, %17p, %17p\n",&var1,&var2,&var3);
         printf("Variables globales: %18p, %17p, %17p\n",&vg1,&vg2,&vg3);
         printf("Var(N.I.) globales: %18p, %17p, %17p\n",&vgn1,&vgn2,&vgn3);
