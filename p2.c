@@ -57,7 +57,7 @@ void Cmd_malloc(char* trozos[],tListLM* memL){
             mallocItem.mappedFD = -1;
             strcpy(mallocItem.mappedFilename, "");
             mallocItem.sharedKey = -1;
-            printf("Asignados %d bytes en %p", allocatedBytes, malloc(allocatedBytes));
+            printf("Asignados %d bytes en %p", allocatedBytes, mallocItem.memdir);
             insertItemM(mallocItem, memL);
         }
         else printf("No se asignan bloques de 0 bytes");

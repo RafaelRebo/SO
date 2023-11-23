@@ -180,10 +180,13 @@ void deleteAtPositionM(tPosLM p, tListLM *M){
 
 void deleteListM(tListLM *M){
     tPosLM p;
+    tItemLM item;
     while (!isEmptyListM(*M))
     {
         p = *M;
         *M = (*M)->next;
+        item=getItemM(p,*M);
+        free(item.memdir);
         free(p);
     }
 }
