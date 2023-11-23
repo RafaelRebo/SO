@@ -22,7 +22,6 @@ typedef struct tItemLF{
     int descriptor;
     tFilename filename;
     tMode mode;
-    int olddf;
 }tItemLF;
 
 typedef struct tItemLM{

@@ -169,7 +169,6 @@ void Cmd_open(char *trozos[], tListF *F) {
         printf("Anadida entrada %d a la tabla ficheros abiertos", df);
         item.descriptor = df;
         strcpy(item.filename, trozos[1]);
-        item.olddf = df;
         getFilePermFlags(&item, df, mode, isRDONLY); //Consigue mediante fcntl los flags de apertura del fichero
         insertItemF(item, F);
     }
@@ -190,16 +189,7 @@ void Cmd_close(char *trozos[], tListF *F) {
                 //Si se encuentra el fichero buscado en la lista se cierra
                 printf("Cerrando fichero con entrada %d", df);
                 p = findItemF(df, *F);
-                item = getItemF(p, *F);
-                if (p != LFNULL) {
-                    for (tPosLF q = firstF(*F); q != LFNULL; q = nextF(q, *F)) {
-                        dup = getItemF(q, *F);
-                        if (dup.olddf == item.descriptor) {
-                            q = previous(q, *F);
-                            deleteAtPositionF(nextF(q, *F), F);
-                        }
-                    }
-                }
+                if (p != LFNULL) deleteAtPositionF(p, F);
             }
         } else {
             printf("No se pueden cerrar los ficheros de entrada y salida estandar");
@@ -230,7 +220,6 @@ void Cmd_dup(char *trozos[], tListF *F) {
                 strcpy(mode, item.mode);
                 sprintf(aux, "dup %d (%s)", df, filename);
                 duplicado.descriptor = newdf;
-                duplicado.olddf = item.olddf;
                 strcpy(duplicado.filename, aux);
                 strcpy(duplicado.mode, mode);
                 insertItemF(duplicado, F);
