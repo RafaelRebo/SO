@@ -537,7 +537,7 @@ void Cmd_mem(char* trozos[],tListLM M){
         else if(strcmp(trozos[1],"-funcs")==0){
             //Funciones de cada tipo creadas dentro del programa
             printf("Funciones de programa: %18p, %17p, %17p\n",&getByteAmount,&Cmd_shared,&printCharacter);
-            printf("Funciones de liberia: %19p, %17p, %17p\n",&printf,&strcmp,&scanf);
+            printf("Funciones de libreria: %18p, %17p, %17p\n",&printf,&strcmp,&scanf);
         }
         else if(strcmp(trozos[1],"-pmap")==0){
             //Da una salida similar a pmap [pid]
@@ -553,7 +553,7 @@ void Cmd_mem(char* trozos[],tListLM M){
         printf("Var(N.I.) estaticas: %17p, %17p, %17p\n",&snvar1,&snvar2,&snvar3);
         printf("\n");
         printf("Funciones de programa: %15p, %17p, %17p\n",&getByteAmount,&Cmd_shared,&printCharacter);
-        printf("Funciones de liberia: %16p, %17p, %17p\n",&printf,&strcmp,&scanf);
+        printf("Funciones de libreria: %15p, %17p, %17p\n",&printf,&strcmp,&scanf);
         printf("\n");
         printListM(M,alloctype);
     }
