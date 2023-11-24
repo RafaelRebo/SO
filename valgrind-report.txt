@@ -1,472 +1,250 @@
-==34319== Memcheck, a memory error detector
-==34319== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==34319== Using Valgrind-3.18.1-42b08ed5bd-20211015 and LibVEX; rerun with -h for copyright info
-==34319== Command: ./p2
-==34319== Parent PID: 34289
-==34319== 
---34319-- 
---34319-- Valgrind options:
---34319--    --leak-check=full
---34319--    --show-leak-kinds=all
---34319--    --track-origins=yes
---34319--    --verbose
---34319--    --log-file=valgrind-report.txt
---34319-- Contents of /proc/version:
---34319--   Linux version 6.2.0-37-generic (buildd@bos03-amd64-055) (x86_64-linux-gnu-gcc-11 (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0, GNU ld (GNU Binutils for Ubuntu) 2.38) #38~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Thu Nov  2 18:01:13 UTC 2
---34319-- 
---34319-- Arch and hwcaps: AMD64, LittleEndian, amd64-cx16-lzcnt-rdtscp-sse3-ssse3-avx-avx2-bmi-f16c-rdrand-rdseed
---34319-- Page sizes: currently 4096, max supported 4096
---34319-- Valgrind library directory: /usr/libexec/valgrind
---34319-- Reading syms from /home/rafael/CLionProjects/SO/p2
---34319-- Reading syms from /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
---34319--   Considering /usr/lib/debug/.build-id/97/18d3757f00d2366056830aae09698dbd35e32c.debug ..
---34319--   .. build-id is valid
---34319-- Reading syms from /usr/libexec/valgrind/memcheck-amd64-linux
---34319--    object doesn't have a symbol table
---34319--    object doesn't have a dynamic symbol table
---34319-- Scheduler: using generic scheduler lock implementation.
---34319-- Reading suppressions file: /usr/libexec/valgrind/default.supp
-==34319== embedded gdbserver: reading from /tmp/vgdb-pipe-from-vgdb-to-34319-by-rafael-on-???
-==34319== embedded gdbserver: writing to   /tmp/vgdb-pipe-to-vgdb-from-34319-by-rafael-on-???
-==34319== embedded gdbserver: shared mem   /tmp/vgdb-pipe-shared-mem-vgdb-34319-by-rafael-on-???
-==34319== 
-==34319== TO CONTROL THIS PROCESS USING vgdb (which you probably
-==34319== don't want to do, unless you know exactly what you're doing,
-==34319== or are doing some strange experiment):
-==34319==   /usr/bin/vgdb --pid=34319 ...command...
-==34319== 
-==34319== TO DEBUG THIS PROCESS USING GDB: start GDB like this
-==34319==   /path/to/gdb ./p2
-==34319== and then give GDB the following command
-==34319==   target remote | /usr/bin/vgdb --pid=34319
-==34319== --pid is optional if only one valgrind process is running
-==34319== 
---34319-- REDIR: 0x402aa40 (ld-linux-x86-64.so.2:strlen) redirected to 0x580bcec2 (???)
---34319-- REDIR: 0x402a810 (ld-linux-x86-64.so.2:index) redirected to 0x580bcedc (???)
---34319-- Reading syms from /usr/libexec/valgrind/vgpreload_core-amd64-linux.so
---34319--    object doesn't have a symbol table
---34319-- Reading syms from /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so
---34319--    object doesn't have a symbol table
-==34319== WARNING: new redirection conflicts with existing -- ignoring it
---34319--     old: 0x0402aa40 (strlen              ) R-> (0000.0) 0x580bcec2 ???
---34319--     new: 0x0402aa40 (strlen              ) R-> (2007.0) 0x0484ee30 strlen
---34319-- REDIR: 0x4027220 (ld-linux-x86-64.so.2:strcmp) redirected to 0x484fcd0 (strcmp)
---34319-- REDIR: 0x402afa0 (ld-linux-x86-64.so.2:mempcpy) redirected to 0x4853840 (mempcpy)
---34319-- Reading syms from /usr/lib/x86_64-linux-gnu/libc.so.6
---34319--   Considering /usr/lib/debug/.build-id/a4/3bfc8428df6623cd498c9c0caeb91aec9be4f9.debug ..
---34319--   .. build-id is valid
-==34319== WARNING: new redirection conflicts with existing -- ignoring it
---34319--     old: 0x04913c60 (memalign            ) R-> (1011.0) 0x0484e080 memalign
---34319--     new: 0x04913c60 (memalign            ) R-> (1017.0) 0x0484e050 aligned_alloc
-==34319== WARNING: new redirection conflicts with existing -- ignoring it
---34319--     old: 0x04913c60 (memalign            ) R-> (1011.0) 0x0484e080 memalign
---34319--     new: 0x04913c60 (memalign            ) R-> (1017.0) 0x0484e020 aligned_alloc
-==34319== WARNING: new redirection conflicts with existing -- ignoring it
---34319--     old: 0x04913c60 (memalign            ) R-> (1011.0) 0x0484e080 memalign
---34319--     new: 0x04913c60 (memalign            ) R-> (1017.0) 0x0484e050 aligned_alloc
-==34319== WARNING: new redirection conflicts with existing -- ignoring it
---34319--     old: 0x04913c60 (memalign            ) R-> (1011.0) 0x0484e080 memalign
---34319--     new: 0x04913c60 (memalign            ) R-> (1017.0) 0x0484e020 aligned_alloc
---34319-- REDIR: 0x4916720 (libc.so.6:strnlen) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
---34319-- REDIR: 0x49169e0 (libc.so.6:strpbrk) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
---34319-- REDIR: 0x49162e0 (libc.so.6:strcmp) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
---34319-- REDIR: 0x4934cd0 (libc.so.6:wcsnlen) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
---34319-- REDIR: 0x49176d0 (libc.so.6:memset) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
---34319-- REDIR: 0x4933540 (libc.so.6:wcslen) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
---34319-- REDIR: 0x4917c10 (libc.so.6:memcpy@@GLIBC_2.14) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
---34319-- REDIR: 0x4933370 (libc.so.6:wcschr) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
---34319-- REDIR: 0x4916260 (libc.so.6:index) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
---34319-- REDIR: 0x4916960 (libc.so.6:rindex) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
---34319-- REDIR: 0x49175a0 (libc.so.6:memmove) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
-==34319== Preferring higher priority redirection:
---34319--     old: 0x04a0e9c0 (__memcpy_avx_unalign) R-> (2018.0) 0x04850f90 __memcpy_avx_unaligned_erms
---34319--     new: 0x04a0e9c0 (__memcpy_avx_unalign) R-> (2018.1) 0x04852880 memmove
---34319-- REDIR: 0x49333f0 (libc.so.6:wcscmp) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
---34319-- REDIR: 0x49179e0 (libc.so.6:stpncpy) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
---34319-- REDIR: 0x49339b0 (libc.so.6:wmemchr) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
---34319-- REDIR: 0x4916830 (libc.so.6:strncmp) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
---34319-- REDIR: 0x4917a70 (libc.so.6:strcasecmp) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
---34319-- REDIR: 0x4916420 (libc.so.6:strcspn) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
---34319-- REDIR: 0x4933470 (libc.so.6:wcscpy) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
---34319-- REDIR: 0x49161d0 (libc.so.6:strcat) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
---34319-- REDIR: 0x4917b60 (libc.so.6:strncasecmp_l) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
---34319-- REDIR: 0x4917480 (libc.so.6:bcmp) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
---34319-- REDIR: 0x491f570 (libc.so.6:memrchr) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
---34319-- REDIR: 0x4919010 (libc.so.6:strchrnul) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
---34319-- REDIR: 0x4916390 (libc.so.6:strcpy) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
---34319-- REDIR: 0x4917b10 (libc.so.6:strcasecmp_l) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
---34319-- REDIR: 0x49166a0 (libc.so.6:strlen) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
---34319-- REDIR: 0x49168d0 (libc.so.6:strncpy) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
---34319-- REDIR: 0x4917950 (libc.so.6:stpcpy) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
---34319-- REDIR: 0x49173f0 (libc.so.6:memchr) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
---34319-- REDIR: 0x4916b00 (libc.so.6:strspn) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
---34319-- REDIR: 0x49177d0 (libc.so.6:mempcpy) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
---34319-- REDIR: 0x4917ac0 (libc.so.6:strncasecmp) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
---34319-- REDIR: 0x4918f80 (libc.so.6:rawmemchr) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
---34319-- REDIR: 0x4917310 (libc.so.6:strstr) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
---34319-- REDIR: 0x4a0b810 (libc.so.6:__strrchr_avx2) redirected to 0x484e810 (rindex)
---34319-- REDIR: 0x49130a0 (libc.so.6:malloc) redirected to 0x4848820 (malloc)
---34319-- REDIR: 0x4a0b9e0 (libc.so.6:__strlen_avx2) redirected to 0x484ed10 (strlen)
---34319-- REDIR: 0x4a06f80 (libc.so.6:__strncmp_avx2) redirected to 0x484f3e0 (strncmp)
---34319-- REDIR: 0x4932180 (libc.so.6:__strstr_sse2_unaligned) redirected to 0x4853a50 (strstr)
---34319-- REDIR: 0x4a0b600 (libc.so.6:__strchrnul_avx2) redirected to 0x4853330 (strchrnul)
---34319-- REDIR: 0x4a0e980 (libc.so.6:__mempcpy_avx_unaligned_erms) redirected to 0x4853440 (mempcpy)
---34319-- REDIR: 0x4a074c0 (libc.so.6:__memchr_avx2) redirected to 0x484fd50 (memchr)
---34319-- REDIR: 0x4a0e9c0 (libc.so.6:__memcpy_avx_unaligned_erms) redirected to 0x4852880 (memmove)
---34319-- REDIR: 0x4a0ceb0 (libc.so.6:__strcpy_avx2) redirected to 0x484ee60 (strcpy)
---34319-- REDIR: 0x4a069f0 (libc.so.6:__strspn_sse42) redirected to 0x4853d50 (strspn)
---34319-- REDIR: 0x4a06790 (libc.so.6:__strcspn_sse42) redirected to 0x4853c70 (strcspn)
---34319-- REDIR: 0x4a06b40 (libc.so.6:__strcmp_avx2) redirected to 0x484fbd0 (strcmp)
---34319-- REDIR: 0x49133e0 (libc.so.6:free) redirected to 0x484b210 (free)
---34319-- REDIR: 0x4916fc0 (libc.so.6:__GI_strstr) redirected to 0x4853ae0 (__strstr_sse2)
---34319-- REDIR: 0x4a07c80 (libc.so.6:__memcmp_avx2_movbe) redirected to 0x4852010 (bcmp)
---34319-- REDIR: 0x4a099b0 (libc.so.6:__strncasecmp_avx) redirected to 0x484f640 (strncasecmp)
---34319-- REDIR: 0x4a0b380 (libc.so.6:__strchr_avx2) redirected to 0x484e9f0 (index)
---34319-- REDIR: 0x4a0dba0 (libc.so.6:__stpcpy_avx2) redirected to 0x4852130 (stpcpy)
-==34319== Conditional jump or move depends on uninitialised value(s)
-==34319==    at 0x110573: printCharacter (p2.c:333)
-==34319==    by 0x11069C: imprimirMemDumpHex (p2.c:345)
-==34319==    by 0x11080E: Cmd_memdump (p2.c:370)
-==34319==    by 0x10D657: procesarComando (generalfunctions.c:75)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319==  Uninitialised value was created by a heap allocation
-==34319==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==34319==    by 0x10F35E: Cmd_malloc (p2.c:60)
-==34319==    by 0x10D591: procesarComando (generalfunctions.c:67)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319== 
-==34319== Conditional jump or move depends on uninitialised value(s)
-==34319==    at 0x110597: printCharacter (p2.c:333)
-==34319==    by 0x11069C: imprimirMemDumpHex (p2.c:345)
-==34319==    by 0x11080E: Cmd_memdump (p2.c:370)
-==34319==    by 0x10D657: procesarComando (generalfunctions.c:75)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319==  Uninitialised value was created by a heap allocation
-==34319==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==34319==    by 0x10F35E: Cmd_malloc (p2.c:60)
-==34319==    by 0x10D591: procesarComando (generalfunctions.c:67)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319== 
-==34319== Use of uninitialised value of size 8
-==34319==    at 0x48C828A: _itoa_word (_itoa.c:178)
-==34319==    by 0x48E3ABD: __vfprintf_internal (vfprintf-internal.c:1516)
-==34319==    by 0x48CE79E: printf (printf.c:33)
-==34319==    by 0x110726: imprimirMemDumpHex (p2.c:352)
-==34319==    by 0x11080E: Cmd_memdump (p2.c:370)
-==34319==    by 0x10D657: procesarComando (generalfunctions.c:75)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319==  Uninitialised value was created by a heap allocation
-==34319==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==34319==    by 0x10F35E: Cmd_malloc (p2.c:60)
-==34319==    by 0x10D591: procesarComando (generalfunctions.c:67)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319== 
-==34319== Conditional jump or move depends on uninitialised value(s)
-==34319==    at 0x48C829C: _itoa_word (_itoa.c:178)
-==34319==    by 0x48E3ABD: __vfprintf_internal (vfprintf-internal.c:1516)
-==34319==    by 0x48CE79E: printf (printf.c:33)
-==34319==    by 0x110726: imprimirMemDumpHex (p2.c:352)
-==34319==    by 0x11080E: Cmd_memdump (p2.c:370)
-==34319==    by 0x10D657: procesarComando (generalfunctions.c:75)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319==  Uninitialised value was created by a heap allocation
-==34319==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==34319==    by 0x10F35E: Cmd_malloc (p2.c:60)
-==34319==    by 0x10D591: procesarComando (generalfunctions.c:67)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319== 
-==34319== Conditional jump or move depends on uninitialised value(s)
-==34319==    at 0x48E45C3: __vfprintf_internal (vfprintf-internal.c:1516)
-==34319==    by 0x48CE79E: printf (printf.c:33)
-==34319==    by 0x110726: imprimirMemDumpHex (p2.c:352)
-==34319==    by 0x11080E: Cmd_memdump (p2.c:370)
-==34319==    by 0x10D657: procesarComando (generalfunctions.c:75)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319==  Uninitialised value was created by a heap allocation
-==34319==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==34319==    by 0x10F35E: Cmd_malloc (p2.c:60)
-==34319==    by 0x10D591: procesarComando (generalfunctions.c:67)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319== 
-==34319== Conditional jump or move depends on uninitialised value(s)
-==34319==    at 0x48E3C05: __vfprintf_internal (vfprintf-internal.c:1516)
-==34319==    by 0x48CE79E: printf (printf.c:33)
-==34319==    by 0x110726: imprimirMemDumpHex (p2.c:352)
-==34319==    by 0x11080E: Cmd_memdump (p2.c:370)
-==34319==    by 0x10D657: procesarComando (generalfunctions.c:75)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319==  Uninitialised value was created by a heap allocation
-==34319==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==34319==    by 0x10F35E: Cmd_malloc (p2.c:60)
-==34319==    by 0x10D591: procesarComando (generalfunctions.c:67)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319== 
-==34319== Use of uninitialised value of size 8
-==34319==    at 0x48C828A: _itoa_word (_itoa.c:178)
-==34319==    by 0x48E3ABD: __vfprintf_internal (vfprintf-internal.c:1516)
-==34319==    by 0x48CE79E: printf (printf.c:33)
-==34319==    by 0x1106F3: imprimirMemDumpHex (p2.c:350)
-==34319==    by 0x11080E: Cmd_memdump (p2.c:370)
-==34319==    by 0x10D657: procesarComando (generalfunctions.c:75)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319==  Uninitialised value was created by a heap allocation
-==34319==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==34319==    by 0x10F35E: Cmd_malloc (p2.c:60)
-==34319==    by 0x10D591: procesarComando (generalfunctions.c:67)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319== 
-==34319== Conditional jump or move depends on uninitialised value(s)
-==34319==    at 0x48C829C: _itoa_word (_itoa.c:178)
-==34319==    by 0x48E3ABD: __vfprintf_internal (vfprintf-internal.c:1516)
-==34319==    by 0x48CE79E: printf (printf.c:33)
-==34319==    by 0x1106F3: imprimirMemDumpHex (p2.c:350)
-==34319==    by 0x11080E: Cmd_memdump (p2.c:370)
-==34319==    by 0x10D657: procesarComando (generalfunctions.c:75)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319==  Uninitialised value was created by a heap allocation
-==34319==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==34319==    by 0x10F35E: Cmd_malloc (p2.c:60)
-==34319==    by 0x10D591: procesarComando (generalfunctions.c:67)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319== 
-==34319== Conditional jump or move depends on uninitialised value(s)
-==34319==    at 0x48E45C3: __vfprintf_internal (vfprintf-internal.c:1516)
-==34319==    by 0x48CE79E: printf (printf.c:33)
-==34319==    by 0x1106F3: imprimirMemDumpHex (p2.c:350)
-==34319==    by 0x11080E: Cmd_memdump (p2.c:370)
-==34319==    by 0x10D657: procesarComando (generalfunctions.c:75)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319==  Uninitialised value was created by a heap allocation
-==34319==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==34319==    by 0x10F35E: Cmd_malloc (p2.c:60)
-==34319==    by 0x10D591: procesarComando (generalfunctions.c:67)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319== 
-==34319== Conditional jump or move depends on uninitialised value(s)
-==34319==    at 0x48E3C05: __vfprintf_internal (vfprintf-internal.c:1516)
-==34319==    by 0x48CE79E: printf (printf.c:33)
-==34319==    by 0x1106F3: imprimirMemDumpHex (p2.c:350)
-==34319==    by 0x11080E: Cmd_memdump (p2.c:370)
-==34319==    by 0x10D657: procesarComando (generalfunctions.c:75)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319==  Uninitialised value was created by a heap allocation
-==34319==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==34319==    by 0x10F35E: Cmd_malloc (p2.c:60)
-==34319==    by 0x10D591: procesarComando (generalfunctions.c:67)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319== 
-==34319== Invalid free() / delete / delete[] / realloc()
-==34319==    at 0x484B27F: free (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==34319==    by 0x111C8D: deleteListM (listamemoria.c:193)
-==34319==    by 0x10DFE2: main (p0.c:26)
-==34319==  Address 0x4037000 is in a rw- shared memory segment
-==34319== 
-==34319== 
-==34319== HEAP SUMMARY:
-==34319==     in use at exit: 0 bytes in 0 blocks
-==34319==   total heap usage: 102 allocs, 104 frees, 1,051,048 bytes allocated
-==34319== 
-==34319== All heap blocks were freed -- no leaks are possible
-==34319== 
-==34319== ERROR SUMMARY: 92 errors from 11 contexts (suppressed: 0 from 0)
-==34319== 
-==34319== 1 errors in context 1 of 11:
-==34319== Conditional jump or move depends on uninitialised value(s)
-==34319==    at 0x48E3C05: __vfprintf_internal (vfprintf-internal.c:1516)
-==34319==    by 0x48CE79E: printf (printf.c:33)
-==34319==    by 0x1106F3: imprimirMemDumpHex (p2.c:350)
-==34319==    by 0x11080E: Cmd_memdump (p2.c:370)
-==34319==    by 0x10D657: procesarComando (generalfunctions.c:75)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319==  Uninitialised value was created by a heap allocation
-==34319==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==34319==    by 0x10F35E: Cmd_malloc (p2.c:60)
-==34319==    by 0x10D591: procesarComando (generalfunctions.c:67)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319== 
-==34319== 
-==34319== 1 errors in context 2 of 11:
-==34319== Conditional jump or move depends on uninitialised value(s)
-==34319==    at 0x48E45C3: __vfprintf_internal (vfprintf-internal.c:1516)
-==34319==    by 0x48CE79E: printf (printf.c:33)
-==34319==    by 0x1106F3: imprimirMemDumpHex (p2.c:350)
-==34319==    by 0x11080E: Cmd_memdump (p2.c:370)
-==34319==    by 0x10D657: procesarComando (generalfunctions.c:75)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319==  Uninitialised value was created by a heap allocation
-==34319==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==34319==    by 0x10F35E: Cmd_malloc (p2.c:60)
-==34319==    by 0x10D591: procesarComando (generalfunctions.c:67)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319== 
-==34319== 
-==34319== 1 errors in context 3 of 11:
-==34319== Conditional jump or move depends on uninitialised value(s)
-==34319==    at 0x48C829C: _itoa_word (_itoa.c:178)
-==34319==    by 0x48E3ABD: __vfprintf_internal (vfprintf-internal.c:1516)
-==34319==    by 0x48CE79E: printf (printf.c:33)
-==34319==    by 0x1106F3: imprimirMemDumpHex (p2.c:350)
-==34319==    by 0x11080E: Cmd_memdump (p2.c:370)
-==34319==    by 0x10D657: procesarComando (generalfunctions.c:75)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319==  Uninitialised value was created by a heap allocation
-==34319==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==34319==    by 0x10F35E: Cmd_malloc (p2.c:60)
-==34319==    by 0x10D591: procesarComando (generalfunctions.c:67)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319== 
-==34319== 
-==34319== 1 errors in context 4 of 11:
-==34319== Use of uninitialised value of size 8
-==34319==    at 0x48C828A: _itoa_word (_itoa.c:178)
-==34319==    by 0x48E3ABD: __vfprintf_internal (vfprintf-internal.c:1516)
-==34319==    by 0x48CE79E: printf (printf.c:33)
-==34319==    by 0x1106F3: imprimirMemDumpHex (p2.c:350)
-==34319==    by 0x11080E: Cmd_memdump (p2.c:370)
-==34319==    by 0x10D657: procesarComando (generalfunctions.c:75)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319==  Uninitialised value was created by a heap allocation
-==34319==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==34319==    by 0x10F35E: Cmd_malloc (p2.c:60)
-==34319==    by 0x10D591: procesarComando (generalfunctions.c:67)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319== 
-==34319== 
-==34319== 2 errors in context 5 of 11:
-==34319== Invalid free() / delete / delete[] / realloc()
-==34319==    at 0x484B27F: free (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==34319==    by 0x111C8D: deleteListM (listamemoria.c:193)
-==34319==    by 0x10DFE2: main (p0.c:26)
-==34319==  Address 0x4037000 is in a rw- shared memory segment
-==34319== 
-==34319== 
-==34319== 14 errors in context 6 of 11:
-==34319== Conditional jump or move depends on uninitialised value(s)
-==34319==    at 0x48E3C05: __vfprintf_internal (vfprintf-internal.c:1516)
-==34319==    by 0x48CE79E: printf (printf.c:33)
-==34319==    by 0x110726: imprimirMemDumpHex (p2.c:352)
-==34319==    by 0x11080E: Cmd_memdump (p2.c:370)
-==34319==    by 0x10D657: procesarComando (generalfunctions.c:75)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319==  Uninitialised value was created by a heap allocation
-==34319==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==34319==    by 0x10F35E: Cmd_malloc (p2.c:60)
-==34319==    by 0x10D591: procesarComando (generalfunctions.c:67)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319== 
-==34319== 
-==34319== 14 errors in context 7 of 11:
-==34319== Conditional jump or move depends on uninitialised value(s)
-==34319==    at 0x48E45C3: __vfprintf_internal (vfprintf-internal.c:1516)
-==34319==    by 0x48CE79E: printf (printf.c:33)
-==34319==    by 0x110726: imprimirMemDumpHex (p2.c:352)
-==34319==    by 0x11080E: Cmd_memdump (p2.c:370)
-==34319==    by 0x10D657: procesarComando (generalfunctions.c:75)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319==  Uninitialised value was created by a heap allocation
-==34319==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==34319==    by 0x10F35E: Cmd_malloc (p2.c:60)
-==34319==    by 0x10D591: procesarComando (generalfunctions.c:67)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319== 
-==34319== 
-==34319== 14 errors in context 8 of 11:
-==34319== Conditional jump or move depends on uninitialised value(s)
-==34319==    at 0x48C829C: _itoa_word (_itoa.c:178)
-==34319==    by 0x48E3ABD: __vfprintf_internal (vfprintf-internal.c:1516)
-==34319==    by 0x48CE79E: printf (printf.c:33)
-==34319==    by 0x110726: imprimirMemDumpHex (p2.c:352)
-==34319==    by 0x11080E: Cmd_memdump (p2.c:370)
-==34319==    by 0x10D657: procesarComando (generalfunctions.c:75)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319==  Uninitialised value was created by a heap allocation
-==34319==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==34319==    by 0x10F35E: Cmd_malloc (p2.c:60)
-==34319==    by 0x10D591: procesarComando (generalfunctions.c:67)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319== 
-==34319== 
-==34319== 14 errors in context 9 of 11:
-==34319== Use of uninitialised value of size 8
-==34319==    at 0x48C828A: _itoa_word (_itoa.c:178)
-==34319==    by 0x48E3ABD: __vfprintf_internal (vfprintf-internal.c:1516)
-==34319==    by 0x48CE79E: printf (printf.c:33)
-==34319==    by 0x110726: imprimirMemDumpHex (p2.c:352)
-==34319==    by 0x11080E: Cmd_memdump (p2.c:370)
-==34319==    by 0x10D657: procesarComando (generalfunctions.c:75)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319==  Uninitialised value was created by a heap allocation
-==34319==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==34319==    by 0x10F35E: Cmd_malloc (p2.c:60)
-==34319==    by 0x10D591: procesarComando (generalfunctions.c:67)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319== 
-==34319== 
-==34319== 15 errors in context 10 of 11:
-==34319== Conditional jump or move depends on uninitialised value(s)
-==34319==    at 0x110597: printCharacter (p2.c:333)
-==34319==    by 0x11069C: imprimirMemDumpHex (p2.c:345)
-==34319==    by 0x11080E: Cmd_memdump (p2.c:370)
-==34319==    by 0x10D657: procesarComando (generalfunctions.c:75)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319==  Uninitialised value was created by a heap allocation
-==34319==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==34319==    by 0x10F35E: Cmd_malloc (p2.c:60)
-==34319==    by 0x10D591: procesarComando (generalfunctions.c:67)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319== 
-==34319== 
-==34319== 15 errors in context 11 of 11:
-==34319== Conditional jump or move depends on uninitialised value(s)
-==34319==    at 0x110573: printCharacter (p2.c:333)
-==34319==    by 0x11069C: imprimirMemDumpHex (p2.c:345)
-==34319==    by 0x11080E: Cmd_memdump (p2.c:370)
-==34319==    by 0x10D657: procesarComando (generalfunctions.c:75)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319==  Uninitialised value was created by a heap allocation
-==34319==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==34319==    by 0x10F35E: Cmd_malloc (p2.c:60)
-==34319==    by 0x10D591: procesarComando (generalfunctions.c:67)
-==34319==    by 0x10D18E: procesarEntrada (generalfunctions.c:23)
-==34319==    by 0x10DFA1: main (p0.c:22)
-==34319== 
-==34319== ERROR SUMMARY: 92 errors from 11 contexts (suppressed: 0 from 0)
+==4846== Memcheck, a memory error detector
+==4846== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==4846== Using Valgrind-3.18.1-42b08ed5bd-20211015 and LibVEX; rerun with -h for copyright info
+==4846== Command: ./p2
+==4846== Parent PID: 4816
+==4846== 
+--4846-- 
+--4846-- Valgrind options:
+--4846--    --leak-check=full
+--4846--    --show-leak-kinds=all
+--4846--    --track-origins=yes
+--4846--    --verbose
+--4846--    --log-file=valgrind-report.txt
+--4846-- Contents of /proc/version:
+--4846--   Linux version 6.2.0-37-generic (buildd@bos03-amd64-055) (x86_64-linux-gnu-gcc-11 (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0, GNU ld (GNU Binutils for Ubuntu) 2.38) #38~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Thu Nov  2 18:01:13 UTC 2
+--4846-- 
+--4846-- Arch and hwcaps: AMD64, LittleEndian, amd64-cx16-lzcnt-rdtscp-sse3-ssse3-avx-avx2-bmi-f16c-rdrand-rdseed
+--4846-- Page sizes: currently 4096, max supported 4096
+--4846-- Valgrind library directory: /usr/libexec/valgrind
+--4846-- Reading syms from /home/rafael/CLionProjects/SO/p2
+--4846-- Reading syms from /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+--4846--   Considering /usr/lib/debug/.build-id/97/18d3757f00d2366056830aae09698dbd35e32c.debug ..
+--4846--   .. build-id is valid
+--4846-- Reading syms from /usr/libexec/valgrind/memcheck-amd64-linux
+--4846--    object doesn't have a symbol table
+--4846--    object doesn't have a dynamic symbol table
+--4846-- Scheduler: using generic scheduler lock implementation.
+--4846-- Reading suppressions file: /usr/libexec/valgrind/default.supp
+==4846== embedded gdbserver: reading from /tmp/vgdb-pipe-from-vgdb-to-4846-by-rafael-on-???
+==4846== embedded gdbserver: writing to   /tmp/vgdb-pipe-to-vgdb-from-4846-by-rafael-on-???
+==4846== embedded gdbserver: shared mem   /tmp/vgdb-pipe-shared-mem-vgdb-4846-by-rafael-on-???
+==4846== 
+==4846== TO CONTROL THIS PROCESS USING vgdb (which you probably
+==4846== don't want to do, unless you know exactly what you're doing,
+==4846== or are doing some strange experiment):
+==4846==   /usr/bin/vgdb --pid=4846 ...command...
+==4846== 
+==4846== TO DEBUG THIS PROCESS USING GDB: start GDB like this
+==4846==   /path/to/gdb ./p2
+==4846== and then give GDB the following command
+==4846==   target remote | /usr/bin/vgdb --pid=4846
+==4846== --pid is optional if only one valgrind process is running
+==4846== 
+--4846-- REDIR: 0x402aa40 (ld-linux-x86-64.so.2:strlen) redirected to 0x580bcec2 (???)
+--4846-- REDIR: 0x402a810 (ld-linux-x86-64.so.2:index) redirected to 0x580bcedc (???)
+--4846-- Reading syms from /usr/libexec/valgrind/vgpreload_core-amd64-linux.so
+--4846--    object doesn't have a symbol table
+--4846-- Reading syms from /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so
+--4846--    object doesn't have a symbol table
+==4846== WARNING: new redirection conflicts with existing -- ignoring it
+--4846--     old: 0x0402aa40 (strlen              ) R-> (0000.0) 0x580bcec2 ???
+--4846--     new: 0x0402aa40 (strlen              ) R-> (2007.0) 0x0484ee30 strlen
+--4846-- REDIR: 0x4027220 (ld-linux-x86-64.so.2:strcmp) redirected to 0x484fcd0 (strcmp)
+--4846-- REDIR: 0x402afa0 (ld-linux-x86-64.so.2:mempcpy) redirected to 0x4853840 (mempcpy)
+--4846-- Reading syms from /usr/lib/x86_64-linux-gnu/libc.so.6
+--4846--   Considering /usr/lib/debug/.build-id/a4/3bfc8428df6623cd498c9c0caeb91aec9be4f9.debug ..
+--4846--   .. build-id is valid
+==4846== WARNING: new redirection conflicts with existing -- ignoring it
+--4846--     old: 0x04913c60 (memalign            ) R-> (1011.0) 0x0484e080 memalign
+--4846--     new: 0x04913c60 (memalign            ) R-> (1017.0) 0x0484e050 aligned_alloc
+==4846== WARNING: new redirection conflicts with existing -- ignoring it
+--4846--     old: 0x04913c60 (memalign            ) R-> (1011.0) 0x0484e080 memalign
+--4846--     new: 0x04913c60 (memalign            ) R-> (1017.0) 0x0484e020 aligned_alloc
+==4846== WARNING: new redirection conflicts with existing -- ignoring it
+--4846--     old: 0x04913c60 (memalign            ) R-> (1011.0) 0x0484e080 memalign
+--4846--     new: 0x04913c60 (memalign            ) R-> (1017.0) 0x0484e050 aligned_alloc
+==4846== WARNING: new redirection conflicts with existing -- ignoring it
+--4846--     old: 0x04913c60 (memalign            ) R-> (1011.0) 0x0484e080 memalign
+--4846--     new: 0x04913c60 (memalign            ) R-> (1017.0) 0x0484e020 aligned_alloc
+--4846-- REDIR: 0x4916720 (libc.so.6:strnlen) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--4846-- REDIR: 0x49169e0 (libc.so.6:strpbrk) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--4846-- REDIR: 0x49162e0 (libc.so.6:strcmp) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--4846-- REDIR: 0x4934cd0 (libc.so.6:wcsnlen) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--4846-- REDIR: 0x49176d0 (libc.so.6:memset) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--4846-- REDIR: 0x4933540 (libc.so.6:wcslen) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--4846-- REDIR: 0x4917c10 (libc.so.6:memcpy@@GLIBC_2.14) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--4846-- REDIR: 0x4933370 (libc.so.6:wcschr) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--4846-- REDIR: 0x4916260 (libc.so.6:index) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--4846-- REDIR: 0x4916960 (libc.so.6:rindex) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--4846-- REDIR: 0x49175a0 (libc.so.6:memmove) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+==4846== Preferring higher priority redirection:
+--4846--     old: 0x04a0e9c0 (__memcpy_avx_unalign) R-> (2018.0) 0x04850f90 __memcpy_avx_unaligned_erms
+--4846--     new: 0x04a0e9c0 (__memcpy_avx_unalign) R-> (2018.1) 0x04852880 memmove
+--4846-- REDIR: 0x49333f0 (libc.so.6:wcscmp) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--4846-- REDIR: 0x49179e0 (libc.so.6:stpncpy) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--4846-- REDIR: 0x49339b0 (libc.so.6:wmemchr) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--4846-- REDIR: 0x4916830 (libc.so.6:strncmp) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--4846-- REDIR: 0x4917a70 (libc.so.6:strcasecmp) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--4846-- REDIR: 0x4916420 (libc.so.6:strcspn) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--4846-- REDIR: 0x4933470 (libc.so.6:wcscpy) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--4846-- REDIR: 0x49161d0 (libc.so.6:strcat) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--4846-- REDIR: 0x4917b60 (libc.so.6:strncasecmp_l) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--4846-- REDIR: 0x4917480 (libc.so.6:bcmp) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--4846-- REDIR: 0x491f570 (libc.so.6:memrchr) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--4846-- REDIR: 0x4919010 (libc.so.6:strchrnul) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--4846-- REDIR: 0x4916390 (libc.so.6:strcpy) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--4846-- REDIR: 0x4917b10 (libc.so.6:strcasecmp_l) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--4846-- REDIR: 0x49166a0 (libc.so.6:strlen) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--4846-- REDIR: 0x49168d0 (libc.so.6:strncpy) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--4846-- REDIR: 0x4917950 (libc.so.6:stpcpy) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--4846-- REDIR: 0x49173f0 (libc.so.6:memchr) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--4846-- REDIR: 0x4916b00 (libc.so.6:strspn) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--4846-- REDIR: 0x49177d0 (libc.so.6:mempcpy) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--4846-- REDIR: 0x4917ac0 (libc.so.6:strncasecmp) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--4846-- REDIR: 0x4918f80 (libc.so.6:rawmemchr) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--4846-- REDIR: 0x4917310 (libc.so.6:strstr) redirected to 0x483f220 (_vgnU_ifunc_wrapper)
+--4846-- REDIR: 0x4a0b810 (libc.so.6:__strrchr_avx2) redirected to 0x484e810 (rindex)
+--4846-- REDIR: 0x49130a0 (libc.so.6:malloc) redirected to 0x4848820 (malloc)
+--4846-- REDIR: 0x4a0b9e0 (libc.so.6:__strlen_avx2) redirected to 0x484ed10 (strlen)
+--4846-- REDIR: 0x4a06f80 (libc.so.6:__strncmp_avx2) redirected to 0x484f3e0 (strncmp)
+--4846-- REDIR: 0x4932180 (libc.so.6:__strstr_sse2_unaligned) redirected to 0x4853a50 (strstr)
+--4846-- REDIR: 0x4a0b600 (libc.so.6:__strchrnul_avx2) redirected to 0x4853330 (strchrnul)
+--4846-- REDIR: 0x4a0e980 (libc.so.6:__mempcpy_avx_unaligned_erms) redirected to 0x4853440 (mempcpy)
+--4846-- REDIR: 0x4a06b40 (libc.so.6:__strcmp_avx2) redirected to 0x484fbd0 (strcmp)
+==4846== Conditional jump or move depends on uninitialised value(s)
+==4846==    at 0x484FBDC: strcmp (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==4846==    by 0x10DF8C: main (p0.c:22)
+==4846==  Uninitialised value was created by a stack allocation
+==4846==    at 0x10DEFE: main (p0.c:8)
+==4846== 
+==4846== Conditional jump or move depends on uninitialised value(s)
+==4846==    at 0x10DF8F: main (p0.c:22)
+==4846==  Uninitialised value was created by a stack allocation
+==4846==    at 0x10DEFE: main (p0.c:8)
+==4846== 
+--4846-- REDIR: 0x4a0ceb0 (libc.so.6:__strcpy_avx2) redirected to 0x484ee60 (strcpy)
+==4846== Conditional jump or move depends on uninitialised value(s)
+==4846==    at 0x484EE72: strcpy (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==4846==    by 0x10D0A2: procesarEntrada (generalfunctions.c:13)
+==4846==    by 0x10DFBB: main (p0.c:23)
+==4846==  Uninitialised value was created by a stack allocation
+==4846==    at 0x10DEFE: main (p0.c:8)
+==4846== 
+==4846== Conditional jump or move depends on uninitialised value(s)
+==4846==    at 0x491736F: strtok_r (strtok_r.c:49)
+==4846==    by 0x10D795: TrocearCadena (generalfunctions.c:94)
+==4846==    by 0x10D0BF: procesarEntrada (generalfunctions.c:15)
+==4846==    by 0x10DFBB: main (p0.c:23)
+==4846==  Uninitialised value was created by a stack allocation
+==4846==    at 0x10DEFE: main (p0.c:8)
+==4846== 
+==4846== Invalid read of size 1
+==4846==    at 0x484FBD4: strcmp (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==4846==    by 0x10D0DB: procesarEntrada (generalfunctions.c:16)
+==4846==    by 0x10DFBB: main (p0.c:23)
+==4846==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==4846== 
+==4846== 
+==4846== Process terminating with default action of signal 11 (SIGSEGV)
+==4846==  Access not within mapped region at address 0x0
+==4846==    at 0x484FBD4: strcmp (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==4846==    by 0x10D0DB: procesarEntrada (generalfunctions.c:16)
+==4846==    by 0x10DFBB: main (p0.c:23)
+==4846==  If you believe this happened as a result of a stack
+==4846==  overflow in your program's main thread (unlikely but
+==4846==  possible), you can try to increase the size of the
+==4846==  main thread stack using the --main-stacksize= flag.
+==4846==  The main thread stack size used in this run was 8388608.
+==4846== 
+==4846== HEAP SUMMARY:
+==4846==     in use at exit: 3,552 bytes in 6 blocks
+==4846==   total heap usage: 6 allocs, 0 frees, 3,552 bytes allocated
+==4846== 
+==4846== Searching for pointers to 6 not-freed blocks
+==4846== Checked 107,176 bytes
+==4846== 
+==4846== 376 bytes in 1 blocks are still reachable in loss record 1 of 4
+==4846==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==4846==    by 0x10AC1C: createNodeF (listaficheros.c:20)
+==4846==    by 0x10AC60: insertItemF (listaficheros.c:26)
+==4846==    by 0x10B2CB: createDefaultListF (listaficheros.c:134)
+==4846==    by 0x10DF31: main (p0.c:15)
+==4846== 
+==4846== 1,024 bytes in 1 blocks are still reachable in loss record 2 of 4
+==4846==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==4846==    by 0x48ECBA3: _IO_file_doallocate (filedoalloc.c:101)
+==4846==    by 0x48FBCDF: _IO_doallocbuf (genops.c:347)
+==4846==    by 0x48FAF5F: _IO_file_overflow@@GLIBC_2.2.5 (fileops.c:744)
+==4846==    by 0x48EEFA9: puts (ioputs.c:41)
+==4846==    by 0x10DF60: main (p0.c:19)
+==4846== 
+==4846== 1,024 bytes in 1 blocks are still reachable in loss record 3 of 4
+==4846==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==4846==    by 0x48ECBA3: _IO_file_doallocate (filedoalloc.c:101)
+==4846==    by 0x48FBCDF: _IO_doallocbuf (genops.c:347)
+==4846==    by 0x48FACDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+==4846==    by 0x48FBD95: _IO_default_uflow (genops.c:362)
+==4846==    by 0x48EE41B: _IO_getline_info (iogetline.c:60)
+==4846==    by 0x48ED40F: fgets (iofgets.c:53)
+==4846==    by 0x10D048: leerEntrada (generalfunctions.c:8)
+==4846==    by 0x10DF76: main (p0.c:21)
+==4846== 
+==4846== 1,128 bytes in 3 blocks are still reachable in loss record 4 of 4
+==4846==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==4846==    by 0x10AC1C: createNodeF (listaficheros.c:20)
+==4846==    by 0x10AC60: insertItemF (listaficheros.c:26)
+==4846==    by 0x10B214: createDefaultListF (listaficheros.c:128)
+==4846==    by 0x10DF31: main (p0.c:15)
+==4846== 
+==4846== LEAK SUMMARY:
+==4846==    definitely lost: 0 bytes in 0 blocks
+==4846==    indirectly lost: 0 bytes in 0 blocks
+==4846==      possibly lost: 0 bytes in 0 blocks
+==4846==    still reachable: 3,552 bytes in 6 blocks
+==4846==         suppressed: 0 bytes in 0 blocks
+==4846== 
+==4846== ERROR SUMMARY: 5 errors from 5 contexts (suppressed: 0 from 0)
+==4846== 
+==4846== 1 errors in context 1 of 5:
+==4846== Invalid read of size 1
+==4846==    at 0x484FBD4: strcmp (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==4846==    by 0x10D0DB: procesarEntrada (generalfunctions.c:16)
+==4846==    by 0x10DFBB: main (p0.c:23)
+==4846==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==4846== 
+==4846== 
+==4846== 1 errors in context 2 of 5:
+==4846== Conditional jump or move depends on uninitialised value(s)
+==4846==    at 0x491736F: strtok_r (strtok_r.c:49)
+==4846==    by 0x10D795: TrocearCadena (generalfunctions.c:94)
+==4846==    by 0x10D0BF: procesarEntrada (generalfunctions.c:15)
+==4846==    by 0x10DFBB: main (p0.c:23)
+==4846==  Uninitialised value was created by a stack allocation
+==4846==    at 0x10DEFE: main (p0.c:8)
+==4846== 
+==4846== 
+==4846== 1 errors in context 3 of 5:
+==4846== Conditional jump or move depends on uninitialised value(s)
+==4846==    at 0x484EE72: strcpy (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==4846==    by 0x10D0A2: procesarEntrada (generalfunctions.c:13)
+==4846==    by 0x10DFBB: main (p0.c:23)
+==4846==  Uninitialised value was created by a stack allocation
+==4846==    at 0x10DEFE: main (p0.c:8)
+==4846== 
+==4846== 
+==4846== 1 errors in context 4 of 5:
+==4846== Conditional jump or move depends on uninitialised value(s)
+==4846==    at 0x10DF8F: main (p0.c:22)
+==4846==  Uninitialised value was created by a stack allocation
+==4846==    at 0x10DEFE: main (p0.c:8)
+==4846== 
+==4846== 
+==4846== 1 errors in context 5 of 5:
+==4846== Conditional jump or move depends on uninitialised value(s)
+==4846==    at 0x484FBDC: strcmp (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==4846==    by 0x10DF8C: main (p0.c:22)
+==4846==  Uninitialised value was created by a stack allocation
+==4846==    at 0x10DEFE: main (p0.c:8)
+==4846== 
+==4846== ERROR SUMMARY: 5 errors from 5 contexts (suppressed: 0 from 0)

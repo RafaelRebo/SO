@@ -325,14 +325,14 @@ ssize_t LeerFichero (char *f, void *p, size_t cont){
 
 void CmdRead (char *ar[]){
     void *p;
-    p=stringToAdress(ar[1]);
+
     size_t cont=-1;  /* -1 indica leer todo el fichero*/
     ssize_t n;
     if (ar[0]==NULL || ar[1]==NULL){
         printf ("read: Faltan parametros\n");
         return;
     }
-
+    p=stringToAdress(ar[1]);
     if (ar[2]!=NULL)
         cont=(size_t) atoll(ar[2]);
 
@@ -343,7 +343,11 @@ void CmdRead (char *ar[]){
 }
 
 void Cmd_read (char* trozos[]){
-    CmdRead(&trozos[1]);
+    if (trozos[1]!=NULL) {
+        CmdRead(&trozos[1]);
+    }
+    else printf("read: Faltan parametros");
+
 }
 
 void printCharacter(size_t j, unsigned char *point){
@@ -399,8 +403,13 @@ void LlenarMemoria (void *p, size_t cont, unsigned char byte){
 }
 
 void Cmd_memfill (char* trozos[]){
+    if(trozos[1]==NULL){
+        return;
+    }
     void *p;
-    int fillBytes = atoi(trozos[2]);
+    int fillBytes;
+    if(trozos[2]!=NULL) fillBytes=atoi(trozos[2]);
+    else fillBytes=128;
     char charBytes= 'A';
     p=stringToAdress(trozos[1]);
     if (trozos[3]!=NULL) {
