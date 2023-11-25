@@ -412,7 +412,7 @@ void Cmd_memfill (char* trozos[]){
     else fillBytes=128;
     char charBytes= 'A';
     p=stringToAdress(trozos[1]);
-    if (trozos[3]!=NULL) {
+    if (trozos[2]!=NULL&&trozos[3]!=NULL) {
         //El caracter con el que se va a llenar la memoria debe ir entre ''
         if (trozos[3][0]=='\''&&trozos[3][2]=='\'') {
             charBytes = trozos[3][1];
@@ -423,8 +423,6 @@ void Cmd_memfill (char* trozos[]){
     printf("Llenando %d bytes de memoria con el byte ' %c ' (%02x) a partir de la direccion %p", fillBytes, charBytes, charBytes, p);
     LlenarMemoria(p, fillBytes, charBytes);
 }
-
-
 
 ssize_t EscribirFichero (char *f, void *p, size_t cont,int overwrite){
     ssize_t  n;
