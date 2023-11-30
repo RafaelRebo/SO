@@ -91,6 +91,18 @@ build CMakeFiles/P0.dir/listamemoria.c.o: C_COMPILER__P0_unscanned_Debug /home/r
   OBJECT_DIR = CMakeFiles/P0.dir
   OBJECT_FILE_DIR = CMakeFiles/P0.dir
 
+build CMakeFiles/P0.dir/p3.c.o: C_COMPILER__P0_unscanned_Debug /home/rafael/CLionProjects/SO/p3.c || cmake_object_order_depends_target_P0
+  DEP_FILE = CMakeFiles/P0.dir/p3.c.o.d
+  FLAGS = -g -std=gnu99 -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles/P0.dir
+  OBJECT_FILE_DIR = CMakeFiles/P0.dir
+
+build CMakeFiles/P0.dir/listaprocesos.c.o: C_COMPILER__P0_unscanned_Debug /home/rafael/CLionProjects/SO/listaprocesos.c || cmake_object_order_depends_target_P0
+  DEP_FILE = CMakeFiles/P0.dir/listaprocesos.c.o.d
+  FLAGS = -g -std=gnu99 -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles/P0.dir
+  OBJECT_FILE_DIR = CMakeFiles/P0.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target P0
@@ -99,7 +111,7 @@ build CMakeFiles/P0.dir/listamemoria.c.o: C_COMPILER__P0_unscanned_Debug /home/r
 #############################################
 # Link the executable P0
 
-build P0: C_EXECUTABLE_LINKER__P0_Debug CMakeFiles/P0.dir/p0.c.o CMakeFiles/P0.dir/lista.c.o CMakeFiles/P0.dir/listaficheros.c.o CMakeFiles/P0.dir/p1.c.o CMakeFiles/P0.dir/generalfunctions.c.o CMakeFiles/P0.dir/p2.c.o CMakeFiles/P0.dir/listamemoria.c.o
+build P0: C_EXECUTABLE_LINKER__P0_Debug CMakeFiles/P0.dir/p0.c.o CMakeFiles/P0.dir/lista.c.o CMakeFiles/P0.dir/listaficheros.c.o CMakeFiles/P0.dir/p1.c.o CMakeFiles/P0.dir/generalfunctions.c.o CMakeFiles/P0.dir/p2.c.o CMakeFiles/P0.dir/listamemoria.c.o CMakeFiles/P0.dir/p3.c.o CMakeFiles/P0.dir/listaprocesos.c.o
   FLAGS = -g
   OBJECT_DIR = CMakeFiles/P0.dir
   POST_BUILD = :

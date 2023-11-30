@@ -19,4 +19,8 @@ add_executable(P0 p0.c
         p2.h
         listamemoria.c
         listamemoria.h
+        p3.c
+        p3.h
+        listaprocesos.c
+        listaprocesos.h
 )

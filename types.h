@@ -20,6 +20,13 @@ typedef enum allocType{
     Tall
 }allocType;
 
+typedef enum procStatus{
+    FINISHED,
+    STOPPED,
+    SIGNALED,
+    ACTIVE
+}procStatus;
+
 typedef allocType tAlloctype;
 typedef tComando tItemL;
 
@@ -38,6 +45,14 @@ typedef struct tItemLM{
     tFilename mappedFilename;
     int mappedFD;
 }tItemLM;
+
+typedef struct tItemLP{
+    int pid;
+    struct tm time;
+    procStatus status;
+    tComando commandLine;
+    int priority;
+}tItemLP;
 
 typedef struct parametros{
     bool longComand, linkComand, accComand, recaComand, recbComand, hidComand;
