@@ -81,6 +81,8 @@ void procesarComando(char *trozos[], tList *L, tListF *F, tListLM *memL) {
         Cmd_mem(trozos,*memL);
     } else if (strcmp(trozos[0], "recurse") == 0) {
         Cmd_recurse(trozos);
+    } else if (strcmp(trozos[0], "uid") == 0) {
+        Cmd_uid(trozos);
     } else if (strcmp(trozos[0], "help") == 0) {
         Help(trozos);
     } else {
@@ -97,6 +99,18 @@ int TrocearCadena(char *cadena, char *trozos[]) {
     while ((trozos[i] = strtok(NULL, " \n\t")) != NULL)
         i++;
     return i;
+}
+
+int stringToInt(const char string[]){
+    //Transforma un string que contiene numeros en el int correspondiente, deshaciendose de otros caracteres
+    //Se usa en malloc, shared, etc para obtener el numero de bytes de memoria a reservar
+    char bytes[100]="";
+    char letter;
+    for(int i=0;string[i]>='0'&&string[i]<='9';i++){
+        letter=string[i];
+        bytes[i]=letter;
+    }
+    return atoi(bytes);
 }
 
 bool tests_run_within_valgrind (void){

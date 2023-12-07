@@ -8,6 +8,7 @@ void leerEntrada(char *comando);
 bool procesarEntrada(tComando comando, tList *L, char *trozos[], tListF *F, tListLM *memL);
 void procesarComando(char *trozos[], tList *L, tListF *F, tListLM *memL);
 int TrocearCadena(char *cadena, char *trozos[]);
+int stringToInt(const char string[]);
 bool tests_run_within_valgrind (void);
 void Help(char *trozos[]);
 

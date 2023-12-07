@@ -12,18 +12,6 @@ void* stringToAdress(char* stringAdress){
     return (void *) addr;
 }
 
-int getByteAmount(const char string[]){
-    //Transforma un string que contiene numeros en el int correspondiente, deshaciendose de otros caracteres
-    //Se usa en malloc, shared, etc para obtener el numero de bytes de memoria a reservar
-    char bytes[100]="";
-    char letter;
-    for(int i=0;string[i]>='0'&&string[i]<='9';i++){
-        letter=string[i];
-        bytes[i]=letter;
-    }
-    return atoi(bytes);
-}
-
 void Cmd_malloc(char* trozos[],tListLM* memL){
     tItemLM mallocItem;
     tPosLM p;
@@ -41,7 +29,7 @@ void Cmd_malloc(char* trozos[],tListLM* memL){
         }
         else{
             //malloc -free tamaño busca el item de la lista que tenga el tamaño especificado, libera su dirección de memoria y lo borra de la lista
-            byteAmount=getByteAmount(trozos[2]);
+            byteAmount=stringToInt(trozos[2]);
             if (byteAmount>0) {
                 p = findItemMmalloc(byteAmount, *memL);
                 if (p != NULL) {
@@ -58,7 +46,7 @@ void Cmd_malloc(char* trozos[],tListLM* memL){
     }
     else{
         //malloc tamaño reserva tamaño bytes de memoria, devuelve su direccion, y guarda los datos de esa reserva en la lista de mallocs
-        byteAmount= getByteAmount(trozos[1]);
+        byteAmount= stringToInt(trozos[1]);
         if (byteAmount>0) {
             time_t date = time(NULL);
             struct tm tm = *localtime(&date);
@@ -147,7 +135,7 @@ void SharedFree(char *trozos[],tListLM* M){
         printListM(*M,alloctype);
     } else {
         //Busca si hay algún item de la lista con la clave buscada y si lo encuentra lo libera
-        key=getByteAmount(trozos[2]);
+        key=stringToInt(trozos[2]);
         p = findItemMS(key,*M, alloctype);
         if (p != NULL) {
             item = getItemM(p, *M);
@@ -180,7 +168,7 @@ void SharedDelkey (char *args[]){
 void sharedAttach(char *trozos[],tListLM* M){
     void * p;
     tItemLM item;
-    int key=getByteAmount(trozos[1]);
+    int key=stringToInt(trozos[1]);
     int id;
     struct shmid_ds s;
     //Busca si la clave pasada por argumentos referencia a algún bloque de memoria compartida existente en el sistema, y si es así
@@ -543,7 +531,7 @@ void Cmd_mem(char* trozos[],tListLM M){
         }
         else if(strcmp(trozos[1],"-funcs")==0){
             //Funciones de cada tipo creadas dentro del programa
-            printf("Funciones de programa: %18p, %17p, %17p\n",&getByteAmount,&Cmd_shared,&printCharacter);
+            printf("Funciones de programa: %18p, %17p, %17p\n",&stringToInt,&Cmd_shared,&printCharacter);
             printf("Funciones de libreria: %18p, %17p, %17p\n",&printf,&strcmp,&scanf);
         }
         else if(strcmp(trozos[1],"-pmap")==0){
@@ -562,7 +550,7 @@ void Cmd_mem(char* trozos[],tListLM M){
         printf("Variables estaticas: %17p, %17p, %17p\n",&svar1,&svar2,&svar3);
         printf("Var(N.I.) estaticas: %17p, %17p, %17p\n",&snvar1,&snvar2,&snvar3);
         printf("\n");
-        printf("Funciones de programa: %15p, %17p, %17p\n",&getByteAmount,&Cmd_shared,&printCharacter);
+        printf("Funciones de programa: %15p, %17p, %17p\n",&stringToInt,&Cmd_shared,&printCharacter);
         printf("Funciones de libreria: %15p, %17p, %17p\n",&printf,&strcmp,&scanf);
         printf("\n");
         printListM(M,alloctype);
@@ -582,7 +570,7 @@ void Recursiva (int n){
 void Cmd_recurse(char* trozos[]){
     int n;
     if(trozos[1]!=NULL){
-        n=getByteAmount(trozos[1]);
+        n=stringToInt(trozos[1]);
         Recursiva(n);
     }
 }
