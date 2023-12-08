@@ -5,27 +5,30 @@
 
 #include "includes.h"
 
-int main() {
+int main(int argc, char *argv[], char *envp[]) {
     bool terminado = false;
     tComando comando;
     char *trozos[20];
     tList L;
     tListF F;
     tListLM memL;
+    tListP procL;
     createDefaultListF(&F);
     createEmptyList(&L);
     createEmptyListM(&memL);
+    createEmptyListP(&procL);
     while (!terminado) {
         puts("");
         imprimirPrompt();
         leerEntrada(comando);
         if (strcmp(comando,"\n")!=0) {
-            terminado = procesarEntrada(comando, &L, trozos, &F, &memL);
+            terminado = procesarEntrada(comando, &L, trozos, &F, &memL, &procL, envp);
         }
     }
     deleteList(&L);
     deleteListF(&F);
     deleteListM(&memL);
+    deleteListP(&procL);
     exit(0);
 }
 
@@ -108,7 +111,7 @@ void hist(char *trozos[], tList *L) {
     }
 }
 
-void command(char *trozos[], tList *L, tListF *F, tListLM *memL) {
+void command(char *trozos[], tList *L, tListF *F, tListLM *memL, tListP *procL, char *envp[]) {
     int n;
     tPosL p;
     tComando comando;
@@ -126,7 +129,7 @@ void command(char *trozos[], tList *L, tListF *F, tListLM *memL) {
                 if (p != LNULL) { //Si se encuentra el comando buscado en la lista se vuelve a ejecutar
                     getItem(p, *L, &comando);
                     printf("Repitiendo comando:   [%d] %s\n", n, comando);
-                    procesarEntrada(comando, L, trozos, F, memL);
+                    procesarEntrada(comando, L, trozos, F, memL, procL, envp);
                 } else {
                     printf("command: No se encuentra el comando %d en el historico.", n);
                 }
