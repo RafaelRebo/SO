@@ -8,7 +8,7 @@ void leerEntrada(char *comando) {
     fgets(comando, MAX, stdin);
 }
 
-bool procesarEntrada(tComando comando, tList *L, char *trozos[], tListF *F, tListLM *memL) {
+bool procesarEntrada(tComando comando, tList *L, char *trozos[], tListF *F, tListLM *memL,tListP *procL, char *envp[]) {
     tComando fullcommand;
     strcpy(fullcommand, comando);
     bool terminado = false;
@@ -20,12 +20,12 @@ bool procesarEntrada(tComando comando, tList *L, char *trozos[], tListF *F, tLis
         terminado = true;
         printf("Shell finalizado.\n");
     } else {
-        procesarComando(trozos, L, F, memL); //Funcion para seleccionar la funcion asociada al comando que se quiere ejecutar
+        procesarComando(trozos, L, F, memL, procL, envp); //Funcion para seleccionar la funcion asociada al comando que se quiere ejecutar
     }
     return terminado;
 }
 
-void procesarComando(char *trozos[], tList *L, tListF *F, tListLM *memL) {
+void procesarComando(char *trozos[], tList *L, tListF *F, tListLM *memL, tListP *procL, char *envp[]) {
     if(trozos[1]!=NULL && (!strcmp(trozos[1], "-?") || !strcmp(trozos[1], "-help"))){
         trozos[1]=trozos[0];
         Help(&trozos[0]);
@@ -42,7 +42,7 @@ void procesarComando(char *trozos[], tList *L, tListF *F, tListLM *memL) {
     } else if (strcmp(trozos[0], "hist") == 0) {
         hist(trozos, L);
     } else if (strcmp(trozos[0], "command") == 0) {
-        command(trozos, L, F, memL);
+        command(trozos, L, F, memL, procL, envp);
     } else if (strcmp(trozos[0], "open") == 0) {
         Cmd_open(trozos, F);
     } else if (strcmp(trozos[0], "close") == 0) {
@@ -83,6 +83,10 @@ void procesarComando(char *trozos[], tList *L, tListF *F, tListLM *memL) {
         Cmd_recurse(trozos);
     } else if (strcmp(trozos[0], "uid") == 0) {
         Cmd_uid(trozos);
+    } else if (strcmp(trozos[0], "showvar") == 0) {
+        Cmd_showvar(trozos, envp);
+    } else if (strcmp(trozos[0], "changevar") == 0) {
+        Cmd_changevar(trozos, envp);
     } else if (strcmp(trozos[0], "help") == 0) {
         Help(trozos);
     } else {
