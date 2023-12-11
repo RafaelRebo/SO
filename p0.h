@@ -6,6 +6,7 @@
 #include "listaficheros.h"
 #include "listaprocesos.h"
 
+
 void authors(char *trozos[]);
 void pid(char *trozos[]);
 void chgdir(char *trozos[]);

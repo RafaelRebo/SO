@@ -76,6 +76,15 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/home/yago/CLionProjects/SO/generalfunctions.c">
+			<Option target="P0"/>
+		</Unit>
+		<Unit filename="/home/yago/CLionProjects/SO/generalfunctions.h">
+			<Option target="P0"/>
+		</Unit>
+		<Unit filename="/home/yago/CLionProjects/SO/includes.h">
+			<Option target="P0"/>
+		</Unit>
 		<Unit filename="/home/yago/CLionProjects/SO/lista.c">
 			<Option target="P0"/>
 		</Unit>
@@ -88,7 +97,40 @@
 		<Unit filename="/home/yago/CLionProjects/SO/listaficheros.h">
 			<Option target="P0"/>
 		</Unit>
+		<Unit filename="/home/yago/CLionProjects/SO/listamemoria.c">
+			<Option target="P0"/>
+		</Unit>
+		<Unit filename="/home/yago/CLionProjects/SO/listamemoria.h">
+			<Option target="P0"/>
+		</Unit>
+		<Unit filename="/home/yago/CLionProjects/SO/listaprocesos.c">
+			<Option target="P0"/>
+		</Unit>
+		<Unit filename="/home/yago/CLionProjects/SO/listaprocesos.h">
+			<Option target="P0"/>
+		</Unit>
 		<Unit filename="/home/yago/CLionProjects/SO/p0.c">
+			<Option target="P0"/>
+		</Unit>
+		<Unit filename="/home/yago/CLionProjects/SO/p0.h">
+			<Option target="P0"/>
+		</Unit>
+		<Unit filename="/home/yago/CLionProjects/SO/p1.c">
+			<Option target="P0"/>
+		</Unit>
+		<Unit filename="/home/yago/CLionProjects/SO/p1.h">
+			<Option target="P0"/>
+		</Unit>
+		<Unit filename="/home/yago/CLionProjects/SO/p2.c">
+			<Option target="P0"/>
+		</Unit>
+		<Unit filename="/home/yago/CLionProjects/SO/p2.h">
+			<Option target="P0"/>
+		</Unit>
+		<Unit filename="/home/yago/CLionProjects/SO/p3.c">
+			<Option target="P0"/>
+		</Unit>
+		<Unit filename="/home/yago/CLionProjects/SO/p3.h">
 			<Option target="P0"/>
 		</Unit>
 		<Unit filename="/home/yago/CLionProjects/SO/types.h">

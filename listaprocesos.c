@@ -48,9 +48,9 @@ void updateItemP(tItemLP d, tPosLP p, tListP *L){
     p->data = d;
 }
 
-tPosLP findItemP(tItemLP d, tListP L){
+tPosLP findItemP(int pid, tListP L){
     tPosLP p;
-    //for (p = L; (p != LNULL) && (p->data != d); p = p->next);
+    for (p = L; (p != LNULL) && (p->data.pid != pid); p = p->next);
     return p;
 }
 
@@ -105,4 +105,9 @@ void deleteListP(tListP *L){
         *L = (*L)->next;
         free(p);
     }
+}
+
+void vaciarLista(tListP *L){
+    deleteListP(L);
+    createEmptyListP(L);
 }
