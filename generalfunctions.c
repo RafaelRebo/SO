@@ -97,6 +97,8 @@ void procesarComando(char *trozos[], tList *L, tListF *F, tListLM *memL, tListP 
         exec(trozos,envp);
     } else if (strcmp(trozos[0], "jobs") == 0) {
         jobs(*procL);
+    } else if (strcmp(trozos[0], "deljobs") == 0) {
+        deljobs(trozos,procL);
     } else if (strcmp(trozos[0], "job") == 0) {
         job(trozos, *procL);
     } else if (strcmp(trozos[0], "help") == 0) {

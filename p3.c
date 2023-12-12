@@ -336,9 +336,43 @@ void jobs (tListP Lproc){
     tItemLP proc;
     for(tPosLP i = firstP(Lproc); i!=LPNULL; i= nextP(i, Lproc)){
         proc = getItemP(i, Lproc);
-        updateItems(proc);
+        proc.status=updateItems(proc);
         printf("%d\t%s p=%d %02d/%02d/%02d %02d:%02d:%02d %s (%03d) %s\n", proc.pid, getUserFromUID(getuid()), getpriority(PRIO_PROCESS,proc.pid), proc.time.tm_year+1900,
-               proc.time.tm_mon, proc.time.tm_mday, proc.time.tm_hour, proc.time.tm_min, proc.time.tm_sec, statusEnumToString(proc.status), 0, proc.commandLine);
+               proc.time.tm_mon+1, proc.time.tm_mday, proc.time.tm_hour, proc.time.tm_min, proc.time.tm_sec, statusEnumToString(proc.status), 0, proc.commandLine);
+    }
+}
+
+void deljobs(char* trozos[],tListP* Lproc){
+    tItemLP proc;
+    if(trozos[1]==NULL){
+        for(tPosLP i = firstP(*Lproc); i!=LPNULL; i= nextP(i, *Lproc)){
+            proc = getItemP(i, *Lproc);
+            proc.status=updateItems(proc);
+            printf("%d\t%s p=%d %02d/%02d/%02d %02d:%02d:%02d %s (%03d) %s\n", proc.pid, getUserFromUID(getuid()), getpriority(PRIO_PROCESS,proc.pid), proc.time.tm_year+1900,
+                   proc.time.tm_mon+1, proc.time.tm_mday, proc.time.tm_hour, proc.time.tm_min, proc.time.tm_sec, statusEnumToString(proc.status), 0, proc.commandLine);
+        }
+    }
+    else if(strcmp(trozos[1],"-sig")==0){
+        tPosLP i=firstP(*Lproc),temp;
+        while(i!=LPNULL){
+            proc = getItemP(i, *Lproc);
+            temp=i;
+            i= nextP(i, *Lproc);
+            if(proc.status==FINISHED){
+                deleteAtPositionP(temp,Lproc);
+            }
+        }
+    }
+    else if(strcmp(trozos[1],"-term")==0){
+        tPosLP i=firstP(*Lproc),temp;
+        while(i!=LPNULL){
+            proc = getItemP(i, *Lproc);
+            temp=i;
+            i= nextP(i, *Lproc);
+            if(proc.status==FINISHED){
+                deleteAtPositionP(temp,Lproc);
+            }
+        }
     }
 }
 
@@ -360,7 +394,6 @@ void job (char* trozos[], tListP Lproc){
             }
         }
     }
-
     else{
         p=findItemP(atoi(trozos[1]), Lproc);
         if(p==LPNULL)
@@ -368,7 +401,7 @@ void job (char* trozos[], tListP Lproc){
         else{
             proc = getItemP(p, Lproc);
             printf("%d\t%s p=%d %02d/%02d/%02d %02d:%02d:%02d %s (%03d) %s", proc.pid, getUserFromUID(getuid()), getpriority(PRIO_PROCESS,proc.pid), proc.time.tm_year+1900,
-                   proc.time.tm_mon, proc.time.tm_mday, proc.time.tm_hour, proc.time.tm_min, proc.time.tm_sec,
+                   proc.time.tm_mon+1, proc.time.tm_mday, proc.time.tm_hour, proc.time.tm_min, proc.time.tm_sec,
                    statusEnumToString(proc.status), 0, proc.commandLine);
         }
     }
