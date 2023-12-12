@@ -154,3 +154,130 @@ void Cmd_changevar(char* trozos[], char *envp[]){
         }
     }
 }
+
+void Cmd_fork (char *tr[], tListP* Lproc){
+    pid_t pid;
+
+    if ((pid=fork())==0){
+
+        vaciarLista(Lproc);
+        printf("ejecutando proceso %d\n", getpid());
+    }
+    else if (pid!=-1)
+        waitpid (pid,NULL,0);
+}
+
+bool esVariable(char* command,  char *envp[]){
+    for(int i = 0; envp[i]!=NULL; i++){
+        printf("%s ", envp[i]);
+        if(!strcmp(command, envp[i]))
+            return true;
+    }
+    return false;
+}
+
+void exec (char* trozos[]/*, char *envp[]*/){   //mirar como hacer para las variables (no se como funcionan en la de referencia)
+    /*int i;
+    char* vars[20];*/
+    if (trozos[1]==NULL){
+        printf("Imposible ejecutar: Bad address\n");
+        return;
+    }/*
+    for (i = 2; esVariable(trozos[i], envp); i++){
+        printf("si es");
+        vars[i-2]=trozos[i];
+    }
+    vars[i-2]=NULL;
+
+    if(execve(trozos[1], &trozos[i], vars)==-1)
+        perror("Imposible ejecutar");
+    */
+    if(execvp(trozos[1], &trozos[2])==-1)
+        perror("Imposible ejecutar");
+}
+
+void jobs (char* trozos[], tListP Lproc){
+    tItemLP proc;
+    for(tPosLP i = firstP(Lproc); i!=LPNULL; i= nextP(i, Lproc)){
+        proc = getItemP(i, Lproc);
+        printf("%d\t%s p=%d %d/%d/%d %d:%d:%d %u (%03d) %s\n", proc.pid, "calcular", proc.priority, proc.time.tm_year, proc.time.tm_mon, proc.time.tm_mday, proc.time.tm_hour, proc.time.tm_min, proc.time.tm_sec, proc.status, 0, proc.commandLine);
+    }
+}
+
+void job (char* trozos[], tListP Lproc){
+    tPosLP p;
+    tItemLP proc;
+    if(trozos[1]==NULL)
+        jobs(trozos, Lproc);
+    else if (!strcmp(trozos[1], "-fg")){
+        if(trozos[2]==NULL)
+            jobs(trozos, Lproc);
+        else{
+            //hacer que un proceso pase a fg
+        }
+    }
+
+    else{
+        p=findItemP(atoi(trozos[1]), Lproc);
+        if(p==LPNULL)
+            jobs(trozos, Lproc);
+        else{
+            proc = getItemP(p, Lproc);
+
+            printf("%d\t%s p=%d %d/%d/%d %d:%d:%d %u (%03d) %s", proc.pid, "calcular", proc.priority, proc.time.tm_year, proc.time.tm_mon, proc.time.tm_mday, proc.time.tm_hour, proc.time.tm_min, proc.time.tm_sec, proc.status, 0, proc.commandLine);
+
+        }
+    }
+}
+
+bool tieneAmpersand(char* trozos[]){
+    int i;
+    for(i = 0; trozos[i]!=NULL; i++){
+        if (trozos[i][0]=='&'){
+            trozos[i]=NULL;
+            return true;
+        }
+
+    }
+    return false;
+
+}
+
+char* trozosToString(char* trozos[]){
+    char* returnedString = malloc(sizeof (tComando));
+    for(int i = 0; trozos[i]!=NULL; i++){
+        strcat(returnedString, trozos[i]);
+        strcat(returnedString, " ");
+    }
+    return returnedString;
+}
+void runProcess(char* trozos[], tListP* Lproc){
+    pid_t pid;
+    bool bg= tieneAmpersand(trozos);
+    tItemLP proc;
+
+
+    pid=fork();
+    switch (pid) {
+        case -1:
+            perror("Fork error");
+            break;
+        case 0:
+            execvp(trozos[0], trozos);
+            break;
+    }
+    if(bg){
+        //proc.time=time(); obtener tiempo y guardarlo
+        proc.pid=pid;
+        strcpy(proc.commandLine, trozosToString(trozos));
+        proc.priority=0;
+        proc.status=ACTIVE;//mirar si la inicializamos a esto o a nulo pa empezar o como
+        if(!insertItemP(proc, LPNULL, Lproc))
+            perror("No se pudo insertar");
+    }
+    else
+        waitpid(pid, NULL, 0);
+
+
+
+}
