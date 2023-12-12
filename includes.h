@@ -1,6 +1,8 @@
 #ifndef P0_INCLUDES_H
 #define P0_INCLUDES_H
 
+#define _GNU_SOURCE
+
 #include "types.h"
 #include "p3.h"
 #include "p2.h"

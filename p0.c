@@ -18,6 +18,7 @@ int main(int argc, char *argv[], char *envp[]) {
     createEmptyListM(&memL);
     createEmptyListP(&procL);
     while (!terminado) {
+        usleep(50000);
         puts("");
         imprimirPrompt();
         leerEntrada(comando);

@@ -87,15 +87,19 @@ void procesarComando(char *trozos[], tList *L, tListF *F, tListLM *memL, tListP 
         Cmd_showvar(trozos, envp);
     } else if (strcmp(trozos[0], "changevar") == 0) {
         Cmd_changevar(trozos, envp);
-    }else if (strcmp(trozos[0], "fork") == 0) {
+    } else if (strcmp(trozos[0], "subsvar") == 0) {
+        Cmd_subsvar(trozos, envp);
+    } else if (strcmp(trozos[0], "showenv") == 0) {
+        Cmd_showenv(trozos, envp);
+    } else if (strcmp(trozos[0], "fork") == 0) {
         Cmd_fork(trozos, procL);
-    }else if (strcmp(trozos[0], "exec") == 0) {
-        exec(trozos/*, envp*/);
-    }else if (strcmp(trozos[0], "jobs") == 0) {
-        jobs(trozos, *procL);
-    }else if (strcmp(trozos[0], "job") == 0) {
+    } else if (strcmp(trozos[0], "exec") == 0) {
+        exec(trozos,envp);
+    } else if (strcmp(trozos[0], "jobs") == 0) {
+        jobs(*procL);
+    } else if (strcmp(trozos[0], "job") == 0) {
         job(trozos, *procL);
-    }else if (strcmp(trozos[0], "help") == 0) {
+    } else if (strcmp(trozos[0], "help") == 0) {
         Help(trozos);
     } else {
         runProcess(trozos, procL);
