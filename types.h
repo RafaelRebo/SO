@@ -51,7 +51,6 @@ typedef struct tItemLP{
     struct tm time;
     procStatus status;
     tComando commandLine;
-    int priority;
 }tItemLP;
 
 typedef struct parametros{

@@ -336,8 +336,9 @@ void jobs (tListP Lproc){
     tItemLP proc;
     for(tPosLP i = firstP(Lproc); i!=LPNULL; i= nextP(i, Lproc)){
         proc = getItemP(i, Lproc);
-        printf("%d\t%s p=%d %d/%d/%d %d:%d:%d %u (%03d) %s\n", proc.pid, getUserFromUID(getuid()), proc.priority, proc.time.tm_year+1900,
-               proc.time.tm_mon, proc.time.tm_mday, proc.time.tm_hour, proc.time.tm_min, proc.time.tm_sec, proc.status, 0, proc.commandLine);
+        updateItems(proc);
+        printf("%d\t%s p=%d %d/%d/%d %d:%d:%d %s (%03d) %s\n", proc.pid, getUserFromUID(getuid()), getpriority(PRIO_PROCESS,proc.pid), proc.time.tm_year+1900,
+               proc.time.tm_mon, proc.time.tm_mday, proc.time.tm_hour, proc.time.tm_min, proc.time.tm_sec, statusEnumToString(proc.status), 0, proc.commandLine);
     }
 }
 
@@ -366,8 +367,9 @@ void job (char* trozos[], tListP Lproc){
             jobs(Lproc);
         else{
             proc = getItemP(p, Lproc);
-            printf("%d\t%s p=%d %d/%d/%d %d:%d:%d %s (%03d) %s", proc.pid, getUserFromUID(getuid()), proc.priority, proc.time.tm_year+1900,
-                   proc.time.tm_mon, proc.time.tm_mday, proc.time.tm_hour, proc.time.tm_min, proc.time.tm_sec, proc.status, 0, proc.commandLine);
+            printf("%d\t%s p=%d %d/%d/%d %d:%d:%d %s (%03d) %s", proc.pid, getUserFromUID(getuid()), getpriority(PRIO_PROCESS,proc.pid), proc.time.tm_year+1900,
+                   proc.time.tm_mon, proc.time.tm_mday, proc.time.tm_hour, proc.time.tm_min, proc.time.tm_sec,
+                   statusEnumToString(proc.status), 0, proc.commandLine);
         }
     }
 }
@@ -414,7 +416,6 @@ void runProcess(char* trozos[], tListP* Lproc){
         proc.time=tm;
         proc.pid=pid;
         strcpy(proc.commandLine, trozosToString(trozos));
-        proc.priority=0;
         proc.status=ACTIVE;//mirar si la inicializamos a esto o a nulo pa empezar o como
         if(!insertItemP(proc, LPNULL, Lproc))
             perror("No se pudo insertar");

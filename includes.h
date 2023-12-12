@@ -30,6 +30,7 @@
 #include <sys/shm.h>
 #include <sys/mman.h>
 #include <sys/wait.h>
+#include <sys/resource.h>
 
 
 #endif //P0_INCLUDES_H
