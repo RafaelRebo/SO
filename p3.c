@@ -306,7 +306,7 @@ void exec (char* trozos[], char *envp[]){   //mirar como hacer para las variable
 }
 
 
-procStatus updateItems(tItemLP proc){//falta hacer update de la prioridad
+procStatus updateItems(tItemLP proc){
     int newStatus;
 
     pid_t pid = waitpid(proc.pid, &newStatus, WNOHANG);
@@ -337,7 +337,7 @@ void jobs (tListP Lproc){
     for(tPosLP i = firstP(Lproc); i!=LPNULL; i= nextP(i, Lproc)){
         proc = getItemP(i, Lproc);
         updateItems(proc);
-        printf("%d\t%s p=%d %d/%d/%d %d:%d:%d %s (%03d) %s\n", proc.pid, getUserFromUID(getuid()), getpriority(PRIO_PROCESS,proc.pid), proc.time.tm_year+1900,
+        printf("%d\t%s p=%d %02d/%02d/%02d %02d:%02d:%02d %s (%03d) %s\n", proc.pid, getUserFromUID(getuid()), getpriority(PRIO_PROCESS,proc.pid), proc.time.tm_year+1900,
                proc.time.tm_mon, proc.time.tm_mday, proc.time.tm_hour, proc.time.tm_min, proc.time.tm_sec, statusEnumToString(proc.status), 0, proc.commandLine);
     }
 }
@@ -367,7 +367,7 @@ void job (char* trozos[], tListP Lproc){
             jobs(Lproc);
         else{
             proc = getItemP(p, Lproc);
-            printf("%d\t%s p=%d %d/%d/%d %d:%d:%d %s (%03d) %s", proc.pid, getUserFromUID(getuid()), getpriority(PRIO_PROCESS,proc.pid), proc.time.tm_year+1900,
+            printf("%d\t%s p=%d %02d/%02d/%02d %02d:%02d:%02d %s (%03d) %s", proc.pid, getUserFromUID(getuid()), getpriority(PRIO_PROCESS,proc.pid), proc.time.tm_year+1900,
                    proc.time.tm_mon, proc.time.tm_mday, proc.time.tm_hour, proc.time.tm_min, proc.time.tm_sec,
                    statusEnumToString(proc.status), 0, proc.commandLine);
         }
