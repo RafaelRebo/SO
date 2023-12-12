@@ -1,6 +1,6 @@
 #ifndef SO
 #define SO
-#define MAX 100
+#define MAX 1000
 #define MAXF 300
 #define MAXM 60
 #include "includes.h"

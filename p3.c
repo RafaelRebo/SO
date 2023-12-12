@@ -227,24 +227,20 @@ void Cmd_subsvar(char *trozos[], char *envp[]) {
 
 void Cmd_showenv(char *trozos[], char *envp[]){
     int count=0;
-    char **envp_aux_main = envp;
-    char **envp_aux_environ = environ;
     if(trozos[1]==NULL){
         printf("Imprimiendo todas las variables de entorno:\n\n");
         //Se podria hacer con environ, no se hizo para tener mas similitud a la shell de referencia
         while (envp[count] != NULL) {
-            printf(" > %p -> main arg3[%d]=(%p)  %s\n" ,&envp[count],count,(void*)*envp_aux_main,envp[count]);
+            printf(" > %p -> main arg3[%d]=(%p)  %s\n" ,&envp[count],count,envp[count],envp[count]);
             count++;
-            envp_aux_main++;
         }
     }
     else if(strcmp(trozos[1],"-environ")==0){
         printf("Imprimiendo todas las variables de entorno:\n\n");
         //Se podria hacer con environ, no se hizo para tener mas similitud a la shell de referencia
         while (environ[count] != NULL) {
-            printf(" > %p -> environ[%d]=(%p)  %s\n" ,&environ[count],count,(void*)*envp_aux_environ,environ[count]);
+            printf(" > %p -> environ[%d]=(%p)  %s\n" ,&environ[count],count,environ[count],environ[count]);
             count++;
-            envp_aux_environ++;
         }
     }
     else if(strcmp(trozos[1],"-addr")==0){
@@ -326,9 +322,7 @@ procStatus updateItems(tItemLP proc){//falta hacer update de la prioridad
             return SIGNALED;
         }
     }
-
     return proc.status;
-
 }
 
 char* statusEnumToString(procStatus status){
@@ -342,7 +336,7 @@ void jobs (tListP Lproc){
     tItemLP proc;
     for(tPosLP i = firstP(Lproc); i!=LPNULL; i= nextP(i, Lproc)){
         proc = getItemP(i, Lproc);
-        printf("%d\t%s p=%d %d/%d/%d %d:%d:%d %u (%03d) %s\n", proc.pid, getUserFromUID(getuid()), proc.priority, proc.time.tm_year,
+        printf("%d\t%s p=%d %d/%d/%d %d:%d:%d %u (%03d) %s\n", proc.pid, getUserFromUID(getuid()), proc.priority, proc.time.tm_year+1900,
                proc.time.tm_mon, proc.time.tm_mday, proc.time.tm_hour, proc.time.tm_min, proc.time.tm_sec, proc.status, 0, proc.commandLine);
     }
 }
@@ -372,7 +366,7 @@ void job (char* trozos[], tListP Lproc){
             jobs(Lproc);
         else{
             proc = getItemP(p, Lproc);
-            printf("%d\t%s p=%d %d/%d/%d %d:%d:%d %s (%03d) %s", proc.pid, getUserFromUID(getuid()), proc.priority, proc.time.tm_year,
+            printf("%d\t%s p=%d %d/%d/%d %d:%d:%d %s (%03d) %s", proc.pid, getUserFromUID(getuid()), proc.priority, proc.time.tm_year+1900,
                    proc.time.tm_mon, proc.time.tm_mday, proc.time.tm_hour, proc.time.tm_min, proc.time.tm_sec, proc.status, 0, proc.commandLine);
         }
     }
@@ -392,7 +386,9 @@ bool tieneAmpersand(char* trozos[]){
 
 char* trozosToString(char* trozos[]){
     char* returnedString = malloc(sizeof (tComando));
-    for(int i = 0; trozos[i]!=NULL; i++){
+    strcpy(returnedString,trozos[0]);
+    strcat(returnedString," ");
+    for(int i = 1; trozos[i]!=NULL; i++){
         strcat(returnedString, trozos[i]);
         strcat(returnedString, " ");
     }
@@ -413,7 +409,9 @@ void runProcess(char* trozos[], tListP* Lproc){
             break;
     }
     if(bg){
-        //proc.time=time(); obtener tiempo y guardarlo
+        time_t date = time(NULL);
+        struct tm tm = *localtime(&date);
+        proc.time=tm;
         proc.pid=pid;
         strcpy(proc.commandLine, trozosToString(trozos));
         proc.priority=0;
