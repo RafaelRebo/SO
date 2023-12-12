@@ -167,33 +167,44 @@ void Cmd_fork (char *tr[], tListP* Lproc){
         waitpid (pid,NULL,0);
 }
 
-bool esVariable(char* command,  char *envp[]){
-    for(int i = 0; envp[i]!=NULL; i++){
-        printf("%s ", envp[i]);
-        if(!strcmp(command, envp[i]))
-            return true;
+char* cortarCadena(const char* cadena){
+    char* returnedString = malloc(MAX * sizeof(char));
+    for (int i =0; cadena[i]!='\0' && cadena[i]!='=';i++){
+        returnedString[i]=cadena[i];
     }
-    return false;
+    return returnedString;
 }
 
-void exec (char* trozos[]/*, char *envp[]*/){   //mirar como hacer para las variables (no se como funcionan en la de referencia)
-    /*int i;
-    char* vars[20];*/
+int esVariable(char* command,  char *envp[]){
+    char temp[MAX];
+    for(int i = 0; envp[i]!=NULL; i++){
+        strcpy(temp, cortarCadena(envp[i]));
+
+        if(!strcmp(command, temp))
+            return i;
+    }
+    return -1;
+}
+
+void exec (char* trozos[], char *envp[]){   //mirar como hacer para las variables (no se como funcionan en la de referencia)
+    int i=1, pos;
+    char* vars[20];
     if (trozos[1]==NULL){
         printf("Imposible ejecutar: Bad address\n");
         return;
-    }/*
-    for (i = 2; esVariable(trozos[i], envp); i++){
-        printf("si es");
-        vars[i-2]=trozos[i];
     }
-    vars[i-2]=NULL;
-
-    if(execve(trozos[1], &trozos[i], vars)==-1)
+    pos = esVariable(trozos[i], envp);
+    for (i = 1; pos!=-1; i++){
+        vars[i-1]=envp[pos];
+        pos = esVariable(trozos[i], envp);
+    }
+    vars[i - 1] = NULL;
+    printf("%d", i);
+    if(execve(trozos[i], &trozos[i], vars)==-1)
         perror("Imposible ejecutar");
-    */
+/*
     if(execvp(trozos[1], &trozos[2])==-1)
-        perror("Imposible ejecutar");
+        perror("Imposible ejecutar");*/
 }
 
 void jobs (char* trozos[], tListP Lproc){
@@ -224,7 +235,7 @@ void job (char* trozos[], tListP Lproc){
         else{
             proc = getItemP(p, Lproc);
 
-            printf("%d\t%s p=%d %d/%d/%d %d:%d:%d %u (%03d) %s", proc.pid, "calcular", proc.priority, proc.time.tm_year, proc.time.tm_mon, proc.time.tm_mday, proc.time.tm_hour, proc.time.tm_min, proc.time.tm_sec, proc.status, 0, proc.commandLine);
+            printf("%d\t%s p=%d %d/%d/%d %d:%d:%d %s (%03d) %s", proc.pid, "calcular", proc.priority, proc.time.tm_year, proc.time.tm_mon, proc.time.tm_mday, proc.time.tm_hour, proc.time.tm_min, proc.time.tm_sec, proc.status, 0, proc.commandLine);
 
         }
     }
