@@ -87,7 +87,7 @@ void Cmd_showvar(char* trozos[], char *envp[]);
 void Cmd_changevar(char* trozos[], char *envp[]);
 void Cmd_subsvar(char *trozos[], char *envp[]);
 void Cmd_showenv(char *trozos[], char *envp[]);
-void Cmd_fork (char *tr[], tListP* Lproc);
+void Cmd_fork (tListP* Lproc);
 void exec (char* trozos[], char *envp[]);
 void jobs (tListP Lproc);
 void deljobs(char* trozos[],tListP* Lproc);

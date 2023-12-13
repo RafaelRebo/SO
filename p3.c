@@ -1,7 +1,5 @@
 #include "includes.h"
 
-
-
 char* getUserFromUID(uid_t uid){
     struct passwd *user;
     if ((user = getpwuid(uid)) == NULL) {
@@ -111,7 +109,7 @@ void Cmd_showvar(char* trozos[], char *envp[]){
             printf("Con arg3 main:\n");
             printf("   > %s(%p) @%p\n", envp[selVariable],envp[selVariable], &envp[selVariable]);
             printf("Con variable global environ:\n");
-            printf("   > %s(%p) @%p\n", environ[selVariable],environ[selVariable], &environ[selVariable]);
+            printf("   > %s(%p) @%p\n",environ[selVariable],environ[selVariable], &environ[selVariable]);
             printf("Con llamada a sistema getenv:\n");
             printf("   > %s (%p)\n", aux, aux);
         }
@@ -169,7 +167,7 @@ void Cmd_changevar(char* trozos[], char *envp[]){
                 else printf("Variable de entorno %s creada",aux);
             }
             else{ //Variable ya existente
-                strcpy(aux,trozos[2]);
+                strcat(aux,trozos[2]);
                 strcat(aux, "=");
                 strcat(aux,trozos[3]);
                 if(putenv(aux)!=0) perror("No se ha podido modificar la variable deseada");
@@ -192,7 +190,7 @@ void Cmd_subsvar(char *trozos[], char *envp[]) {
         strcat(aux, "=");
         strcat(aux, trozos[4]);
         if (strcmp(trozos[1], "-a") == 0) {
-            selVariable = BuscarVariableEnvp(trozos[2], envp);
+            selVariable = BuscarVariableEnvp(trozos[2],envp);
             if (selVariable != -1) {
                 if (BuscarVariableEnvp(trozos[3], envp) != -1) {
                     sprintf(error, "Imposible sustituir variable %s por %s", trozos[2], trozos[3]);
@@ -253,7 +251,7 @@ void Cmd_showenv(char *trozos[], char *envp[]){
     }
 }
 
-void Cmd_fork (char *trozos[],tListP *procL){
+void Cmd_fork (tListP *procL){
     pid_t pid;
 
     if ((pid=fork())==0){
@@ -319,7 +317,7 @@ procStatus updateItems(tItemLP proc,tListP* Lproc, int* signal){
     tPosLP pos;
     procStatus updatedStatus;
 
-    pid_t pid = waitpid(proc.pid, &newStatus, WNOHANG| WUNTRACED|WCONTINUED);
+    pid_t pid = waitpid(proc.pid, &newStatus, WNOHANG|WUNTRACED|WCONTINUED);
 
     *signal=0;
 
@@ -360,7 +358,7 @@ void jobs (tListP Lproc){
     int signal;
     for(tPosLP i = firstP(Lproc); i!=LPNULL; i= nextP(i, Lproc)){
         proc = getItemP(i, Lproc);
-        if(proc.status!=SIGNALED) proc.status=updateItems(proc,&Lproc,&signal);
+        if(proc.status!=SIGNALED&&proc.status!=FINISHED) proc.status=updateItems(proc,&Lproc,&signal);
         status=statusEnumToString(proc.status);
         if(proc.status==SIGNALED||proc.status==STOPPED){
             printf("%d\t%s p=%d %02d/%02d/%02d %02d:%02d:%02d %s (%s) %s\n", proc.pid, getUserFromUID(getuid()), getpriority(PRIO_PROCESS,proc.pid), proc.time.tm_year+1900,
@@ -383,7 +381,7 @@ void deljobs(char* trozos[],tListP* Lproc){
     if(trozos[1]==NULL){
         for(tPosLP i = firstP(*Lproc); i!=LPNULL; i= nextP(i, *Lproc)){
             proc = getItemP(i, *Lproc);
-            if(proc.status!=SIGNALED) proc.status=updateItems(proc,Lproc,&signal);
+            if(proc.status!=SIGNALED&&proc.status!=FINISHED) proc.status=updateItems(proc,Lproc,&signal);
             status=statusEnumToString(proc.status);
             if(proc.status==SIGNALED||proc.status==STOPPED){
                 printf("%d\t%s p=%d %02d/%02d/%02d %02d:%02d:%02d %s (%s) %s\n", proc.pid, getUserFromUID(getuid()), getpriority(PRIO_PROCESS,proc.pid), proc.time.tm_year+1900,
@@ -450,7 +448,7 @@ void job (char* trozos[], tListP Lproc){
             jobs(Lproc);
         else{
             proc = getItemP(p, Lproc);
-            if(proc.status!=SIGNALED) proc.status=updateItems(proc,&Lproc,&signal);
+            if(proc.status!=SIGNALED&&proc.status!=FINISHED) proc.status=updateItems(proc,&Lproc,&signal);
             status= statusEnumToString(proc.status);
             if(proc.status==SIGNALED||proc.status==STOPPED){
                 printf("%d\t%s p=%d %02d/%02d/%02d %02d:%02d:%02d %s (%s) %s\n", proc.pid, getUserFromUID(getuid()), getpriority(PRIO_PROCESS,proc.pid), proc.time.tm_year+1900,
@@ -519,6 +517,5 @@ void runProcess(char* trozos[], tListP* Lproc){
         if(!insertItemP(proc, LPNULL, Lproc))
             perror("No se pudo insertar");
     }
-    else
-        waitpid(pid, NULL, 0);
+    else waitpid(pid, NULL, 0);
 }

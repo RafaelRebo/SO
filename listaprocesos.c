@@ -99,15 +99,9 @@ void deleteAtPositionP(tPosLP p, tListP *L){
 
 void deleteListP(tListP *L){
     tPosLP p;
-    while (!isEmptyListP(*L))
-    {
+    while (!isEmptyListP(*L)){
         p = *L;
         *L = (*L)->next;
         free(p);
     }
-}
-
-void vaciarLista(tListP *L){
-    deleteListP(L);
-    createEmptyListP(L);
 }

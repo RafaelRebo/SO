@@ -92,7 +92,7 @@ void procesarComando(char *trozos[], tList *L, tListF *F, tListLM *memL, tListP 
     } else if (strcmp(trozos[0], "showenv") == 0) {
         Cmd_showenv(trozos, envp);
     } else if (strcmp(trozos[0], "fork") == 0) {
-        Cmd_fork(trozos, procL);
+        Cmd_fork(procL);
     } else if (strcmp(trozos[0], "exec") == 0) {
         exec(trozos,envp);
     } else if (strcmp(trozos[0], "jobs") == 0) {
