@@ -306,15 +306,6 @@ void exec (char* trozos[], char *envp[]){   //mirar como hacer para las variable
         perror("Imposible ejecutar");
 }
 
-int ValorSenal(char * sen){
-    int i;
-    for (i=0; sigstrnum[i].nombre!=NULL; i++)
-        if (!strcmp(sen, sigstrnum[i].nombre))
-            return sigstrnum[i].senal;
-    return -1;
-}
-
-
 char *NombreSenal(int sen){			/* para sitios donde no hay sig2str*/
     int i;
     for (i=0; sigstrnum[i].nombre!=NULL; i++)
@@ -382,7 +373,6 @@ void jobs (tListP Lproc){
                    proc.time.tm_mon+1, proc.time.tm_mday, proc.time.tm_hour, proc.time.tm_min, proc.time.tm_sec, status,
                    signal, proc.commandLine);
         }
-
         free(status);
     }
 }
@@ -394,10 +384,18 @@ void deljobs(char* trozos[],tListP* Lproc){
     if(trozos[1]==NULL){
         for(tPosLP i = firstP(*Lproc); i!=LPNULL; i= nextP(i, *Lproc)){
             proc = getItemP(i, *Lproc);
-            proc.status=updateItems(proc,Lproc,&signal);
+            if(proc.status!=SIGNALED) proc.status=updateItems(proc,Lproc,&signal);
             status=statusEnumToString(proc.status);
-            printf("%d\t%s p=%d %02d/%02d/%02d %02d:%02d:%02d %s (%03d) %s\n", proc.pid, getUserFromUID(getuid()), getpriority(PRIO_PROCESS,proc.pid), proc.time.tm_year+1900,
-                   proc.time.tm_mon+1, proc.time.tm_mday, proc.time.tm_hour, proc.time.tm_min, proc.time.tm_sec, status, 0, proc.commandLine);
+            if(proc.status==SIGNALED||proc.status==STOPPED){
+                printf("%d\t%s p=%d %02d/%02d/%02d %02d:%02d:%02d %s (%s) %s\n", proc.pid, getUserFromUID(getuid()), getpriority(PRIO_PROCESS,proc.pid), proc.time.tm_year+1900,
+                       proc.time.tm_mon+1, proc.time.tm_mday, proc.time.tm_hour, proc.time.tm_min, proc.time.tm_sec, status,
+                       NombreSenal(signal), proc.commandLine);
+            }
+            else{
+                printf("%d\t%s p=%d %02d/%02d/%02d %02d:%02d:%02d %s (%03d) %s\n", proc.pid, getUserFromUID(getuid()), getpriority(PRIO_PROCESS,proc.pid), proc.time.tm_year+1900,
+                       proc.time.tm_mon+1, proc.time.tm_mday, proc.time.tm_hour, proc.time.tm_min, proc.time.tm_sec, status,
+                       signal, proc.commandLine);
+            }
             free(status);
         }
     }
@@ -431,6 +429,7 @@ void job (char* trozos[], tListP Lproc){
     tPosLP p;
     tItemLP proc;
     char* status;
+    int signal;
     if(trozos[1]==NULL)
         jobs(Lproc);
     else if (!strcmp(trozos[1], "-fg")){
@@ -452,10 +451,18 @@ void job (char* trozos[], tListP Lproc){
             jobs(Lproc);
         else{
             proc = getItemP(p, Lproc);
+            if(proc.status!=SIGNALED) proc.status=updateItems(proc,&Lproc,&signal);
             status= statusEnumToString(proc.status);
-            printf("%d\t%s p=%d %02d/%02d/%02d %02d:%02d:%02d %s (%03d) %s", proc.pid, getUserFromUID(getuid()), getpriority(PRIO_PROCESS,proc.pid), proc.time.tm_year+1900,
-                   proc.time.tm_mon+1, proc.time.tm_mday, proc.time.tm_hour, proc.time.tm_min, proc.time.tm_sec,
-                   status, 0, proc.commandLine);
+            if(proc.status==SIGNALED||proc.status==STOPPED){
+                printf("%d\t%s p=%d %02d/%02d/%02d %02d:%02d:%02d %s (%s) %s\n", proc.pid, getUserFromUID(getuid()), getpriority(PRIO_PROCESS,proc.pid), proc.time.tm_year+1900,
+                       proc.time.tm_mon+1, proc.time.tm_mday, proc.time.tm_hour, proc.time.tm_min, proc.time.tm_sec, status,
+                       NombreSenal(signal), proc.commandLine);
+            }
+            else{
+                printf("%d\t%s p=%d %02d/%02d/%02d %02d:%02d:%02d %s (%03d) %s\n", proc.pid, getUserFromUID(getuid()), getpriority(PRIO_PROCESS,proc.pid), proc.time.tm_year+1900,
+                       proc.time.tm_mon+1, proc.time.tm_mday, proc.time.tm_hour, proc.time.tm_min, proc.time.tm_sec, status,
+                       signal, proc.commandLine);
+            }
             free(status);
         }
     }
@@ -507,7 +514,7 @@ void runProcess(char* trozos[], tListP* Lproc){
         proc.time=tm;
         proc.pid=pid;
         strcpy(proc.commandLine, trozosToString(trozos));
-        proc.status=ACTIVE;//mirar si la inicializamos a esto o a nulo pa empezar o como
+        proc.status=ACTIVE;
         if(!insertItemP(proc, LPNULL, Lproc))
             perror("No se pudo insertar");
     }
