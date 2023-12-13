@@ -297,7 +297,6 @@ void exec (char* trozos[], char *envp[]){   //mirar como hacer para las variable
         if(pos==-1) i--;
     }
     vars[i - 1] = NULL;
-    printf("%d",i);
     if(i==1){
         if(execvp(trozos[i], &trozos[i])==-1)
             perror("Imposible ejecutar");
@@ -481,7 +480,7 @@ bool tieneAmpersand(char* trozos[]){
 }
 
 char* trozosToString(char* trozos[]){
-    char* returnedString = malloc(sizeof (tComando));
+    static char returnedString[100];
     strcpy(returnedString,trozos[0]);
     strcat(returnedString," ");
     for(int i = 1; trozos[i]!=NULL; i++){
@@ -506,6 +505,8 @@ void runProcess(char* trozos[], tListP* Lproc){
                 perror("Imposible ejecutar comando: ");
                 exit(0);
             }
+            break;
+        default:
             break;
     }
     if(bg){
