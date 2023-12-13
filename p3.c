@@ -331,7 +331,7 @@ procStatus updateItems(tItemLP proc,tListP* Lproc, int* signal){
 
     pid_t pid = waitpid(proc.pid, &newStatus, WNOHANG| WUNTRACED|WCONTINUED);
 
-    *signal=newStatus;
+    *signal=0;
 
     if(pid==0||WIFCONTINUED(newStatus)){
         updatedStatus=ACTIVE;
@@ -344,10 +344,11 @@ procStatus updateItems(tItemLP proc,tListP* Lproc, int* signal){
         }
         else if(WIFEXITED(newStatus)) {
             updatedStatus=FINISHED;
-            *signal= WTERMSIG(newStatus);
+            *signal=WTERMSIG(newStatus);
         }
         else if(WIFSIGNALED(newStatus)) {
             updatedStatus=SIGNALED;
+            *signal=WTERMSIG(newStatus);
         }
     }
     proc.status=updatedStatus;
@@ -369,11 +370,19 @@ void jobs (tListP Lproc){
     int signal;
     for(tPosLP i = firstP(Lproc); i!=LPNULL; i= nextP(i, Lproc)){
         proc = getItemP(i, Lproc);
-        proc.status=updateItems(proc,&Lproc,&signal);
+        if(proc.status!=SIGNALED) proc.status=updateItems(proc,&Lproc,&signal);
         status=statusEnumToString(proc.status);
-        printf("%d\t%s p=%d %02d/%02d/%02d %02d:%02d:%02d %s (%s) %s\n", proc.pid, getUserFromUID(getuid()), getpriority(PRIO_PROCESS,proc.pid), proc.time.tm_year+1900,
-               proc.time.tm_mon+1, proc.time.tm_mday, proc.time.tm_hour, proc.time.tm_min, proc.time.tm_sec, status,
-               NombreSenal(signal), proc.commandLine);
+        if(proc.status==SIGNALED||proc.status==STOPPED){
+            printf("%d\t%s p=%d %02d/%02d/%02d %02d:%02d:%02d %s (%s) %s\n", proc.pid, getUserFromUID(getuid()), getpriority(PRIO_PROCESS,proc.pid), proc.time.tm_year+1900,
+                   proc.time.tm_mon+1, proc.time.tm_mday, proc.time.tm_hour, proc.time.tm_min, proc.time.tm_sec, status,
+                   NombreSenal(signal), proc.commandLine);
+        }
+        else{
+            printf("%d\t%s p=%d %02d/%02d/%02d %02d:%02d:%02d %s (%03d) %s\n", proc.pid, getUserFromUID(getuid()), getpriority(PRIO_PROCESS,proc.pid), proc.time.tm_year+1900,
+                   proc.time.tm_mon+1, proc.time.tm_mday, proc.time.tm_hour, proc.time.tm_min, proc.time.tm_sec, status,
+                   signal, proc.commandLine);
+        }
+
         free(status);
     }
 }
