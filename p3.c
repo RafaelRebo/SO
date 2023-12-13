@@ -1,6 +1,7 @@
 #include "includes.h"
 
 
+
 char* getUserFromUID(uid_t uid){
     struct passwd *user;
     if ((user = getpwuid(uid)) == NULL) {
@@ -305,23 +306,53 @@ void exec (char* trozos[], char *envp[]){   //mirar como hacer para las variable
         perror("Imposible ejecutar");
 }
 
+int ValorSenal(char * sen){
+    int i;
+    for (i=0; sigstrnum[i].nombre!=NULL; i++)
+        if (!strcmp(sen, sigstrnum[i].nombre))
+            return sigstrnum[i].senal;
+    return -1;
+}
 
-procStatus updateItems(tItemLP proc){
+
+char *NombreSenal(int sen){			/* para sitios donde no hay sig2str*/
+    int i;
+    for (i=0; sigstrnum[i].nombre!=NULL; i++)
+        if (sen==sigstrnum[i].senal)
+            return sigstrnum[i].nombre;
+    return ("SIGUNKNOWN");
+}
+
+
+procStatus updateItems(tItemLP proc,tListP* Lproc, int* signal){
     int newStatus;
+    tPosLP pos;
+    procStatus updatedStatus;
 
-    pid_t pid = waitpid(proc.pid, &newStatus, WNOHANG);
+    pid_t pid = waitpid(proc.pid, &newStatus, WNOHANG| WUNTRACED|WCONTINUED);
 
-    if(pid==0)
-        return ACTIVE;
+    *signal=newStatus;
+
+    if(pid==0||WIFCONTINUED(newStatus)){
+        updatedStatus=ACTIVE;
+    }
+
     else if (pid > 0){
-        if(WIFEXITED(newStatus)) {
-            return FINISHED;
-        } else if(WIFSTOPPED(newStatus)) {
-            return STOPPED;
-        } else if(WIFSIGNALED(newStatus)) {
-            return SIGNALED;
+        if(WIFSTOPPED(newStatus)){
+            updatedStatus=STOPPED;
+            *signal=WSTOPSIG(newStatus);
+        }
+        else if(WIFEXITED(newStatus)) {
+            updatedStatus=FINISHED;
+            *signal= WTERMSIG(newStatus);
+        }
+        else if(WIFSIGNALED(newStatus)) {
+            updatedStatus=SIGNALED;
         }
     }
+    proc.status=updatedStatus;
+    pos=findItemP(proc.pid,*Lproc);
+    updateItemP(proc,pos,Lproc);
     return proc.status;
 }
 
@@ -334,44 +365,55 @@ char* statusEnumToString(procStatus status){
 
 void jobs (tListP Lproc){
     tItemLP proc;
+    char* status;
+    int signal;
     for(tPosLP i = firstP(Lproc); i!=LPNULL; i= nextP(i, Lproc)){
         proc = getItemP(i, Lproc);
-        proc.status=updateItems(proc);
-        printf("%d\t%s p=%d %02d/%02d/%02d %02d:%02d:%02d %s (%03d) %s\n", proc.pid, getUserFromUID(getuid()), getpriority(PRIO_PROCESS,proc.pid), proc.time.tm_year+1900,
-               proc.time.tm_mon+1, proc.time.tm_mday, proc.time.tm_hour, proc.time.tm_min, proc.time.tm_sec, statusEnumToString(proc.status), 0, proc.commandLine);
+        proc.status=updateItems(proc,&Lproc,&signal);
+        status=statusEnumToString(proc.status);
+        printf("%d\t%s p=%d %02d/%02d/%02d %02d:%02d:%02d %s (%s) %s\n", proc.pid, getUserFromUID(getuid()), getpriority(PRIO_PROCESS,proc.pid), proc.time.tm_year+1900,
+               proc.time.tm_mon+1, proc.time.tm_mday, proc.time.tm_hour, proc.time.tm_min, proc.time.tm_sec, status,
+               NombreSenal(signal), proc.commandLine);
+        free(status);
     }
 }
 
 void deljobs(char* trozos[],tListP* Lproc){
     tItemLP proc;
+    char* status;
+    int signal;
     if(trozos[1]==NULL){
         for(tPosLP i = firstP(*Lproc); i!=LPNULL; i= nextP(i, *Lproc)){
             proc = getItemP(i, *Lproc);
-            proc.status=updateItems(proc);
+            proc.status=updateItems(proc,Lproc,&signal);
+            status=statusEnumToString(proc.status);
             printf("%d\t%s p=%d %02d/%02d/%02d %02d:%02d:%02d %s (%03d) %s\n", proc.pid, getUserFromUID(getuid()), getpriority(PRIO_PROCESS,proc.pid), proc.time.tm_year+1900,
-                   proc.time.tm_mon+1, proc.time.tm_mday, proc.time.tm_hour, proc.time.tm_min, proc.time.tm_sec, statusEnumToString(proc.status), 0, proc.commandLine);
+                   proc.time.tm_mon+1, proc.time.tm_mday, proc.time.tm_hour, proc.time.tm_min, proc.time.tm_sec, status, 0, proc.commandLine);
+            free(status);
         }
     }
     else if(strcmp(trozos[1],"-sig")==0){
-        tPosLP i=firstP(*Lproc),temp;
+        tPosLP i= firstP(*Lproc),temp;
         while(i!=LPNULL){
-            proc = getItemP(i, *Lproc);
-            temp=i;
-            i= nextP(i, *Lproc);
-            if(proc.status==FINISHED){
+            proc=getItemP(i,*Lproc);
+            if(proc.status==SIGNALED){
+                temp=i;
+                i=nextP(i,*Lproc);
                 deleteAtPositionP(temp,Lproc);
             }
+            else i=nextP(i,*Lproc);
         }
     }
     else if(strcmp(trozos[1],"-term")==0){
-        tPosLP i=firstP(*Lproc),temp;
+        tPosLP i= firstP(*Lproc),temp;
         while(i!=LPNULL){
-            proc = getItemP(i, *Lproc);
-            temp=i;
-            i= nextP(i, *Lproc);
+            proc=getItemP(i,*Lproc);
             if(proc.status==FINISHED){
+                temp=i;
+                i=nextP(i,*Lproc);
                 deleteAtPositionP(temp,Lproc);
             }
+            else i=nextP(i,*Lproc);
         }
     }
 }
@@ -379,6 +421,7 @@ void deljobs(char* trozos[],tListP* Lproc){
 void job (char* trozos[], tListP Lproc){
     tPosLP p;
     tItemLP proc;
+    char* status;
     if(trozos[1]==NULL)
         jobs(Lproc);
     else if (!strcmp(trozos[1], "-fg")){
@@ -400,9 +443,11 @@ void job (char* trozos[], tListP Lproc){
             jobs(Lproc);
         else{
             proc = getItemP(p, Lproc);
+            status= statusEnumToString(proc.status);
             printf("%d\t%s p=%d %02d/%02d/%02d %02d:%02d:%02d %s (%03d) %s", proc.pid, getUserFromUID(getuid()), getpriority(PRIO_PROCESS,proc.pid), proc.time.tm_year+1900,
                    proc.time.tm_mon+1, proc.time.tm_mday, proc.time.tm_hour, proc.time.tm_min, proc.time.tm_sec,
-                   statusEnumToString(proc.status), 0, proc.commandLine);
+                   status, 0, proc.commandLine);
+            free(status);
         }
     }
 }
@@ -430,6 +475,7 @@ char* trozosToString(char* trozos[]){
     return returnedString;
 }
 
+
 void runProcess(char* trozos[], tListP* Lproc){
     pid_t pid;
     bool bg= tieneAmpersand(trozos);
@@ -440,7 +486,10 @@ void runProcess(char* trozos[], tListP* Lproc){
             perror("Fork error");
             break;
         case 0:
-            execvp(trozos[0], trozos);
+            if(execvp(trozos[0], trozos)==-1){
+                perror("Imposible ejecutar comando: ");
+                exit(0);
+            }
             break;
     }
     if(bg){
