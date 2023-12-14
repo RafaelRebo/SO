@@ -169,9 +169,9 @@ void deleteAtPositionM(tPosLM p, tListLM *M){
     if (p == *M){
         *M = (*M)->next;
     }
-    else if (p->next == LNULL){
-        for (q = *M; q->next->next != LNULL; q = q->next);
-        q->next = LNULL;
+    else if (p->next == LMNULL){
+        for (q = *M; q->next->next != LMNULL; q = q->next);
+        q->next = LMNULL;
     }
     else{
         q = p->next;

@@ -280,22 +280,26 @@ int esVariable(char* command,  char *envp[]){
     return -1;
 }
 
-int findPriorityArgument(char* trozos[]){
-    printf("akjsfhlkjashdfjasdjfk");
-    int i;
+int findPriorityArgument(char* trozos[], int* i){
+
+
     int prio=0;
 
-    for(i=0; trozos[i]!=NULL && trozos[i][0]=='@'; i++);
-    if (trozos[i]!=NULL){
-        prio=atoi(&trozos[i][1]);
-        trozos[i]=NULL;
+    for(*i=0; trozos[*i]!=NULL; (*i)++) {
+        if(trozos[*i][0]=='@'){
+            prio=atoi(&trozos[*i][1]);
+            trozos[*i]=NULL;
+        }
     }
 
     return prio;
 }
 void exec (char* trozos[], char *envp[]){
-    int i=1, pos;
+    int i=1, pos, arrobaPos, prio;
     char* vars[20];
+    prio=findPriorityArgument(trozos, &arrobaPos);
+    if(arrobaPos!=0)
+        trozos[arrobaPos]=NULL;
 
     if (trozos[1]==NULL){
         errno=EFAULT;
@@ -310,6 +314,7 @@ void exec (char* trozos[], char *envp[]){
         if(pos==-1) i--;
     }
     vars[i - 1] = NULL;
+    setpriority(PRIO_PROCESS,getpid(), prio);
     if(i==1){
         if(execvp(trozos[i], &trozos[i])==-1)
             perror("Imposible ejecutar");
@@ -318,7 +323,7 @@ void exec (char* trozos[], char *envp[]){
         perror("Imposible ejecutar");
 
 
-    setpriority(PRIO_PROCESS,getpid(), prio);
+
 }
 
 char *NombreSenal(int sen){			/* para sitios donde no hay sig2str*/
@@ -424,6 +429,8 @@ void deljobs(char* trozos[],tListP* Lproc){
 }
 
 void job (char* trozos[], tListP* Lproc){
+    int newStatus;
+    pid_t retPid;
     tPosLP p;
     tItemLP proc;
     char* status;
@@ -440,7 +447,15 @@ void job (char* trozos[], tListP* Lproc){
             else{
                 proc = getItemP(p, *Lproc);
                 deleteAtPositionP(p,Lproc);
-                waitpid(proc.pid, NULL, 0);
+                retPid=waitpid(proc.pid, &newStatus, 0);
+                if (retPid > 0){
+                    if(WIFEXITED(newStatus)){
+                        printf("Proceso terminado normalmente. Valor devuelto %d",WTERMSIG(newStatus));
+                    }
+                    else if(WIFSIGNALED(newStatus)) {
+                        printf("Proceso terminado por la senal %d",WTERMSIG(newStatus));
+                    }
+                }
             }
         }
     }
