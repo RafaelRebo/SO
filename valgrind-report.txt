@@ -249,3 +249,221 @@
 ==20483== 
 --20483-- REDIR: 0x4a0d7a0 (libc.so.6:__stpcpy_avx2) redirected to 0x4852130 (stpcpy)
 --20483-- REDIR: 0x49133e0 (libc.so.6:free) redirected to 0x484b210 (free)
+==20483== 
+==20483== Process terminating with default action of signal 1 (SIGHUP)
+==20483==    at 0x4953788: clock_nanosleep@@GLIBC_2.17 (clock_nanosleep.c:78)
+==20483==    by 0x4958676: nanosleep (nanosleep.c:25)
+==20483==    by 0x4989D3E: usleep (usleep.c:31)
+==20483==    by 0x11044B: main (p0.c:21)
+==20483== 
+==20483== HEAP SUMMARY:
+==20483==     in use at exit: 11,096 bytes in 14 blocks
+==20483==   total heap usage: 18 allocs, 4 frees, 14,088 bytes allocated
+==20483== 
+==20483== Searching for pointers to 14 not-freed blocks
+==20483== Checked 113,272 bytes
+==20483== 
+==20483== 376 bytes in 1 blocks are still reachable in loss record 1 of 6
+==20483==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==20483==    by 0x10CD97: createNodeF (listaficheros.c:20)
+==20483==    by 0x10CDDB: insertItemF (listaficheros.c:26)
+==20483==    by 0x10D446: createDefaultListF (listaficheros.c:134)
+==20483==    by 0x11040F: main (p0.c:16)
+==20483== 
+==20483== 488 bytes in 1 blocks are still reachable in loss record 2 of 6
+==20483==    at 0x48487A9: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==20483==    by 0x48B2E7B: __add_to_environ (setenv.c:156)
+==20483==    by 0x48B2D2C: putenv (putenv.c:77)
+==20483==    by 0x48541FF: putenv (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==20483==    by 0x114437: Cmd_changevar (p3.c:168)
+==20483==    by 0x10F977: procesarComando (generalfunctions.c:89)
+==20483==    by 0x10F33B: procesarEntrada (generalfunctions.c:23)
+==20483==    by 0x1104D2: main (p0.c:26)
+==20483== 
+==20483== 1,024 bytes in 1 blocks are still reachable in loss record 3 of 6
+==20483==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==20483==    by 0x48ECBA3: _IO_file_doallocate (filedoalloc.c:101)
+==20483==    by 0x48FBCDF: _IO_doallocbuf (genops.c:347)
+==20483==    by 0x48FAF5F: _IO_file_overflow@@GLIBC_2.2.5 (fileops.c:744)
+==20483==    by 0x48EEFA9: puts (ioputs.c:41)
+==20483==    by 0x11045A: main (p0.c:22)
+==20483== 
+==20483== 1,024 bytes in 1 blocks are still reachable in loss record 4 of 6
+==20483==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==20483==    by 0x48ECBA3: _IO_file_doallocate (filedoalloc.c:101)
+==20483==    by 0x48FBCDF: _IO_doallocbuf (genops.c:347)
+==20483==    by 0x48FACDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+==20483==    by 0x48FBD95: _IO_default_uflow (genops.c:362)
+==20483==    by 0x48EE41B: _IO_getline_info (iogetline.c:60)
+==20483==    by 0x48ED40F: fgets (iofgets.c:53)
+==20483==    by 0x10F1C3: leerEntrada (generalfunctions.c:8)
+==20483==    by 0x110473: main (p0.c:24)
+==20483== 
+==20483== 1,128 bytes in 3 blocks are still reachable in loss record 5 of 6
+==20483==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==20483==    by 0x10CD97: createNodeF (listaficheros.c:20)
+==20483==    by 0x10CDDB: insertItemF (listaficheros.c:26)
+==20483==    by 0x10D38F: createDefaultListF (listaficheros.c:128)
+==20483==    by 0x11040F: main (p0.c:16)
+==20483== 
+==20483== 7,056 bytes in 7 blocks are still reachable in loss record 6 of 6
+==20483==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==20483==    by 0x10C992: createNode (lista.c:14)
+==20483==    by 0x10C9DA: insertItem (lista.c:20)
+==20483==    by 0x10F28B: procesarEntrada (generalfunctions.c:17)
+==20483==    by 0x1104D2: main (p0.c:26)
+==20483== 
+==20483== LEAK SUMMARY:
+==20483==    definitely lost: 0 bytes in 0 blocks
+==20483==    indirectly lost: 0 bytes in 0 blocks
+==20483==      possibly lost: 0 bytes in 0 blocks
+==20483==    still reachable: 11,096 bytes in 14 blocks
+==20483==         suppressed: 0 bytes in 0 blocks
+==20483== 
+==20483== ERROR SUMMARY: 59 errors from 10 contexts (suppressed: 0 from 0)
+==20483== 
+==20483== 1 errors in context 1 of 10:
+==20483== Conditional jump or move depends on uninitialised value(s)
+==20483==    at 0x484ED19: strlen (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==20483==    by 0x48E4D30: __vfprintf_internal (vfprintf-internal.c:1517)
+==20483==    by 0x48CE79E: printf (printf.c:33)
+==20483==    by 0x114047: Cmd_showvar (p3.c:122)
+==20483==    by 0x10F942: procesarComando (generalfunctions.c:87)
+==20483==    by 0x10F33B: procesarEntrada (generalfunctions.c:23)
+==20483==    by 0x1104D2: main (p0.c:26)
+==20483==  Uninitialised value was created by a stack allocation
+==20483==    at 0x113CE1: Cmd_showvar (p3.c:95)
+==20483== 
+==20483== 
+==20483== 1 errors in context 2 of 10:
+==20483== Conditional jump or move depends on uninitialised value(s)
+==20483==    at 0x484ED19: strlen (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==20483==    by 0x48E4D30: __vfprintf_internal (vfprintf-internal.c:1517)
+==20483==    by 0x48CE79E: printf (printf.c:33)
+==20483==    by 0x114013: Cmd_showvar (p3.c:120)
+==20483==    by 0x10F942: procesarComando (generalfunctions.c:87)
+==20483==    by 0x10F33B: procesarEntrada (generalfunctions.c:23)
+==20483==    by 0x1104D2: main (p0.c:26)
+==20483==  Uninitialised value was created by a stack allocation
+==20483==    at 0x113CE1: Cmd_showvar (p3.c:95)
+==20483== 
+==20483== 
+==20483== 2 errors in context 3 of 10:
+==20483== Syscall param write(buf) points to uninitialised byte(s)
+==20483==    at 0x4982697: write (write.c:26)
+==20483==    by 0x48F8EEC: _IO_file_write@@GLIBC_2.2.5 (fileops.c:1180)
+==20483==    by 0x48FA9E0: new_do_write (fileops.c:448)
+==20483==    by 0x48FA9E0: _IO_new_do_write (fileops.c:425)
+==20483==    by 0x48FA9E0: _IO_do_write@@GLIBC_2.2.5 (fileops.c:422)
+==20483==    by 0x48F96D4: _IO_new_file_xsputn (fileops.c:1243)
+==20483==    by 0x48F96D4: _IO_file_xsputn@@GLIBC_2.2.5 (fileops.c:1196)
+==20483==    by 0x48E3FC9: outstring_func (vfprintf-internal.c:239)
+==20483==    by 0x48E3FC9: __vfprintf_internal (vfprintf-internal.c:1593)
+==20483==    by 0x48CE79E: printf (printf.c:33)
+==20483==    by 0x114013: Cmd_showvar (p3.c:120)
+==20483==    by 0x10F942: procesarComando (generalfunctions.c:87)
+==20483==    by 0x10F33B: procesarEntrada (generalfunctions.c:23)
+==20483==    by 0x1104D2: main (p0.c:26)
+==20483==  Address 0x4a99745 is 5 bytes inside a block of size 1,024 alloc'd
+==20483==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==20483==    by 0x48ECBA3: _IO_file_doallocate (filedoalloc.c:101)
+==20483==    by 0x48FBCDF: _IO_doallocbuf (genops.c:347)
+==20483==    by 0x48FAF5F: _IO_file_overflow@@GLIBC_2.2.5 (fileops.c:744)
+==20483==    by 0x48EEFA9: puts (ioputs.c:41)
+==20483==    by 0x11045A: main (p0.c:22)
+==20483==  Uninitialised value was created by a stack allocation
+==20483==    at 0x113CE1: Cmd_showvar (p3.c:95)
+==20483== 
+==20483== 
+==20483== 5 errors in context 4 of 10:
+==20483== Conditional jump or move depends on uninitialised value(s)
+==20483==    at 0x484F411: strncmp (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==20483==    by 0x113C81: BuscarVariableEnviron (p3.c:84)
+==20483==    by 0x113DF4: Cmd_showvar (p3.c:108)
+==20483==    by 0x10F942: procesarComando (generalfunctions.c:87)
+==20483==    by 0x10F33B: procesarEntrada (generalfunctions.c:23)
+==20483==    by 0x1104D2: main (p0.c:26)
+==20483==  Uninitialised value was created by a stack allocation
+==20483==    at 0x113CE1: Cmd_showvar (p3.c:95)
+==20483== 
+==20483== 
+==20483== 5 errors in context 5 of 10:
+==20483== Conditional jump or move depends on uninitialised value(s)
+==20483==    at 0x484F40F: strncmp (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==20483==    by 0x113C81: BuscarVariableEnviron (p3.c:84)
+==20483==    by 0x113DF4: Cmd_showvar (p3.c:108)
+==20483==    by 0x10F942: procesarComando (generalfunctions.c:87)
+==20483==    by 0x10F33B: procesarEntrada (generalfunctions.c:23)
+==20483==    by 0x1104D2: main (p0.c:26)
+==20483==  Uninitialised value was created by a stack allocation
+==20483==    at 0x113CE1: Cmd_showvar (p3.c:95)
+==20483== 
+==20483== 
+==20483== 5 errors in context 6 of 10:
+==20483== Conditional jump or move depends on uninitialised value(s)
+==20483==    at 0x484F3FC: strncmp (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==20483==    by 0x113C81: BuscarVariableEnviron (p3.c:84)
+==20483==    by 0x113DF4: Cmd_showvar (p3.c:108)
+==20483==    by 0x10F942: procesarComando (generalfunctions.c:87)
+==20483==    by 0x10F33B: procesarEntrada (generalfunctions.c:23)
+==20483==    by 0x1104D2: main (p0.c:26)
+==20483==  Uninitialised value was created by a stack allocation
+==20483==    at 0x113CE1: Cmd_showvar (p3.c:95)
+==20483== 
+==20483== 
+==20483== 10 errors in context 7 of 10:
+==20483== Conditional jump or move depends on uninitialised value(s)
+==20483==    at 0x48F9737: _IO_new_file_xsputn (fileops.c:1218)
+==20483==    by 0x48F9737: _IO_file_xsputn@@GLIBC_2.2.5 (fileops.c:1196)
+==20483==    by 0x48E500B: outstring_func (vfprintf-internal.c:239)
+==20483==    by 0x48E500B: __vfprintf_internal (vfprintf-internal.c:1517)
+==20483==    by 0x48CE79E: printf (printf.c:33)
+==20483==    by 0x114047: Cmd_showvar (p3.c:122)
+==20483==    by 0x10F942: procesarComando (generalfunctions.c:87)
+==20483==    by 0x10F33B: procesarEntrada (generalfunctions.c:23)
+==20483==    by 0x1104D2: main (p0.c:26)
+==20483==  Uninitialised value was created by a stack allocation
+==20483==    at 0x113CE1: Cmd_showvar (p3.c:95)
+==20483== 
+==20483== 
+==20483== 10 errors in context 8 of 10:
+==20483== Conditional jump or move depends on uninitialised value(s)
+==20483==    at 0x484ED28: strlen (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==20483==    by 0x48E4D30: __vfprintf_internal (vfprintf-internal.c:1517)
+==20483==    by 0x48CE79E: printf (printf.c:33)
+==20483==    by 0x114047: Cmd_showvar (p3.c:122)
+==20483==    by 0x10F942: procesarComando (generalfunctions.c:87)
+==20483==    by 0x10F33B: procesarEntrada (generalfunctions.c:23)
+==20483==    by 0x1104D2: main (p0.c:26)
+==20483==  Uninitialised value was created by a stack allocation
+==20483==    at 0x113CE1: Cmd_showvar (p3.c:95)
+==20483== 
+==20483== 
+==20483== 10 errors in context 9 of 10:
+==20483== Conditional jump or move depends on uninitialised value(s)
+==20483==    at 0x48F9737: _IO_new_file_xsputn (fileops.c:1218)
+==20483==    by 0x48F9737: _IO_file_xsputn@@GLIBC_2.2.5 (fileops.c:1196)
+==20483==    by 0x48E500B: outstring_func (vfprintf-internal.c:239)
+==20483==    by 0x48E500B: __vfprintf_internal (vfprintf-internal.c:1517)
+==20483==    by 0x48CE79E: printf (printf.c:33)
+==20483==    by 0x114013: Cmd_showvar (p3.c:120)
+==20483==    by 0x10F942: procesarComando (generalfunctions.c:87)
+==20483==    by 0x10F33B: procesarEntrada (generalfunctions.c:23)
+==20483==    by 0x1104D2: main (p0.c:26)
+==20483==  Uninitialised value was created by a stack allocation
+==20483==    at 0x113CE1: Cmd_showvar (p3.c:95)
+==20483== 
+==20483== 
+==20483== 10 errors in context 10 of 10:
+==20483== Conditional jump or move depends on uninitialised value(s)
+==20483==    at 0x484ED28: strlen (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==20483==    by 0x48E4D30: __vfprintf_internal (vfprintf-internal.c:1517)
+==20483==    by 0x48CE79E: printf (printf.c:33)
+==20483==    by 0x114013: Cmd_showvar (p3.c:120)
+==20483==    by 0x10F942: procesarComando (generalfunctions.c:87)
+==20483==    by 0x10F33B: procesarEntrada (generalfunctions.c:23)
+==20483==    by 0x1104D2: main (p0.c:26)
+==20483==  Uninitialised value was created by a stack allocation
+==20483==    at 0x113CE1: Cmd_showvar (p3.c:95)
+==20483== 
+==20483== ERROR SUMMARY: 59 errors from 10 contexts (suppressed: 0 from 0)

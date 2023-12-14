@@ -91,7 +91,7 @@ void Cmd_fork (tListP* Lproc);
 void exec (char* trozos[], char *envp[]);
 void jobs (tListP Lproc);
 void deljobs(char* trozos[],tListP* Lproc);
-void job (char* trozos[], tListP Lproc);
+void job (char* trozos[], tListP* Lproc);
 void runProcess(char* trozos[], tListP* Lproc);
 
 #endif //P0_P3_H

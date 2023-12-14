@@ -50,7 +50,7 @@ void updateItemP(tItemLP d, tPosLP p, tListP *L){
 
 tPosLP findItemP(int pid, tListP L){
     tPosLP p;
-    for (p = L; (p != LNULL) && (p->data.pid != pid); p = p->next);
+    for (p = L; (p != LPNULL) && (p->data.pid != pid); p = p->next);
     return p;
 }
 

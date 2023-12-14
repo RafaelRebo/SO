@@ -405,33 +405,34 @@ void deljobs(char* trozos[],tListP* Lproc){
     }
 }
 
-void job (char* trozos[], tListP Lproc){
+void job (char* trozos[], tListP* Lproc){
     tPosLP p;
     tItemLP proc;
     char* status;
     int signal;
     if(trozos[1]==NULL)
-        jobs(Lproc);
+        jobs(*Lproc);
     else if (!strcmp(trozos[1], "-fg")){
         if(trozos[2]==NULL)
-            jobs(Lproc);
+            jobs(*Lproc);
         else{
-            p=findItemP(atoi(trozos[2]), Lproc);
+            p=findItemP(atoi(trozos[2]), *Lproc);
             if(p==LPNULL)
-                jobs(Lproc);
+                jobs(*Lproc);
             else{
-                proc = getItemP(p, Lproc);
+                proc = getItemP(p, *Lproc);
+                deleteAtPositionP(p,Lproc);
                 waitpid(proc.pid, NULL, 0);
             }
         }
     }
     else{
-        p=findItemP(atoi(trozos[1]), Lproc);
+        p=findItemP(atoi(trozos[1]), *Lproc);
         if(p==LPNULL)
-            jobs(Lproc);
+            jobs(*Lproc);
         else{
-            proc = getItemP(p, Lproc);
-            if(proc.status!=SIGNALED&&proc.status!=FINISHED) proc.status=updateItems(proc,&Lproc,&signal);
+            proc = getItemP(p, *Lproc);
+            if(proc.status!=SIGNALED&&proc.status!=FINISHED) proc.status=updateItems(proc,Lproc,&signal);
             status= statusEnumToString(proc.status);
             if(proc.status==SIGNALED||proc.status==STOPPED){
                 printf("%d\t%s p=%d %02d/%02d/%02d %02d:%02d:%02d %s (%s) %s\n", proc.pid, getUserFromUID(getuid()), getpriority(PRIO_PROCESS,proc.pid), proc.time.tm_year+1900,
