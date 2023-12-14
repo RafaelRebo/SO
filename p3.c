@@ -280,14 +280,29 @@ int esVariable(char* command,  char *envp[]){
     return -1;
 }
 
-void exec (char* trozos[], char *envp[]){   //mirar como hacer para las variables (no se como funcionan en la de referencia)
+int findPriorityArgument(char* trozos[]){
+    printf("akjsfhlkjashdfjasdjfk");
+    int i;
+    int prio=0;
+
+    for(i=0; trozos[i]!=NULL && trozos[i][0]=='@'; i++);
+    if (trozos[i]!=NULL){
+        prio=atoi(&trozos[i][1]);
+        trozos[i]=NULL;
+    }
+
+    return prio;
+}
+void exec (char* trozos[], char *envp[]){
     int i=1, pos;
     char* vars[20];
+
     if (trozos[1]==NULL){
         errno=EFAULT;
         perror("Imposible ejecutar");
         return;
     }
+
     pos = esVariable(trozos[i], envp);
     for (i = 1; pos!=-1; i++){
         vars[i-1]=envp[pos];
@@ -301,6 +316,9 @@ void exec (char* trozos[], char *envp[]){   //mirar como hacer para las variable
     }
     else if(execvpe(trozos[i], &trozos[i], vars)==-1)
         perror("Imposible ejecutar");
+
+
+    setpriority(PRIO_PROCESS,getpid(), prio);
 }
 
 char *NombreSenal(int sen){			/* para sitios donde no hay sig2str*/
