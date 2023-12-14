@@ -186,9 +186,6 @@ void Cmd_subsvar(char *trozos[], char *envp[]) {
         char aux[MAXVAR];
         int selVariable;
 
-        strcpy(aux, trozos[3]);
-        strcat(aux, "=");
-        strcat(aux, trozos[4]);
         if (strcmp(trozos[1], "-a") == 0) {
             selVariable = BuscarVariableEnvp(trozos[2],envp);
             if (selVariable != -1) {
@@ -198,27 +195,31 @@ void Cmd_subsvar(char *trozos[], char *envp[]) {
                     perror(error);
                     return;
                 }
+                strcpy(aux, trozos[3]);
+                strcat(aux, "=");
+                strcat(aux, trozos[4]);
                 strcpy(envp[selVariable], aux);
                 printf("Sustituida variable de entorno %s con %s=%s", trozos[2], trozos[3], trozos[4]);
             } else {
-                sprintf(error, "Imposible sustituir variable %s por %s", trozos[2], trozos[3]);
-                perror(error);
+                fprintf(stderr, "Imposible sustituir variable %s por %s: No such file or directory\n", trozos[2], trozos[3]);
             }
         }
         else {
             selVariable = BuscarVariableEnviron(trozos[2]);
-            if (selVariable != -1) {
-                if (BuscarVariableEnviron(trozos[3]) != -1) {
+            if (selVariable != -1||BuscarVariableEnviron(trozos[3]) != -1){
+                if (BuscarVariableEnviron(trozos[2]) != -1&&BuscarVariableEnviron(trozos[3]) != -1) {
                     sprintf(error, "Imposible sustituir variable %s por %s", trozos[2], trozos[3]);
                     errno = EEXIST;
                     perror(error);
                     return;
                 }
-                strcpy(environ[selVariable], aux);
+                strcpy(aux, trozos[3]);
+                strcat(aux, "=");
+                strcat(aux, trozos[4]);
+                if(selVariable!=-1) strcpy(environ[selVariable], aux);
                 printf("Sustituida variable de entorno %s con %s=%s", trozos[2], trozos[3], trozos[4]);
             } else {
-                sprintf(error, "Imposible sustituir variable %s por %s", trozos[2], trozos[3]);
-                perror(error);
+                fprintf(stderr, "Imposible sustituir variable %s por %s: No such file or directory\n", trozos[2], trozos[3]);
             }
         }
     }
@@ -447,7 +448,7 @@ void job (char* trozos[], tListP* Lproc){
             else{
                 proc = getItemP(p, *Lproc);
                 deleteAtPositionP(p,Lproc);
-                retPid=waitpid(proc.pid, &newStatus, 0);
+                retPid=waitpid(proc.pid, NULL, 0);
                 if (retPid > 0){
                     if(WIFEXITED(newStatus)){
                         printf("Proceso terminado normalmente. Valor devuelto %d",WTERMSIG(newStatus));
