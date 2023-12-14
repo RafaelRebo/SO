@@ -221,6 +221,41 @@ void Help(char *trozos[]) {
                    "\t\t-pmap: muestra la salida del comando pmap(o similar)");
         } else if (strcmp(trozos[1], "recurse") == 0) {
             printf(" [n]\tInvoca a la funcion recursiva n veces");
+        } else if (strcmp(trozos[1], "uid") == 0) {
+            printf(" [-get|-set] [-l] [id] \t Accede a las credenciales del proceso que ejecuta el shell\n"
+                   "\t-get: muestra las credenciales\n"
+                   "\t-set id: establece la credencial al valor numerico id\n"
+                   "\t-set -l id: establece la credencial a login id");
+        } else if (strcmp(trozos[1], "showvar") == 0) {
+            printf(" var\tMuestra el valor y las direcciones de la variable de entorno var");
+        } else if (strcmp(trozos[1], "changevar") == 0) {
+            printf(" [-a|-e|-p] var valor\tCambia el valor de una variable de entorno\n"
+                   "\t-a: accede por el tercer arg de main\n"
+                   "\t-e: accede mediante environ\n"
+                   "\t-p: accede mediante putenv");
+        } else if (strcmp(trozos[1], "subsvar") == 0) {
+            printf(" [-a|-e] var1 var2 valor\tSustituye la variable de entorno var1\n"
+                   "\tcon var2=valor\n"
+                   "\t-a: accede por el tercer arg de main\n"
+                   "\t-e: accede mediante environ");
+        } else if (strcmp(trozos[1], "showenv") == 0) {
+            printf(" [-environ|-addr] \t Muestra el entorno del proceso\n"
+                   "\t-environ: accede usando environ (en lugar del tercer arg de main)\n"
+                   "\t-addr: muestra el valor y donde se almacenan environ y el 3er arg main ");
+        } else if (strcmp(trozos[1], "fork") == 0) {
+            printf(" \tEl shell hace fork y queda en espera a que su hijo termine");
+        } else if (strcmp(trozos[1], "exec") == 0) {
+            printf(" VAR1 VAR2 ..prog args....[@pri]\tEjecuta, sin crear proceso,prog con argumentos\n"
+                   "\t en un entorno que contiene solo las variables VAR1, VAR2...");
+        } else if (strcmp(trozos[1], "jobs") == 0) {
+            printf(" \tLista los procesos en segundo plano");
+        } else if (strcmp(trozos[1], "deljobs") == 0) {
+            printf(" [-term][-sig]\tElimina los procesos de la lista procesos en sp\n"
+                   "\t-term: los terminados\n"
+                   "\t-sig: los terminados por senal");
+        } else if (strcmp(trozos[1], "job") == 0) {
+            printf(" [-fg] pid\tMuestra informacion del proceso pid.\n"
+                   "\t\t-fg: lo pasa a primer plano");
         } else if (strcmp(trozos[1], "quit") == 0 || strcmp(trozos[1], "exit") == 0 || strcmp(trozos[1], "bye") == 0) {
             printf(" \tTermina la ejecucion del shell\n");
         } else {
@@ -232,6 +267,8 @@ void Help(char *trozos[]) {
                "\n>open [filepath flags] \n>close [df] \n>dup [df] \n>listopen \n>infosys \n>create [-f] \n>stat [-long|-link|-acc] "
                "\n>list [-long|-link|-acc|-reca|-recb|-hid] \n>delete \n>deltree \n>malloc [-free][tam] \n>shared [-free|-create|-delkey] cl [tam]"
                "\n>mmap [-free] fich prm \n>read fiche addr cont \n>write [-o] fiche addr cont \n>memdump addr cont \n>memfill addr cont byte"
-               "\n>mem [-blocks|-funcs|-vars|-all|-pmap] \n>recurse [n] \n>help [cmd] \n>quit \n>exit \n>bye\n");
+               "\n>mem [-blocks|-funcs|-vars|-all|-pmap] \n>recurse [n] \n>uid [-get|-set] [-l] [id]\n>showvar var"
+               "\n>changevar [-a|-e|-p] var valor \n>subsvar [-a|-e] var1 var2 valor \n>showenv [-environ|-addr] \n>fork \n>exec VAR1 VAR2 ..prog args....[@pri]"
+               "\n>jobs \n>deljobs [-term][-sig] \n>job [-fg] pid \n>help [cmd] \n>quit \n>exit \n>bye\n");
     }
 }
